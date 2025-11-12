@@ -11,7 +11,9 @@ const MainContent = ({ children }: MainContentProps) => {
   return (
     <div className="min-h-screen flex flex-col w-full relative bg-transparent">
       {/* Cloud GLSL Shader Background */}
-      <CloudShader />
+      <div className="absolute inset-0 z-0">
+        <CloudShader />
+      </div>
       
       {/* Overlay to add slight darkening and better text contrast */}
       <div className="absolute inset-0 bg-blue-darker/20 z-1"></div>
@@ -26,9 +28,11 @@ const MainContent = ({ children }: MainContentProps) => {
       />
       
       {/* Header and content are positioned above the background layers */}
-      <Header />
-      <div className="flex-grow p-6 relative z-10">
-        {children}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Header />
+        <div className="flex-grow p-6">
+          {children}
+        </div>
       </div>
     </div>
   );
