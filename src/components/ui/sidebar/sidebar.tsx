@@ -12,10 +12,12 @@ interface SidebarProps {
     path: string;
     icon: React.ComponentType<{ className?: string }>;
     hasSubmenu?: boolean;
+    isNew?: boolean;
     submenuItems?: {
       name: string;
       path: string;
       icon: React.ComponentType<{ className?: string }>;
+      isNew?: boolean;
     }[];
   }[];
 }

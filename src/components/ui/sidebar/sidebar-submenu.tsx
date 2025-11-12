@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
 
 interface SubmenuProps {
   isOpen: boolean;
@@ -91,19 +92,26 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                     variants={menuItemVariants}
                     className="relative"
                   >
-                    <div 
+                    <div
                       className={`
                         flex items-center px-3 py-2 rounded-lg text-xs transition-all duration-200 cursor-pointer
                         ${nestedOpenSubmenus[subItem.name] ? 'bg-cyan-500/20 text-white font-medium' : 'text-blue-lightest hover:bg-cyan-500/10 hover:text-white'}
                       `}
                       onClick={(e) => toggleNestedSubmenu(subItem.name, e)}
                     >
-                      <subItem.icon 
+                      <subItem.icon
                         className={`h-3.5 w-3.5 mr-2 ${nestedOpenSubmenus[subItem.name] ? 'text-cyan-400 icon-glow-cyan' : 'text-blue-lighter'}`}
                         isGlowing={nestedOpenSubmenus[subItem.name]}
-                        glowColor="highlight" 
+                        glowColor="highlight"
                       />
-                      <span className="text-shadow-sm flex-1">{subItem.name}</span>
+                      <span className="text-shadow-sm flex-1 flex items-center gap-2">
+                        {subItem.name}
+                        {subItem.isNew && (
+                          <Badge className="text-[9px] uppercase tracking-wider bg-emerald-500/20 border-emerald-400/40 text-emerald-200">
+                            New
+                          </Badge>
+                        )}
+                      </span>
                       <ChevronRight className={`h-3 w-3 transition-transform duration-200 ${nestedOpenSubmenus[subItem.name] ? 'rotate-90' : ''}`} />
                     </div>
                     {nestedOpenSubmenus[subItem.name] && subItem.submenuItems && (
@@ -172,7 +180,7 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                   variants={menuItemVariants}
                 >
                   {subItem.path.startsWith('http') ? (
-                    <a 
+                    <a
                       href={subItem.path}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -181,18 +189,25 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                         text-blue-lightest hover:bg-cyan-500/10 hover:text-white
                       `}
                     >
-                      <subItem.icon 
+                      <subItem.icon
                         className="h-3.5 w-3.5 mr-2 text-blue-lighter"
                       />
-                      <span className="text-shadow-sm">{subItem.name}</span>
+                      <span className="text-shadow-sm flex items-center gap-2">
+                        {subItem.name}
+                        {subItem.isNew && (
+                          <Badge className="text-[9px] uppercase tracking-wider bg-emerald-500/20 border-emerald-400/40 text-emerald-200">
+                            New
+                          </Badge>
+                        )}
+                      </span>
                     </a>
                   ) : (
-                    <Link 
-                      to={subItem.path} 
+                    <Link
+                      to={subItem.path}
                       className={`
                         flex items-center px-3 py-2 rounded-lg text-xs transition-all duration-200
-                        ${isSubItemActive 
-                          ? 'bg-cyan-500/20 text-white font-medium' 
+                        ${isSubItemActive
+                          ? 'bg-cyan-500/20 text-white font-medium'
                           : 'text-blue-lightest hover:bg-cyan-500/10 hover:text-white'}
                       `}
                     >
@@ -201,12 +216,14 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                         isGlowing={isSubItemActive}
                         glowColor="highlight"
                       />
-                      <span className="text-shadow-sm flex-1">{subItem.name}</span>
-                      {subItem.isNew && (
-                        <span className="text-[8px] font-bold px-1 py-0.5 rounded bg-gradient-to-r from-green-500 to-emerald-500 text-white">
-                          NEW
-                        </span>
-                      )}
+                      <span className="text-shadow-sm flex items-center gap-2">
+                        {subItem.name}
+                        {subItem.isNew && (
+                          <Badge className="text-[9px] uppercase tracking-wider bg-emerald-500/20 border-emerald-400/40 text-emerald-200">
+                            New
+                          </Badge>
+                        )}
+                      </span>
                     </Link>
                   )}
                 </motion.div>
@@ -259,7 +276,14 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                       isGlowing={nestedOpenSubmenus[subItem.name]} 
                       glowColor="highlight"
                     />
-                    <span className="text-shadow-sm flex-1 text-left">{subItem.name}</span>
+                    <span className="text-shadow-sm flex-1 text-left flex items-center gap-2">
+                      {subItem.name}
+                      {subItem.isNew && (
+                        <Badge className="text-[9px] uppercase tracking-wider bg-emerald-500/20 border-emerald-400/40 text-emerald-200">
+                          New
+                        </Badge>
+                      )}
+                    </span>
                     <ChevronRight className={`h-3 w-3 transition-transform duration-200 ${nestedOpenSubmenus[subItem.name] ? 'rotate-90' : ''}`} />
                   </div>
                   <AnimatePresence>
@@ -352,7 +376,14 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                     <subItem.icon 
                       className="h-3.5 w-3.5 mr-2 text-blue-lighter group-hover:text-blue-lightest" 
                     />
-                    <span className="text-shadow-sm">{subItem.name}</span>
+                    <span className="text-shadow-sm flex items-center gap-2">
+                      {subItem.name}
+                      {subItem.isNew && (
+                        <Badge className="text-[9px] uppercase tracking-wider bg-emerald-500/20 border-emerald-400/40 text-emerald-200">
+                          New
+                        </Badge>
+                      )}
+                    </span>
                   </a>
                 ) : (
                   <Link 
@@ -367,17 +398,17 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                     <subItem.icon
                       className={`h-3.5 w-3.5 mr-2 ${isSubItemActive ? 'text-cyan-400 icon-glow-cyan' : 'text-blue-lighter group-hover:text-blue-lightest'}`}
                       isGlowing={isSubItemActive}
-                      glowColor={isSubItemActive ? "highlight" : "highlight"}
+                      glowColor="highlight"
                     />
-                    <span className="text-shadow-sm flex-1">{subItem.name}</span>
-
-                    {/* NEW badge */}
-                    {subItem.isNew && (
-                      <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-gradient-to-r from-green-500 to-emerald-500 text-white mr-2">
-                        NEW
-                      </span>
-                    )}
-
+                    <span className="text-shadow-sm flex items-center gap-2">
+                      {subItem.name}
+                      {subItem.isNew && (
+                        <Badge className="text-[9px] uppercase tracking-wider bg-emerald-500/20 border-emerald-400/40 text-emerald-200">
+                          New
+                        </Badge>
+                      )}
+                    </span>
+                    
                     {/* Subtle active indicator */}
                     {isSubItemActive && (
                       <span className="absolute right-1 w-1 h-1 rounded-full bg-cyan-400 shadow-[0_0_5px_rgba(0,240,255,0.5)]"></span>

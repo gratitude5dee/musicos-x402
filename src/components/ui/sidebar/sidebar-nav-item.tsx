@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 interface NavItemProps {
   item: {
@@ -10,10 +11,12 @@ interface NavItemProps {
     path: string;
     icon: React.ComponentType<{ className?: string; isGlowing?: boolean; glowColor?: "highlight" | "accent" | "white" }>;
     hasSubmenu?: boolean;
+    isNew?: boolean;
     submenuItems?: {
       name: string;
       path: string;
       icon: React.ComponentType<{ className?: string; isGlowing?: boolean; glowColor?: "highlight" | "accent" | "white" }>;
+      isNew?: boolean;
     }[];
   };
   isActive: boolean;
@@ -67,7 +70,7 @@ const SidebarNavItem: React.FC<NavItemProps> = ({
           ${isCollapsed ? 'w-full' : 'mr-3'}
           ${isActive ? 'text-white' : 'text-blue-lightest group-hover:text-white'}
         `}>
-          <item.icon 
+          <item.icon
             className={`h-5 w-5 transition-all duration-200
               ${isActive ? 'icon-glow-white' : ''}
               ${!isActive && 'group-hover:text-white'}
@@ -80,6 +83,9 @@ const SidebarNavItem: React.FC<NavItemProps> = ({
           <span className={`absolute inset-0 rounded-full -z-10 transition-all duration-200
             ${isActive ? 'bg-white/10' : 'bg-transparent group-hover:bg-white/5'}
           `}></span>
+          {item.isNew && (
+            <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
+          )}
         </div>
         
         {!isCollapsed && (
@@ -87,9 +93,14 @@ const SidebarNavItem: React.FC<NavItemProps> = ({
             initial="hidden"
             animate="visible"
             variants={textVariants}
-            className="flex-1 text-[13px] font-medium text-shadow-sm text-left"
+            className="flex-1 text-[13px] font-medium text-shadow-sm text-left flex items-center gap-2"
           >
             {item.name}
+            {item.isNew && (
+              <Badge className="text-[10px] uppercase tracking-wide bg-emerald-500/20 border-emerald-400/40 text-emerald-200">
+                New
+              </Badge>
+            )}
           </motion.span>
         )}
         

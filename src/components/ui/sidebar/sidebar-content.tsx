@@ -16,6 +16,7 @@ interface SidebarContentProps {
       className?: string;
     }>;
     hasSubmenu?: boolean;
+    isNew?: boolean;
     submenuItems?: {
       name: string;
       path: string;
@@ -23,6 +24,7 @@ interface SidebarContentProps {
         className?: string;
       }>;
       hasSubmenu?: boolean;
+      isNew?: boolean;
       submenuItems?: {
         name: string;
         path: string;

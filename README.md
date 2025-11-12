@@ -85,6 +85,8 @@ Before you begin, ensure you have the following installed:
    VITE_CROSSMINT_CLIENT_KEY=your_crossmint_client_key_here
    VITE_SUPABASE_URL=your_supabase_url
    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_ENABLE_AGENT_SCAN=true
+   VITE_SCAN_CACHE_TTL=300
    ```
    *Note: You can reference the Crossmint Developer Console for client keys and the Supabase dashboard (Project Settings → API) for your Supabase URL and anon key when filling in these values.*
 
@@ -181,6 +183,7 @@ After starting the development server, you can:
 3. **Create AI Agents** - Use `/create-agent` to build custom AI assistants
 4. **Manage Assets** - Visit `/gallery` to organize your digital assets
 5. **Treasury Management** - Access `/treasury` for financial tools
+6. **Scan Agent Health** - Visit `/agents/scan` to monitor activity, token usage, transactions, and resource consumption across your Lovable agent network
 
 ### Code Examples
 
