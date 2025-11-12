@@ -1,131 +1,307 @@
-import React, { useState } from "react";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SearchFilters from "@/components/marketplace/SearchFilters";
-import EnhancedAgentCard from "@/components/marketplace/EnhancedAgentCard";
-import { FilterState, MarketplaceListing } from "@/types/marketplace";
-import { Grid2x2, Activity, Sparkles, Zap, Shield } from "lucide-react";
-import AgentComparison from "@/components/marketplace/AgentComparison";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+'use client'
 
-const AgentMarketplace = () => {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    categories: [],
-    priceModel: [],
-    minRating: 0,
-    sortBy: 'popularity'
-  });
+import { useState } from 'react'
+import DashboardLayout from '@/layouts/dashboard-layout'
+import { useQuery } from '@tanstack/react-query'
+import { useAgent } from '@/context/AgentContext'
+import { supabase } from '@/integrations/supabase/client'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { motion } from 'framer-motion'
+import {
+  Search,
+  Bot,
+  Coins,
+  Palette,
+  BarChart3,
+  FileText,
+  TrendingUp,
+  Download,
+  Star,
+} from 'lucide-react'
+import { toast } from 'sonner'
 
-  // Mock marketplace listings
-  const mockListings: MarketplaceListing[] = [
-    {
-      id: '1',
-      agentId: '1',
-      name: 'CodeWhiz Pro',
-      description: 'AI-powered code assistant with multi-language support and real-time error detection',
-      longDescription: '',
-      creator: { id: '1', name: 'TechCorp', avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=tech' },
-      category: ['Technical', 'Development'],
-      pricing: { model: 'subscription', price: 9.99, currency: 'USD' },
-      rating: 4.8,
-      reviewCount: 234,
-      installCount: 12500,
-      features: ['Code completion', 'Error detection', 'Refactoring'],
-      screenshots: ['https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400'],
-      dependencies: [],
-      requiredPlugins: [],
-      lastUpdated: new Date(),
-      version: '2.4.1'
+interface MarketplaceAgent {
+  id: string
+  name: string
+  type: string
+  description: string
+  avatar_url?: string
+  capabilities: string[]
+  tools_enabled: string[]
+  creator_name: string
+  rating: number
+  installations: number
+  is_featured: boolean
+  is_public: boolean
+  config_template: Record<string, any>
+}
+
+const AGENT_TYPE_ICONS = {
+  studio: Palette,
+  treasury: Coins,
+  distribution: TrendingUp,
+  rights: FileText,
+  analytics: BarChart3,
+  custom: Bot,
+}
+
+const skeletonArray = (count: number) => Array.from({ length: count }, (_, index) => index)
+
+export default function AgentMarketplacePage() {
+  const { createAgent } = useAgent()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedType, setSelectedType] = useState<string>('all')
+
+  const { data: marketplaceAgents = [], isLoading } = useQuery({
+    queryKey: ['marketplace-agents', searchQuery, selectedType],
+    queryFn: async () => {
+      let query = supabase
+        .from('agents')
+        .select('*')
+        .eq('is_public', true)
+        .order('installations', { ascending: false })
+
+      if (selectedType !== 'all') {
+        query = query.eq('type', selectedType)
+      }
+
+      if (searchQuery) {
+        query = query.or(`name.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`)
+      }
+
+      const { data, error } = await query.limit(50)
+
+      if (error) throw error
+      return (data ?? []) as MarketplaceAgent[]
+    },
+  })
+
+  const handleInstallAgent = async (agent: MarketplaceAgent) => {
+    try {
+      await createAgent({
+        name: `${agent.name} (Copy)`,
+        type: agent.type as any,
+        description: agent.description,
+        capabilities: agent.capabilities,
+        tools_enabled: agent.tools_enabled,
+        config: agent.config_template || {},
+      })
+
+      toast.success('Agent installed', {
+        description: `${agent.name} has been added to your workspace`,
+      })
+    } catch (error: any) {
+      toast.error('Installation failed', {
+        description: error?.message || 'Unable to install agent',
+      })
     }
-  ];
+  }
+
+  const featuredAgents = marketplaceAgents.filter((agent) => agent.is_featured)
+  const allAgents = marketplaceAgents
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
-        {/* Hero Section */}
-        <div className="space-y-4">
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-            AI Agent Marketplace
-          </h1>
-          <p className="text-white/70 text-xl max-w-3xl">
-            Discover, evaluate, and deploy pre-built AI agents for your creative workflows
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">Agent Marketplace</h1>
+          <p className="text-lg text-muted-foreground">
+            Discover and install AI agents to supercharge your creative workflows
           </p>
         </div>
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="backdrop-blur-md bg-white/10 border-white/20 hover:bg-white/15 transition-all">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Sparkles className="h-5 w-5 text-[#22c55e]" />
-                Smart Discovery
-              </CardTitle>
-              <CardDescription className="text-white/70">
-                AI-powered recommendations based on your workflow
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="backdrop-blur-md bg-white/10 border-white/20 hover:bg-white/15 transition-all">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Zap className="h-5 w-5 text-[#6366f1]" />
-                Instant Deployment
-              </CardTitle>
-              <CardDescription className="text-white/70">
-                One-click installation and automatic configuration
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="backdrop-blur-md bg-white/10 border-white/20 hover:bg-white/15 transition-all">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Shield className="h-5 w-5 text-[#f59e0b]" />
-                Verified Quality
-              </CardTitle>
-              <CardDescription className="text-white/70">
-                Curated agents tested for performance and security
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
-
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="browse" className="space-y-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-            <TabsList className="backdrop-blur-md bg-white/10 border border-white/20 shadow-card-glow">
-              <TabsTrigger value="browse" className="text-white data-[state=active]:bg-studio-accent data-[state=active]:text-white">
-                <Grid2x2 className="mr-2 h-4 w-4" />
-                Browse Agents
-              </TabsTrigger>
-              <TabsTrigger value="compare" className="text-white data-[state=active]:bg-studio-accent data-[state=active]:text-white">
-                <Activity className="mr-2 h-4 w-4" />
-                Compare
-              </TabsTrigger>
-            </TabsList>
-
-            <SearchFilters filters={filters} onFiltersChange={setFilters} />
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search agents..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              className="pl-10"
+            />
           </div>
 
-          <TabsContent value="browse" className="pt-6 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in">
-              {mockListings.map((listing) => (
-                <EnhancedAgentCard key={listing.id} listing={listing} />
-              ))}
-            </div>
+          <Select value={selectedType} onValueChange={setSelectedType}>
+            <SelectTrigger className="w-full md:w-[200px]">
+              <SelectValue placeholder="Agent type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="studio">Studio</SelectItem>
+              <SelectItem value="treasury">Treasury</SelectItem>
+              <SelectItem value="distribution">Distribution</SelectItem>
+              <SelectItem value="rights">Rights</SelectItem>
+              <SelectItem value="analytics">Analytics</SelectItem>
+              <SelectItem value="custom">Custom</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Tabs defaultValue="featured">
+          <TabsList>
+            <TabsTrigger value="featured">Featured ({featuredAgents.length})</TabsTrigger>
+            <TabsTrigger value="all">All Agents ({allAgents.length})</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="featured" className="mt-6">
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {skeletonArray(3).map((index) => (
+                  <Card key={index} className="animate-pulse">
+                    <CardHeader>
+                      <div className="h-6 bg-muted rounded mb-2" />
+                      <div className="h-4 bg-muted rounded" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-20 bg-muted rounded" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : featuredAgents.length === 0 ? (
+              <Card>
+                <CardContent className="text-center py-12">
+                  <Bot className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No featured agents available</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {featuredAgents.map((agent) => (
+                  <AgentCard key={agent.id} agent={agent} onInstall={handleInstallAgent} />
+                ))}
+              </div>
+            )}
           </TabsContent>
 
-          <TabsContent value="compare" className="pt-6">
-            <AgentComparison />
+          <TabsContent value="all" className="mt-6">
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {skeletonArray(6).map((index) => (
+                  <Card key={index} className="animate-pulse">
+                    <CardHeader>
+                      <div className="h-6 bg-muted rounded mb-2" />
+                      <div className="h-4 bg-muted rounded" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-20 bg-muted rounded" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : allAgents.length === 0 ? (
+              <Card>
+                <CardContent className="text-center py-12">
+                  <Bot className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">
+                    No agents found matching your criteria
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {allAgents.map((agent) => (
+                  <AgentCard key={agent.id} agent={agent} onInstall={handleInstallAgent} />
+                ))}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>
     </DashboardLayout>
-  );
-};
+  )
+}
 
-export default AgentMarketplace;
+function AgentCard({
+  agent,
+  onInstall,
+}: {
+  agent: MarketplaceAgent
+  onInstall: (agent: MarketplaceAgent) => void
+}) {
+  const Icon = AGENT_TYPE_ICONS[agent.type as keyof typeof AGENT_TYPE_ICONS] || Bot
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Card className="h-full flex flex-col hover:border-primary/50 transition-colors">
+        <CardHeader>
+          <div className="flex items-start justify-between mb-2">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={agent.avatar_url} />
+              <AvatarFallback>
+                <Icon className="h-6 w-6" />
+              </AvatarFallback>
+            </Avatar>
+            {agent.is_featured && (
+              <Badge variant="default" className="bg-yellow-500">
+                <Star className="h-3 w-3 mr-1" />
+                Featured
+              </Badge>
+            )}
+          </div>
+
+          <CardTitle className="text-xl">{agent.name}</CardTitle>
+          <CardDescription className="line-clamp-2">{agent.description}</CardDescription>
+
+          <div className="flex items-center gap-4 text-sm text-muted-foreground pt-2">
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 fill-current text-yellow-500" />
+              <span>{agent.rating.toFixed(1)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Download className="h-4 w-4" />
+              <span>{agent.installations.toLocaleString()}</span>
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="flex-1 flex flex-col justify-between">
+          <div className="space-y-3 mb-4">
+            <div>
+              <p className="text-xs text-muted-foreground mb-2">Capabilities</p>
+              <div className="flex flex-wrap gap-1">
+                {agent.capabilities.slice(0, 3).map((capability) => (
+                  <Badge key={capability} variant="secondary" className="text-xs">
+                    {capability}
+                  </Badge>
+                ))}
+                {agent.capabilities.length > 3 && (
+                  <Badge variant="secondary" className="text-xs">
+                    +{agent.capabilities.length - 3}
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs text-muted-foreground mb-2">Tools</p>
+              <p className="text-sm">{agent.tools_enabled.length} tools enabled</p>
+            </div>
+          </div>
+
+          <Button onClick={() => onInstall(agent)} className="w-full">
+            <Download className="mr-2 h-4 w-4" />
+            Install Agent
+          </Button>
+        </CardContent>
+      </Card>
+    </motion.div>
+  )
+}
