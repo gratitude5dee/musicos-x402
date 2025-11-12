@@ -28,7 +28,8 @@ interface ScanAnalyticsProps {
 const COLORS = ['#8B5CF6', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#EC4899'];
 
 export function ScanAnalytics({ filters }: ScanAnalyticsProps) {
-  const { userId } = useAuth();
+  const { user } = useAuth();
+  const userId = user?.id;
 
   // Fetch analytics data
   const { data: analyticsData, isLoading, error } = useQuery({

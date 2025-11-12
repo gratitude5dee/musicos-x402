@@ -14,7 +14,8 @@ interface ScanDashboardProps {
 }
 
 export function ScanDashboard({ filters }: ScanDashboardProps) {
-  const { userId } = useAuth();
+  const { user } = useAuth();
+  const userId = user?.id;
 
   // Fetch agents with activity data
   const { data: agents = [], isLoading, error } = useQuery({

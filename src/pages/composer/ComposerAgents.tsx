@@ -8,7 +8,7 @@ import { Users, Plus, Calendar, CreditCard, Globe, Shield, Activity } from "luci
 
 export default function ComposerAgents() {
   const navigate = useNavigate();
-  const { agents, isLoading } = useAgent();
+  const { agents, loading } = useAgent();
 
   const agentCollections = [
     {
@@ -67,7 +67,7 @@ export default function ComposerAgents() {
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Total Agents</p>
               <p className="text-3xl font-bold text-foreground">
-                {isLoading ? '...' : agents.length}
+                {loading ? '...' : agents.length}
               </p>
             </div>
           </Card>
@@ -75,7 +75,7 @@ export default function ComposerAgents() {
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Active Agents</p>
               <p className="text-3xl font-bold text-green-400">
-                {isLoading ? '...' : agents.filter(a => a.status === 'active').length}
+                {loading ? '...' : agents.filter(a => a.status === 'active').length}
               </p>
             </div>
           </Card>
@@ -83,7 +83,7 @@ export default function ComposerAgents() {
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Agent Types</p>
               <p className="text-3xl font-bold text-blue-400">
-                {isLoading ? '...' : new Set(agents.map(a => a.type)).size}
+                {loading ? '...' : new Set(agents.map(a => a.type)).size}
               </p>
             </div>
           </Card>

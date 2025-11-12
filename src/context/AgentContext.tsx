@@ -129,10 +129,12 @@ export function AgentProvider({ children }: { children: ReactNode }) {
 
       const { data: newAgent, error } = await supabase
         .from('agents')
-        .insert({
+        .insert([{
           user_id: userId,
+          name: data.name || 'New Agent',
+          type: data.type || 'custom',
           ...data,
-        })
+        }])
         .select()
         .single()
 
@@ -179,9 +181,8 @@ export function AgentProvider({ children }: { children: ReactNode }) {
     mutationFn: async (id: string) => {
       const { error } = await supabase.from('agents').delete().eq('id', id)
       if (error) throw error
-      return id
     },
-    onSuccess: (deletedId) => {
+    onSuccess: (_, deletedId) => {
       queryClient.invalidateQueries({ queryKey: ['agents', userId] })
       setActiveAgent((current) => {
         if (!current) return null

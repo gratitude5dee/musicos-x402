@@ -8,7 +8,8 @@ import { Radio, Activity, CheckCircle, XCircle, Clock, Loader2 } from "lucide-re
 import { formatDistanceToNow } from "date-fns";
 
 export default function ComposerFeed() {
-  const { userId } = useAuth();
+  const { user } = useAuth();
+  const userId = user?.id;
 
   // Fetch recent agent activity
   const { data: activities = [], isLoading } = useQuery({
