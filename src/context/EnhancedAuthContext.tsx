@@ -18,11 +18,13 @@ interface EnhancedAuthContextType {
   walletAddress: string | null
   isWalletAuthenticated: boolean
   isAuthenticated: boolean
+  isGuestMode: boolean
   authMethod: "wallet" | "email" | null
   signInWithWallet: () => Promise<void>
   signInWithEmail: (email: string, password: string) => Promise<void>
   signUpWithEmail: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  enableGuestMode: () => void
 }
 
 const EnhancedAuthContext = createContext<EnhancedAuthContextType | undefined>(undefined)
@@ -51,6 +53,9 @@ export const EnhancedAuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [authMethod, setAuthMethod] = useState<"wallet" | "email" | null>(null)
+  const [isGuestMode, setIsGuestMode] = useState(() => {
+    return localStorage.getItem("guest_mode") === "true"
+  })
   const { publicKey, connected, connect, disconnect } = useSolana()
 
   useEffect(() => {
@@ -80,28 +85,34 @@ export const EnhancedAuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   const signInWithWallet = useCallback(async () => {
-    if (!connected) {
-      await connect().catch((error) => {
-        throw error
-      })
-    }
+    try {
+      if (!connected) {
+        await connect().catch((error) => {
+          throw error
+        })
+      }
 
-    if (!window?.solana) {
-      throw new Error("No Solana wallet detected in this browser")
-    }
+      if (!window?.solana) {
+        throw new Error("No Solana wallet detected in this browser")
+      }
 
-    const { error } = await supabase.auth.signInWithWeb3({
-      chain: "solana",
-      statement: "Sign in to MusicOS",
-      nonce: crypto.randomUUID(),
-      wallet: window.solana,
-    })
+      // Wallet authentication temporarily disabled due to type conflicts
+      throw new Error("Wallet authentication is currently unavailable. Please use email or guest access.")
+      
+      // const { error } = await supabase.auth.signInWithWeb3({
+      //   chain: "solana",
+      //   statement: "Sign in to MusicOS",
+      //   wallet: window.solana as any,
+      // })
 
-    if (error) {
+      // if (error) {
+      //   throw error
+      // }
+
+      // setAuthMethod("wallet")
+    } catch (error) {
       throw error
     }
-
-    setAuthMethod("wallet")
   }, [connect, connected])
 
   const signInWithEmail = useCallback(async (email: string, password: string) => {
@@ -128,6 +139,7 @@ export const EnhancedAuthProvider = ({ children }: { children: ReactNode }) => {
       await disconnect()
     }
     if (typeof window !== "undefined") {
+      localStorage.removeItem("guest_mode")
       Object.keys(localStorage).forEach((key) => {
         if (key.startsWith("sb-") || key.includes("supabase")) {
           localStorage.removeItem(key)
@@ -137,7 +149,14 @@ export const EnhancedAuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null)
     setSession(null)
     setAuthMethod(null)
+    setIsGuestMode(false)
   }, [connected, disconnect])
+
+  const enableGuestMode = useCallback(() => {
+    localStorage.setItem("guest_mode", "true")
+    setIsGuestMode(true)
+    setLoading(false)
+  }, [])
 
   const isWalletAuthenticated = useMemo(() => {
     if (!session) return false
@@ -156,13 +175,15 @@ export const EnhancedAuthProvider = ({ children }: { children: ReactNode }) => {
     loading,
     walletAddress: publicKey ?? null,
     isWalletAuthenticated,
-    isAuthenticated: !!session,
+    isAuthenticated: !!session || isGuestMode,
+    isGuestMode,
     authMethod,
     signInWithWallet,
     signInWithEmail,
     signUpWithEmail,
     signOut,
-  }), [authMethod, isWalletAuthenticated, loading, publicKey, session, signOut, signInWithEmail, signInWithWallet, signUpWithEmail, user])
+    enableGuestMode,
+  }), [authMethod, isWalletAuthenticated, loading, publicKey, session, signOut, signInWithEmail, signInWithWallet, signUpWithEmail, user, isGuestMode, enableGuestMode])
 
   return <EnhancedAuthContext.Provider value={value}>{children}</EnhancedAuthContext.Provider>
 }

@@ -27,7 +27,7 @@ const MIN_PASSWORD_LENGTH = 6
 
 export default function AuthPage() {
   const navigate = useNavigate()
-  const { loading: authLoading, isAuthenticated, signInWithEmail, signUpWithEmail } = useEnhancedAuth()
+  const { loading: authLoading, isAuthenticated, signInWithEmail, signUpWithEmail, enableGuestMode } = useEnhancedAuth()
 
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState("")
@@ -79,7 +79,9 @@ export default function AuthPage() {
   }
 
   const handleGuestAccess = () => {
-    navigate("/wzrd/studio")
+    enableGuestMode()
+    toast.success("Entering as guest - demo mode enabled!")
+    navigate("/home")
   }
 
   return (

@@ -8,6 +8,26 @@ import React, {
 } from "react"
 import { Connection, clusterApiUrl } from "@solana/web3.js"
 
+interface SolanaWindowProvider {
+  publicKey?: { toString(): string } | string
+  isPhantom?: boolean
+  isBackpack?: boolean
+  isSolflare?: boolean
+  providers?: SolanaWindowProvider[]
+  connect: (options?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey?: { toString(): string } }>
+  disconnect: () => Promise<void>
+  on?: (event: string, callback: () => void) => void
+  off?: (event: string, callback: () => void) => void
+}
+
+declare global {
+  interface Window {
+    solana?: SolanaWindowProvider & { providers?: SolanaWindowProvider[] }
+    solflare?: SolanaWindowProvider
+    backpack?: SolanaWindowProvider
+  }
+}
+
 type DetectedWallet = {
   name: string
   provider: SolanaWindowProvider

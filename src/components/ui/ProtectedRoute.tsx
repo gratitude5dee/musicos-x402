@@ -1,10 +1,9 @@
-
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useEnhancedAuth } from "@/context/EnhancedAuthContext";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, isGuestMode } = useEnhancedAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,11 +21,11 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
-  // If no user and not loading, redirect to auth
-  if (!user) {
+  // If no user and not in guest mode, redirect to auth
+  if (!user && !isGuestMode) {
     return <Navigate to="/auth" replace />;
   }
 
-  // User is authenticated, render the protected content
+  // User is authenticated or in guest mode, render the protected content
   return <>{children}</>;
 };
