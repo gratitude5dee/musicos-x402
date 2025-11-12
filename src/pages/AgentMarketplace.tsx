@@ -70,8 +70,8 @@ export default function AgentMarketplacePage() {
       let query = supabase
         .from('agents')
         .select('*')
-        .eq('is_public', true)
-        .order('installations', { ascending: false })
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
 
       if (selectedType !== 'all') {
         query = query.eq('type', selectedType)
@@ -84,7 +84,23 @@ export default function AgentMarketplacePage() {
       const { data, error } = await query.limit(50)
 
       if (error) throw error
-      return (data ?? []) as MarketplaceAgent[]
+      
+      // Map database agents to marketplace format
+      return (data ?? []).map(agent => ({
+        id: agent.id,
+        name: agent.name,
+        type: agent.type,
+        description: agent.description || 'No description available',
+        avatar_url: agent.avatar_url,
+        capabilities: Array.isArray(agent.capabilities) ? agent.capabilities as string[] : [],
+        tools_enabled: Array.isArray(agent.tools_enabled) ? agent.tools_enabled as string[] : [],
+        creator_name: 'System',
+        rating: 4.5,
+        installations: 0,
+        is_featured: false,
+        is_public: true,
+        config_template: typeof agent.config === 'object' ? agent.config : {},
+      })) as MarketplaceAgent[]
     },
   })
 

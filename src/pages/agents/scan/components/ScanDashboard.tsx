@@ -28,7 +28,7 @@ export const ScanDashboard = () => {
     queryKey: ["agent-scan", filters, cursor],
     queryFn: () => fetchAgentScanSummaries({ filters, cursor, limit: DEFAULT_SCAN_LIMIT }),
     staleTime: cacheTtlMs,
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
 
   useEffect(() => {
