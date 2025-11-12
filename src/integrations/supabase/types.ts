@@ -50,6 +50,89 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_activity_log: {
+        Row: {
+          activity_type: string
+          agent_id: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          agent_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          agent_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_activity_log_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agents: {
+        Row: {
+          capabilities: Json | null
+          config: Json | null
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          name: string
+          status: string
+          tools_enabled: Json | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          capabilities?: Json | null
+          config?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          name: string
+          status?: string
+          tools_enabled?: Json | null
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          capabilities?: Json | null
+          config?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          name?: string
+          status?: string
+          tools_enabled?: Json | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_runs: {
         Row: {
           board_id: string
@@ -3287,6 +3370,77 @@ export type Database = {
           },
         ]
       }
+      research_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          model: string | null
+          role: string
+          session_id: string
+          sources: string[] | null
+          tokens_used: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          model?: string | null
+          role: string
+          session_id: string
+          sources?: string[] | null
+          tokens_used?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          model?: string | null
+          role?: string
+          session_id?: string
+          sources?: string[] | null
+          tokens_used?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "research_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      research_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          last_message_at: string | null
+          session_identifier: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message_at?: string | null
+          session_identifier: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message_at?: string | null
+          session_identifier?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       scenes: {
         Row: {
           created_at: string
@@ -4670,6 +4824,98 @@ export type Database = {
           referral_source?: string | null
           shared_count?: number | null
           user_agent?: string | null
+        }
+        Relationships: []
+      }
+      wallet_flow_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          model: string | null
+          role: string
+          session_id: string
+          tokens_used: number | null
+          tool_call_id: string | null
+          tool_calls: Json | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          model?: string | null
+          role: string
+          session_id: string
+          tokens_used?: number | null
+          tool_call_id?: string | null
+          tool_calls?: Json | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          model?: string | null
+          role?: string
+          session_id?: string
+          tokens_used?: number | null
+          tool_call_id?: string | null
+          tool_calls?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_flow_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_flow_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_flow_sessions: {
+        Row: {
+          agent_balance: number
+          agent_wallet_address: string
+          created_at: string
+          current_stage: number
+          id: string
+          last_message_at: string | null
+          metadata: Json | null
+          seller_balance: number
+          seller_wallet_address: string
+          session_identifier: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agent_balance?: number
+          agent_wallet_address: string
+          created_at?: string
+          current_stage?: number
+          id?: string
+          last_message_at?: string | null
+          metadata?: Json | null
+          seller_balance?: number
+          seller_wallet_address: string
+          session_identifier: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agent_balance?: number
+          agent_wallet_address?: string
+          created_at?: string
+          current_stage?: number
+          id?: string
+          last_message_at?: string | null
+          metadata?: Json | null
+          seller_balance?: number
+          seller_wallet_address?: string
+          session_identifier?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
