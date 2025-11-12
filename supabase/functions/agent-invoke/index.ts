@@ -95,6 +95,7 @@ serve(async (req) => {
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
     const mcpServerUrl = Deno.env.get('MCP_SERVER_URL') || 'http://localhost:8974';
     const mcpBearerToken = Deno.env.get('MCP_BEARER_TOKEN');
+    const enabledTools = Array.isArray(agent.tools_enabled) ? agent.tools_enabled : [];
 
     const enabledTools = Array.isArray(agent.tools_enabled) ? agent.tools_enabled : [];
 
@@ -143,6 +144,10 @@ Return your plan as a JSON array of steps:
     const planningData = await planningResponse.json();
     const plan = JSON.parse(planningData.choices[0].message.content);
 
+    if (!Array.isArray(plan)) {
+      throw new Error('Planning response must be an array of steps.');
+    }
+
     console.log('Execution plan generated:', plan);
 
     // Log planning completion
@@ -178,7 +183,7 @@ Return your plan as a JSON array of steps:
         JSON.stringify({
           status: 'approval_required',
           correlationId,
-          plan: plan.steps,
+          plan,
           approvalRequestId: approvalRequest.id,
           message: 'Plan requires approval before execution',
         }),
@@ -189,7 +194,7 @@ Return your plan as a JSON array of steps:
     // Step 3: Execute plan (auto-approved or no approval required)
     const executionResults = [];
 
-    for (const step of plan.steps) {
+    for (const step of plan) {
       console.log(`Executing step: ${step.tool}`);
 
       // Verify tool is enabled for this agent
@@ -306,7 +311,7 @@ Return your plan as a JSON array of steps:
         correlationId,
         response: finalResponse,
         executionResults,
-        plan: plan.steps,
+        plan,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
