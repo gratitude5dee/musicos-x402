@@ -60,7 +60,8 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
       className="fixed left-0 top-0 h-screen flex flex-col border-r border-blue-primary/40 shadow-blue-glow transition-all duration-300 overflow-hidden z-30"
       initial={false}
       animate={{ 
-        width: isExpanded ? '16rem' : '4.5rem'
+        x: isExpanded ? 0 : '-100%',
+        width: '16rem'
       }}
       transition={{ duration: 0.25, ease: "easeOut" }}
       onMouseEnter={handleMouseEnter}
