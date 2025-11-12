@@ -9,18 +9,21 @@ interface FuturisticCursorProps {
 const FuturisticCursor: React.FC<FuturisticCursorProps> = ({ 
   isLoading = false 
 }) => {
-  const [position, setPosition] = useState({ x: -100, y: -100 });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const cursorRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
+    // Set initial visibility
+    setIsVisible(true);
+    
     // Cursor movement handler with optimization using requestAnimationFrame
     let rafId: number;
-    let lastX = -100;
-    let lastY = -100;
+    let lastX = 0;
+    let lastY = 0;
     
     const handleMouseMove = (e: MouseEvent) => {
       // Cancel any pending animation frame

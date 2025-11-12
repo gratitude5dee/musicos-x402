@@ -19,7 +19,7 @@
 /* Base cursor styles */
 .futuristic-cursor {
   position: fixed;
-  z-index: 10000;
+  z-index: 99999;
   pointer-events: none;
   width: 24px;
   height: 24px;
@@ -27,6 +27,7 @@
   transition: opacity 0.2s ease;
   opacity: 1;
   will-change: transform;
+  mix-blend-mode: screen;
 }
 
 .futuristic-cursor.hidden {
