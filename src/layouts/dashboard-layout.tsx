@@ -10,13 +10,15 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Default to collapsed
 
   // Listen for sidebar state changes from localStorage
   useEffect(() => {
     const checkSidebarState = () => {
       const savedState = localStorage.getItem('sidebarCollapsed');
-      setSidebarCollapsed(savedState === 'true');
+      if (savedState !== null) {
+        setSidebarCollapsed(savedState === 'true');
+      }
     };
 
     // Initial check
@@ -38,8 +40,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <div className="min-h-screen bg-transparent">
       <Sidebar navItems={navItems} />
       <div 
-        className="relative transition-all duration-300"
-        style={{ marginLeft: sidebarCollapsed ? '4.5rem' : '16rem' }}
+        className="relative min-h-screen transition-all duration-300"
+        style={{ 
+          marginLeft: sidebarCollapsed ? '4.5rem' : '16rem',
+          width: `calc(100% - ${sidebarCollapsed ? '4.5rem' : '16rem'})`
+        }}
       >
         <MainContent>{children}</MainContent>
       </div>
