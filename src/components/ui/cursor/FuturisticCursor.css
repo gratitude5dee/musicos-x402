@@ -27,7 +27,6 @@
   transition: opacity 0.2s ease;
   opacity: 1;
   will-change: transform;
-  mix-blend-mode: screen;
 }
 
 .futuristic-cursor.hidden {
