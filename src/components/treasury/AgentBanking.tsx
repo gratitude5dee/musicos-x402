@@ -7,6 +7,7 @@ import AccountDashboard from "@/components/treasury/banking/AccountDashboard";
 import BankingControls from "@/components/treasury/banking/BankingControls";
 import ActivityTab from "@/components/treasury/banking/ActivityTab";
 import ApiIntegration from "@/components/treasury/banking/ApiIntegration";
+import { TreasuryAgentActions } from "@/components/treasury/TreasuryAgentActions";
 import { Landmark } from "lucide-react";
 import { toast } from "sonner";
 
@@ -60,6 +61,9 @@ const AgentBanking: React.FC = () => {
             <TabsTrigger value="integration" className="data-[state=active]:bg-blue-primary data-[state=active]:text-white data-[state=active]:shadow-blue-glow font-medium text-blue-lightest">
               API Integration
             </TabsTrigger>
+            <TabsTrigger value="treasury-actions" className="data-[state=active]:bg-blue-primary data-[state=active]:text-white data-[state=active]:shadow-blue-glow font-medium text-blue-lightest">
+              Treasury Actions
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview" className="outline-none">
@@ -76,6 +80,10 @@ const AgentBanking: React.FC = () => {
           
           <TabsContent value="integration" className="outline-none">
             <ApiIntegration />
+          </TabsContent>
+          
+          <TabsContent value="treasury-actions" className="outline-none">
+            <TreasuryAgentActions />
           </TabsContent>
         </Tabs>
       )}

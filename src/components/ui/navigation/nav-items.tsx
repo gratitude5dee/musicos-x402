@@ -10,7 +10,7 @@ import {
   Database, ShoppingCart, Eye, Building, Building2, Trees, ArrowRightLeft, Share2, Link, Tv, 
   User, Music, Landmark, TrendingUp, Droplets, CreditCard, Calendar, UserCircle,
   Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart, 
-  Home, Banknote, Zap, Receipt, BarChart3
+  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare
 } from "lucide-react";
 
 export const navItems = [{
@@ -146,6 +146,11 @@ export const navItems = [{
       name: "Create New Agent",
       path: "/create-agent",
       icon: NavAgentIcon
+    },
+    {
+      name: "Agent Chat",
+      path: "/agent-chat",
+      icon: MessageSquare
     },
     {
       name: "My Agents",

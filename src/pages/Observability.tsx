@@ -3,7 +3,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Activity, FlaskConical, Target, TrendingUp, Terminal, Heart, ScrollText, Bell } from "lucide-react";
+import { Activity, FlaskConical, Target, TrendingUp, Terminal, Heart, ScrollText, Bell, Monitor } from "lucide-react";
 import { ObservabilityDashboard } from "@/components/observability/ObservabilityDashboard";
 import { EvalsFramework } from "@/components/observability/EvalsFramework";
 import { ClusterAnalysis } from "@/components/observability/ClusterAnalysis";
@@ -12,6 +12,7 @@ import { AlertsManagement } from "@/components/observability/AlertsManagement";
 import { LogsViewer } from "@/components/observability/LogsViewer";
 import CommandCenter from "@/components/observability/CommandCenter";
 import AgentHealthMonitor from "@/components/observability/AgentHealthMonitor";
+import { AgentActivityMonitor } from "@/components/agents/AgentActivityMonitor";
 
 const Observability = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -45,7 +46,7 @@ const Observability = () => {
 
         {/* Navigation Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 lg:grid-cols-8 w-full bg-card/50 backdrop-blur-md border border-border/50 p-1">
+          <TabsList className="grid grid-cols-4 lg:grid-cols-9 w-full bg-card/50 backdrop-blur-md border border-border/50 p-1">
             <TabsTrigger value="dashboard" className="gap-2">
               <Activity className="w-4 h-4" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -69,6 +70,10 @@ const Observability = () => {
             <TabsTrigger value="health" className="gap-2">
               <Heart className="w-4 h-4" />
               <span className="hidden sm:inline">Health</span>
+            </TabsTrigger>
+            <TabsTrigger value="activity" className="gap-2">
+              <Monitor className="w-4 h-4" />
+              <span className="hidden sm:inline">Activity</span>
             </TabsTrigger>
             <TabsTrigger value="logs" className="gap-2">
               <ScrollText className="w-4 h-4" />
@@ -102,6 +107,10 @@ const Observability = () => {
 
           <TabsContent value="health" className="space-y-6">
             <AgentHealthMonitor />
+          </TabsContent>
+
+          <TabsContent value="activity" className="space-y-6">
+            <AgentActivityMonitor />
           </TabsContent>
 
           <TabsContent value="logs" className="space-y-6">
