@@ -9,7 +9,7 @@ interface MainContentProps {
 
 const MainContent = ({ children }: MainContentProps) => {
   return (
-    <div className="flex-1 min-h-screen flex flex-col w-full overflow-hidden relative bg-transparent">
+    <div className="min-h-screen flex flex-col w-full relative bg-transparent">
       {/* Cloud GLSL Shader Background */}
       <CloudShader />
       

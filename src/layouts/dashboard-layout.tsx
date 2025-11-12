@@ -1,5 +1,5 @@
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import Sidebar from "@/components/ui/sidebar/sidebar";
 import MainContent from "@/components/ui/layout/main-content";
 import { navItems } from "@/components/ui/navigation/nav-items";
@@ -10,10 +10,37 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Listen for sidebar state changes from localStorage
+  useEffect(() => {
+    const checkSidebarState = () => {
+      const savedState = localStorage.getItem('sidebarCollapsed');
+      setSidebarCollapsed(savedState === 'true');
+    };
+
+    // Initial check
+    checkSidebarState();
+
+    // Listen for storage changes (when sidebar toggles)
+    window.addEventListener('storage', checkSidebarState);
+    
+    // Also poll for changes since storage events don't fire in the same tab
+    const interval = setInterval(checkSidebarState, 100);
+
+    return () => {
+      window.removeEventListener('storage', checkSidebarState);
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col bg-transparent overflow-hidden">
-      <div className="flex flex-1 z-10 relative">
-        <Sidebar navItems={navItems} />
+    <div className="min-h-screen flex bg-transparent">
+      <Sidebar navItems={navItems} />
+      <div 
+        className="flex-1 transition-all duration-300"
+        style={{ marginLeft: sidebarCollapsed ? '4.5rem' : '16rem' }}
+      >
         <MainContent>{children}</MainContent>
       </div>
       <FuturisticCursor />
