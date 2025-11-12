@@ -9,8 +9,8 @@ import {
   Palette, BookOpen, Headphones, Infinity, UserRound, Users, Shield, Globe, 
   Database, ShoppingCart, Eye, Building, Building2, Trees, ArrowRightLeft, Share2, Link, Tv, 
   User, Music, Landmark, TrendingUp, Droplets, CreditCard, Calendar, UserCircle,
-  Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart, 
-  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare
+  Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart,
+  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare, Radar
 } from "lucide-react";
 
 export const navItems = [{
@@ -179,6 +179,12 @@ export const navItems = [{
           icon: Shield
         }
       ]
+    },
+    {
+      name: "Scan Agents",
+      path: "/agents/scan",
+      icon: Radar,
+      isNew: true,
     },
     {
       name: "Integrations",

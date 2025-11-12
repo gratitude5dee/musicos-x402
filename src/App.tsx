@@ -57,6 +57,7 @@ import PaymentsView from "./pages/agents/PaymentsView";
 import InvoiceAgent from "./pages/agents/InvoiceAgent";
 import SocialMediaAgent from "./pages/agents/SocialMediaAgent";
 import ContractAgent from "./pages/agents/ContractAgent";
+import AgentScanPage from "./pages/agents/scan/ScanPage";
 import { AgentChat } from "./components/agents/AgentChat";
 
 // Distribution Pages
@@ -144,6 +145,7 @@ function App() {
                       <Route path="/collection/invoice-agent" element={<ProtectedRoute><InvoiceAgent /></ProtectedRoute>} />
                       <Route path="/collection/social-media" element={<ProtectedRoute><SocialMediaAgent /></ProtectedRoute>} />
                       <Route path="/collection/contract-agent" element={<ProtectedRoute><ContractAgent /></ProtectedRoute>} />
+                      <Route path="/agents/scan" element={<ProtectedRoute><AgentScanPage /></ProtectedRoute>} />
 
                       {/* Distribution Routes - Protected */}
                       <Route path="/distribution" element={<ProtectedRoute><DistributionOverview /></ProtectedRoute>} />

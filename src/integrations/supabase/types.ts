@@ -88,6 +88,51 @@ export type Database = {
           },
         ]
       }
+      agent_scan_events: {
+        Row: {
+          agent_id: string
+          id: string
+          metadata: Json | null
+          resource_count: number | null
+          scanned_at: string
+          transaction_count: number | null
+          user_id: string
+        }
+        Insert: {
+          agent_id: string
+          id?: string
+          metadata?: Json | null
+          resource_count?: number | null
+          scanned_at?: string
+          transaction_count?: number | null
+          user_id: string
+        }
+        Update: {
+          agent_id?: string
+          id?: string
+          metadata?: Json | null
+          resource_count?: number | null
+          scanned_at?: string
+          transaction_count?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_scan_events_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_scan_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agents: {
         Row: {
           capabilities: Json | null
@@ -5184,6 +5229,41 @@ export type Database = {
         Returns: {
           period: string
           signup_count: number
+        }[]
+      }
+      get_agent_scan_analytics: {
+        Args: {
+          p_agent_id: string
+          p_time_range?: string
+        }
+        Returns: Json
+      }
+      get_agent_scan_summaries: {
+        Args: {
+          p_facilitator?: string | null
+          p_network?: string | null
+          p_resource_type?: string | null
+          p_time_range?: string
+          p_limit?: number
+          p_offset?: number
+        }
+        Returns: {
+          agent_id: string
+          agent_name: string
+          agent_type: string
+          agent_status: string
+          user_id: string
+          created_at: string
+          last_active_at: string | null
+          activity_count: number
+          success_rate: number
+          avg_latency: number
+          avg_tokens: number
+          transaction_count: number
+          transaction_volume: number
+          resource_count: number
+          metadata: Json | null
+          total_count: number
         }[]
       }
       get_waitlist_count: { Args: never; Returns: number }
