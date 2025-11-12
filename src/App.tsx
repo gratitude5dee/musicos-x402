@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { WalletProvider } from "@/context/WalletContext";
 import { OnboardingProvider } from "@/context/OnboardingContext";
+import { AgentProvider } from "@/context/AgentContext";
 import { SolanaProvider } from "@/components/providers/SolanaProvider";
 import { EnhancedAuthProvider } from "@/context/EnhancedAuthContext";
 import { ProtectedRoute } from "@/components/ui/ProtectedRoute";
@@ -86,9 +87,10 @@ function App() {
             <EnhancedAuthProvider>
               <WalletProvider>
                 <OnboardingProvider>
-                  <TooltipProvider>
-                    <Toaster />
-                    <Routes>
+                  <AgentProvider>
+                    <TooltipProvider>
+                      <Toaster />
+                      <Routes>
                       {/* Public routes */}
                       <Route path="/" element={<FYILanding />} />
                       <Route path="/auth" element={<Auth />} />
@@ -158,8 +160,9 @@ function App() {
                       <Route path="/wzrd/companions" element={<ProtectedRoute><WzrdCompanions /></ProtectedRoute>} />
 
                       <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </TooltipProvider>
+                      </Routes>
+                    </TooltipProvider>
+                  </AgentProvider>
                 </OnboardingProvider>
               </WalletProvider>
             </EnhancedAuthProvider>
