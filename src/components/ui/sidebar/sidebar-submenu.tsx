@@ -17,6 +17,7 @@ interface SubmenuProps {
       name: string;
       path: string;
       icon: React.ComponentType<{ className?: string; isGlowing?: boolean; glowColor?: "highlight" | "accent" | "white" }>;
+      isNew?: boolean;
     }[];
   }[];
   currentPath: string;

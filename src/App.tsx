@@ -78,6 +78,13 @@ import WzrdCompanions from "./pages/wzrd/WzrdCompanions";
 
 import NotFound from "./pages/NotFound";
 
+// Composer Pages
+import ComposerHome from "./pages/composer/ComposerHome";
+import ComposerChat from "./pages/composer/ComposerChat";
+import ComposerAgents from "./pages/composer/ComposerAgents";
+import ComposerScan from "./pages/composer/ComposerScan";
+import ComposerFeed from "./pages/composer/ComposerFeed";
+
 const queryClient = new QueryClient();
 
 function App() {
@@ -162,6 +169,13 @@ function App() {
                       <Route path="/wzrd/podcasts" element={<ProtectedRoute><WzrdPodcasts /></ProtectedRoute>} />
                       <Route path="/wzrd/infinite-library" element={<ProtectedRoute><WzrdInfiniteLibrary /></ProtectedRoute>} />
                       <Route path="/wzrd/companions" element={<ProtectedRoute><WzrdCompanions /></ProtectedRoute>} />
+
+                      {/* Composer Routes - Protected */}
+                      <Route path="/composer" element={<ProtectedRoute><ComposerHome /></ProtectedRoute>} />
+                      <Route path="/composer/chat" element={<ProtectedRoute><ComposerChat /></ProtectedRoute>} />
+                      <Route path="/composer/agents" element={<ProtectedRoute><ComposerAgents /></ProtectedRoute>} />
+                      <Route path="/composer/scan" element={<ProtectedRoute><ComposerScan /></ProtectedRoute>} />
+                      <Route path="/composer/feed" element={<ProtectedRoute><ComposerFeed /></ProtectedRoute>} />
 
                       <Route path="*" element={<NotFound />} />
                       </Routes>
