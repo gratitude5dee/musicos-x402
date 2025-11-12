@@ -33,16 +33,11 @@ import {
 interface ActivityLog {
   id: string
   agent_id: string
-  correlation_id: string
+  user_id: string
   activity_type: string
-  tool_name: string | null
-  tool_status: 'success' | 'failure' | 'pending' | null
-  latency_ms: number | null
-  tokens_used: number | null
-  cost_usd: number | null
-  error_message: string | null
+  description: string | null
+  metadata: any
   created_at: string
-  completed_at: string | null
 }
 
 interface ActivityMetrics {
@@ -68,13 +63,13 @@ export function AgentActivityMonitor() {
     }
 
     const toolCalls = logs.filter((log) => log.activity_type === 'tool_call')
-    const successCount = toolCalls.filter((log) => log.tool_status === 'success').length
-    const totalLatency = toolCalls.reduce((sum, log) => sum + (log.latency_ms ?? 0), 0)
-    const totalCost = logs.reduce((sum, log) => sum + (log.cost_usd ?? 0), 0)
+    const successCount = toolCalls.filter((log) => log.metadata?.status === 'success').length
+    const totalLatency = toolCalls.reduce((sum, log) => sum + (log.metadata?.latency_ms ?? 0), 0)
+    const totalCost = logs.reduce((sum, log) => sum + (log.metadata?.cost_usd ?? 0), 0)
 
     const distributionMap = toolCalls.reduce((acc, log) => {
-      if (!log.tool_name) return acc
-      acc[log.tool_name] = (acc[log.tool_name] ?? 0) + 1
+      const toolName = log.metadata?.tool_name || log.activity_type
+      acc[toolName] = (acc[toolName] ?? 0) + 1
       return acc
     }, {} as Record<string, number>)
 
@@ -290,9 +285,13 @@ export function AgentActivityMonitor() {
                     <ResponsiveContainer width="100%" height={300}>
                       <LineChart
                         data={activityLogs
-                          .filter((log) => log.latency_ms != null)
+                          .filter((log) => log.metadata?.latency_ms != null)
                           .slice(0, 20)
-                          .reverse()}
+                          .reverse()
+                          .map(log => ({
+                            created_at: log.created_at,
+                            latency_ms: log.metadata?.latency_ms ?? 0
+                          }))}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
@@ -316,27 +315,32 @@ export function AgentActivityMonitor() {
 }
 
 function ActivityLogItem({ log }: { log: ActivityLog }) {
+  const status = log.metadata?.status || log.metadata?.tool_status
+  const toolName = log.metadata?.tool_name || log.activity_type
+  const latencyMs = log.metadata?.latency_ms
+  const errorMessage = log.metadata?.error_message || log.metadata?.error
+
   const getStatusIcon = () => {
-    if (log.tool_status === 'success') {
+    if (status === 'success') {
       return <CheckCircle2 className="h-5 w-5 text-green-500" />
     }
-    if (log.tool_status === 'failure') {
+    if (status === 'failure' || status === 'error') {
       return <XCircle className="h-5 w-5 text-red-500" />
     }
-    if (log.tool_status === 'pending') {
+    if (status === 'pending') {
       return <ClockIcon className="h-5 w-5 text-yellow-500" />
     }
     return <Activity className="h-5 w-5 text-blue-500" />
   }
 
   const getStatusBadge = () => {
-    if (log.tool_status === 'success') {
+    if (status === 'success') {
       return <Badge variant="default">Success</Badge>
     }
-    if (log.tool_status === 'failure') {
+    if (status === 'failure' || status === 'error') {
       return <Badge variant="destructive">Failed</Badge>
     }
-    if (log.tool_status === 'pending') {
+    if (status === 'pending') {
       return <Badge variant="secondary">Pending</Badge>
     }
     return <Badge variant="outline">{log.activity_type}</Badge>
@@ -354,7 +358,7 @@ function ActivityLogItem({ log }: { log: ActivityLog }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <p className="font-medium text-sm">{log.tool_name || log.activity_type}</p>
+            <p className="font-medium text-sm">{toolName}</p>
             {getStatusBadge()}
           </div>
           <p className="text-xs text-muted-foreground">
@@ -362,17 +366,21 @@ function ActivityLogItem({ log }: { log: ActivityLog }) {
           </p>
         </div>
 
-        {log.latency_ms != null && (
+        {log.description && (
+          <p className="text-xs text-muted-foreground mb-2">{log.description}</p>
+        )}
+
+        {latencyMs != null && (
           <p className="text-xs text-muted-foreground">
             <ClockIcon className="h-3 w-3 inline mr-1" />
-            {log.latency_ms}ms
+            {latencyMs}ms
           </p>
         )}
 
-        {log.error_message && (
+        {errorMessage && (
           <div className="mt-2 p-2 bg-destructive/10 border border-destructive/20 rounded text-xs text-destructive">
             <AlertCircle className="h-3 w-3 inline mr-1" />
-            {log.error_message}
+            {errorMessage}
           </div>
         )}
       </div>
