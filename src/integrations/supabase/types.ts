@@ -228,6 +228,65 @@ export type Database = {
         }
         Relationships: []
       }
+      audio_tracks: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          end_time_ms: number | null
+          id: string
+          is_muted: boolean | null
+          metadata: Json | null
+          name: string
+          project_id: string
+          start_time_ms: number | null
+          storage_bucket: string
+          storage_path: string
+          updated_at: string
+          user_id: string
+          volume: number | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          end_time_ms?: number | null
+          id?: string
+          is_muted?: boolean | null
+          metadata?: Json | null
+          name: string
+          project_id: string
+          start_time_ms?: number | null
+          storage_bucket: string
+          storage_path: string
+          updated_at?: string
+          user_id: string
+          volume?: number | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          end_time_ms?: number | null
+          id?: string
+          is_muted?: boolean | null
+          metadata?: Json | null
+          name?: string
+          project_id?: string
+          start_time_ms?: number | null
+          storage_bucket?: string
+          storage_path?: string
+          updated_at?: string
+          user_id?: string
+          volume?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audio_tracks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_analytics: {
         Row: {
           action_id: string | null
@@ -548,6 +607,136 @@ export type Database = {
         }
         Relationships: []
       }
+      canvas_assets: {
+        Row: {
+          asset_type: string
+          created_at: string
+          file_name: string
+          file_path: string
+          file_size: number
+          id: string
+          metadata: Json | null
+          mime_type: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          asset_type: string
+          created_at?: string
+          file_name: string
+          file_path: string
+          file_size: number
+          id?: string
+          metadata?: Json | null
+          mime_type: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          asset_type?: string
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          id?: string
+          metadata?: Json | null
+          mime_type?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canvas_assets_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "canvas_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canvas_objects: {
+        Row: {
+          created_at: string
+          data: Json
+          id: string
+          layer_index: number
+          locked: boolean
+          object_type: string
+          project_id: string
+          transform: Json
+          updated_at: string
+          visibility: boolean
+        }
+        Insert: {
+          created_at?: string
+          data: Json
+          id?: string
+          layer_index: number
+          locked?: boolean
+          object_type: string
+          project_id: string
+          transform?: Json
+          updated_at?: string
+          visibility?: boolean
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          id?: string
+          layer_index?: number
+          locked?: boolean
+          object_type?: string
+          project_id?: string
+          transform?: Json
+          updated_at?: string
+          visibility?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canvas_objects_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "canvas_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canvas_projects: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          settings: Json
+          thumbnail_url: string | null
+          updated_at: string
+          user_id: string
+          viewport: Json
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          settings?: Json
+          thumbnail_url?: string | null
+          updated_at?: string
+          user_id: string
+          viewport?: Json
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          settings?: Json
+          thumbnail_url?: string | null
+          updated_at?: string
+          user_id?: string
+          viewport?: Json
+        }
+        Relationships: []
+      }
       canvas_state: {
         Row: {
           canvas_settings: Json | null
@@ -579,6 +768,90 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: true
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canvas_timeline_edges: {
+        Row: {
+          created_at: string
+          edge_data: Json | null
+          id: string
+          project_id: string
+          source_id: string
+          target_id: string
+        }
+        Insert: {
+          created_at?: string
+          edge_data?: Json | null
+          id?: string
+          project_id: string
+          source_id: string
+          target_id: string
+        }
+        Update: {
+          created_at?: string
+          edge_data?: Json | null
+          id?: string
+          project_id?: string
+          source_id?: string
+          target_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canvas_timeline_edges_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "canvas_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canvas_timeline_edges_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "canvas_timeline_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "canvas_timeline_edges_target_id_fkey"
+            columns: ["target_id"]
+            isOneToOne: false
+            referencedRelation: "canvas_timeline_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      canvas_timeline_nodes: {
+        Row: {
+          created_at: string
+          data: Json
+          id: string
+          node_type: string
+          position: Json
+          project_id: string
+        }
+        Insert: {
+          created_at?: string
+          data: Json
+          id?: string
+          node_type: string
+          position?: Json
+          project_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          id?: string
+          node_type?: string
+          position?: Json
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "canvas_timeline_nodes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "canvas_projects"
             referencedColumns: ["id"]
           },
         ]
@@ -1420,6 +1693,92 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      execution_node_status: {
+        Row: {
+          created_at: string | null
+          error: string | null
+          id: string
+          node_id: string
+          outputs: Json | null
+          progress: number | null
+          run_id: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          node_id: string
+          outputs?: Json | null
+          progress?: number | null
+          run_id: string
+          status: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          node_id?: string
+          outputs?: Json | null
+          progress?: number | null
+          run_id?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "execution_node_status_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "execution_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      execution_runs: {
+        Row: {
+          completed_nodes: number
+          created_at: string | null
+          error_message: string | null
+          execution_order: Json | null
+          finished_at: string | null
+          id: string
+          project_id: string
+          started_at: string | null
+          status: string
+          total_nodes: number
+          updated_at: string | null
+        }
+        Insert: {
+          completed_nodes?: number
+          created_at?: string | null
+          error_message?: string | null
+          execution_order?: Json | null
+          finished_at?: string | null
+          id?: string
+          project_id: string
+          started_at?: string | null
+          status: string
+          total_nodes?: number
+          updated_at?: string | null
+        }
+        Update: {
+          completed_nodes?: number
+          created_at?: string | null
+          error_message?: string | null
+          execution_order?: Json | null
+          finished_at?: string | null
+          id?: string
+          project_id?: string
+          started_at?: string | null
+          status?: string
+          total_nodes?: number
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       falai_job_updates: {
         Row: {
@@ -3419,6 +3778,61 @@ export type Database = {
           },
         ]
       }
+      studio_connections: {
+        Row: {
+          animated: boolean | null
+          created_at: string | null
+          id: string
+          project_id: string
+          source_block_id: string
+          source_handle: string | null
+          target_block_id: string
+          target_handle: string | null
+        }
+        Insert: {
+          animated?: boolean | null
+          created_at?: string | null
+          id?: string
+          project_id: string
+          source_block_id: string
+          source_handle?: string | null
+          target_block_id: string
+          target_handle?: string | null
+        }
+        Update: {
+          animated?: boolean | null
+          created_at?: string | null
+          id?: string
+          project_id?: string
+          source_block_id?: string
+          source_handle?: string | null
+          target_block_id?: string
+          target_handle?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_connections_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_connections_source_block_id_fkey"
+            columns: ["source_block_id"]
+            isOneToOne: false
+            referencedRelation: "studio_blocks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_connections_target_block_id_fkey"
+            columns: ["target_block_id"]
+            isOneToOne: false
+            referencedRelation: "studio_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tech_packs: {
         Row: {
           created_at: string | null
@@ -4086,6 +4500,74 @@ export type Database = {
         }
         Relationships: []
       }
+      video_clips: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          end_time_ms: number | null
+          id: string
+          layer: number | null
+          metadata: Json | null
+          name: string
+          project_id: string
+          start_time_ms: number | null
+          storage_bucket: string
+          storage_path: string
+          thumbnail_bucket: string | null
+          thumbnail_path: string | null
+          transforms: Json | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          end_time_ms?: number | null
+          id?: string
+          layer?: number | null
+          metadata?: Json | null
+          name: string
+          project_id: string
+          start_time_ms?: number | null
+          storage_bucket: string
+          storage_path: string
+          thumbnail_bucket?: string | null
+          thumbnail_path?: string | null
+          transforms?: Json | null
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          end_time_ms?: number | null
+          id?: string
+          layer?: number | null
+          metadata?: Json | null
+          name?: string
+          project_id?: string
+          start_time_ms?: number | null
+          storage_bucket?: string
+          storage_path?: string
+          thumbnail_bucket?: string | null
+          thumbnail_path?: string | null
+          transforms?: Json | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_clips_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       video_highlights: {
         Row: {
           created_at: string | null
@@ -4425,18 +4907,9 @@ export type Database = {
         Args: { func_name: string; max_calls?: number; window_minutes?: number }
         Returns: boolean
       }
-      generate_board_slug: {
-        Args: { board_title: string }
-        Returns: string
-      }
-      generate_invoice_number: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_available_credits: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      generate_board_slug: { Args: { board_title: string }; Returns: string }
+      generate_invoice_number: { Args: never; Returns: string }
+      get_available_credits: { Args: never; Returns: number }
       get_dashboard_stats: {
         Args: { user_id_param: string }
         Returns: {
@@ -4452,10 +4925,7 @@ export type Database = {
           upcoming_gigs: number
         }[]
       }
-      get_public_waitlist_count: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      get_public_waitlist_count: { Args: never; Returns: number }
       get_recent_signups_admin: {
         Args: { limit_count?: number }
         Returns: {
@@ -4464,16 +4934,13 @@ export type Database = {
         }[]
       }
       get_waitlist_activity: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           period: string
           signup_count: number
         }[]
       }
-      get_waitlist_count: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      get_waitlist_count: { Args: never; Returns: number }
       is_authenticated_user: {
         Args: { requested_user_id: string }
         Returns: boolean
