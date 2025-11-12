@@ -32,6 +32,7 @@ export interface Logger {
   info(message: string, meta?: Record<string, unknown>): void;
   warn(message: string, meta?: Record<string, unknown>): void;
   error(message: string, meta?: Record<string, unknown>): void;
+  child(bindings: Record<string, unknown>): Logger;
 }
 
 export interface SupabaseFunctionsLike {
@@ -74,6 +75,10 @@ export interface Config {
   mode: "mock" | "live";
   port: number;
   bearerToken: string;
+  logLevel?: string;
+  enableMetrics: boolean;
+  enableTracing: boolean;
+  sentryDsn?: string;
   supabase: {
     url?: string;
     anonKey?: string;

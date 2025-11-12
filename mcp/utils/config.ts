@@ -18,8 +18,28 @@ function parseNumberEnv(name: string, fallback: number): number {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function parseBooleanEnv(name: string, fallback: boolean): boolean {
+  const value = process.env[name];
+  if (!value) return fallback;
+  const normalized = value.toLowerCase();
+  if (["true", "1", "yes", "y", "on"].includes(normalized)) {
+    return true;
+  }
+  if (["false", "0", "no", "n", "off"].includes(normalized)) {
+    return false;
+  }
+  return fallback;
+}
+
 export function loadConfig(): Config {
   const mode = (process.env.MCP_MODE ?? "mock").toLowerCase() === "live" ? "live" : "mock";
+
+  const kbDefaultLimit = parseNumberEnv(
+    "MCP_KB_DEFAULT_LIMIT",
+    parseNumberEnv("MCP_KB_DEFAULT_TOPK", 5)
+  );
+  const kbThresholdEnv =
+    process.env.MCP_KB_SIMILARITY_THRESHOLD ?? process.env.MCP_KB_DEFAULT_THRESHOLD ?? "0.25";
 
   const allowlistedSql = parseJsonEnv<Record<string, string>>("MCP_ALLOWLISTED_SQL", {
     list_creator_assets: "select * from creator_assets where creator_id = :creator_id limit :limit",
@@ -42,6 +62,10 @@ export function loadConfig(): Config {
     mode,
     port: parseNumberEnv("MCP_PORT", 8974),
     bearerToken: process.env.MCP_BEARER_TOKEN ?? "dev-secret",
+    logLevel: process.env.MCP_LOG_LEVEL,
+    enableMetrics: parseBooleanEnv("MCP_ENABLE_METRICS", false),
+    enableTracing: parseBooleanEnv("MCP_ENABLE_TRACING", false),
+    sentryDsn: process.env.MCP_SENTRY_DSN,
     supabase: {
       url: process.env.MCP_SUPABASE_URL,
       anonKey: process.env.MCP_SUPABASE_ANON_KEY,
@@ -76,8 +100,8 @@ export function loadConfig(): Config {
       embeddingModel: process.env.MCP_KB_EMBEDDING_MODEL ?? "text-embedding-3-small",
       embeddingEndpoint: process.env.MCP_EMBEDDING_ENDPOINT,
       embeddingApiKey: process.env.MCP_EMBEDDING_API_KEY,
-      defaultTopK: parseNumberEnv("MCP_KB_DEFAULT_TOPK", 5),
-      defaultThreshold: Number.parseFloat(process.env.MCP_KB_DEFAULT_THRESHOLD ?? "0.25")
+      defaultTopK: kbDefaultLimit,
+      defaultThreshold: Number.parseFloat(kbThresholdEnv)
     },
     webSearch: {
       provider: (process.env.MCP_WEB_SEARCH_PROVIDER as "tavily" | "custom" | undefined) ?? "tavily",

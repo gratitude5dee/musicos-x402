@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./mcp/dist",
+    "rootDir": "./",
+    "module": "CommonJS",
+    "target": "ES2022",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  },
+  "include": ["mcp/**/*.ts"],
+  "exclude": ["node_modules", "mcp/dist"]
+}

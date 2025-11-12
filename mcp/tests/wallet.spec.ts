@@ -1,12 +1,12 @@
 import { describe, it, expect } from "bun:test";
-import { createWalletTransferTool, createConfirmationToken } from "../tools/wallet_transfer";
+import { createWalletTransferTool, generateConfirmationToken } from "../tools/wallet_transfer";
 import { createMockConfig, createMockContext } from "./helpers";
 
 describe("wallet_transfer", () => {
   it("rejects when amount exceeds max", async () => {
     const tool = createWalletTransferTool(createMockConfig());
     const context = createMockContext();
-    const token = createConfirmationToken(
+    const token = generateConfirmationToken(
       context.config.wallet.confirmationSecret!,
       {
         fromWallet: "from",
@@ -35,7 +35,7 @@ describe("wallet_transfer", () => {
       toWallet: "to",
       amountSol: 1
     };
-    const token = createConfirmationToken(config.wallet.confirmationSecret!, payload);
+    const token = generateConfirmationToken(config.wallet.confirmationSecret!, payload);
     const input = {
       ...payload,
       confirmationToken: token,

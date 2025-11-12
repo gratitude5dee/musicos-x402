@@ -1,4 +1,4 @@
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { Config, ToolContext, ToolDefinition } from "../types";
 import { assertSchema } from "../utils/schema";
 
@@ -51,6 +51,7 @@ type Output = {
 };
 
 const memoryIdempotency = new Map<string, string>();
+const IDEMPOTENCY_SALT = "wallet-transfer-idempotency";
 
 interface ConfirmationPayload {
   fromWallet: string;
@@ -60,10 +61,12 @@ interface ConfirmationPayload {
 }
 
 function computePayloadHash(payload: ConfirmationPayload): string {
-  return createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+  return createHmac("sha256", IDEMPOTENCY_SALT)
+    .update(JSON.stringify(payload))
+    .digest("hex");
 }
 
-export function createConfirmationToken(
+export function generateConfirmationToken(
   secret: string,
   payload: ConfirmationPayload,
   now: Date = new Date()
@@ -129,19 +132,28 @@ async function ensureIdempotency(
     return duplicate;
   }
 
-  const { data, error } = await context.supabase.rpc<{
-    was_processed: boolean;
-  }>(context.config.idempotency.rpcName!, {
-    idempotency_key: key,
-    payload_hash: payloadHash,
-    ttl_seconds: context.config.idempotency.ttlSeconds
-  });
+  const { data, error } = await context.supabase.rpc(
+    context.config.idempotency.rpcName!,
+    {
+      p_idempotency_key: key,
+      p_payload_hash: payloadHash,
+      p_tool_name: "wallet_transfer"
+    }
+  );
 
   if (error) {
     throw new Error(`Idempotency RPC failed: ${error.message}`);
   }
 
-  return data?.was_processed ?? false;
+  if (typeof data === "boolean") {
+    return data;
+  }
+
+  if (data && typeof data === "object" && "was_processed" in data) {
+    return Boolean((data as { was_processed: boolean }).was_processed);
+  }
+
+  return false;
 }
 
 export function createWalletTransferTool(
@@ -187,6 +199,11 @@ export function createWalletTransferTool(
       }
 
       if (config.mode === "mock" || config.crossmint.dryRun) {
+        context.logger.info("Wallet transfer executed in mock mode", {
+          fromWallet: rawInput.fromWallet.slice(0, 8),
+          toWallet: rawInput.toWallet.slice(0, 8),
+          amountSol: rawInput.amountSol
+        });
         return {
           status: "mocked",
           idempotencyKey: rawInput.idempotencyKey,
@@ -225,6 +242,13 @@ export function createWalletTransferTool(
         throw new Error(`transfer function failed: ${error.message}`);
       }
 
+      context.logger.info("Wallet transfer submitted", {
+        fromWallet: rawInput.fromWallet.slice(0, 8),
+        toWallet: rawInput.toWallet.slice(0, 8),
+        amountSol: rawInput.amountSol,
+        signature: data?.signature
+      });
+
       return {
         status: "submitted",
         idempotencyKey: rawInput.idempotencyKey,
@@ -235,3 +259,4 @@ export function createWalletTransferTool(
     }
   };
 }
+

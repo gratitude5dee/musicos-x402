@@ -5,6 +5,10 @@ export function createMockConfig(): Config {
     mode: "mock",
     port: 0,
     bearerToken: "test-token",
+    logLevel: "debug",
+    enableMetrics: false,
+    enableTracing: false,
+    sentryDsn: undefined,
     supabase: {
       url: "",
       anonKey: "",
@@ -68,7 +72,10 @@ function createMockLogger(): Logger {
     debug() {},
     info() {},
     warn() {},
-    error() {}
+    error() {},
+    child() {
+      return createMockLogger();
+    }
   };
 }
 
@@ -76,7 +83,7 @@ export function createMockSupabase(): SupabaseClientLike {
   return {
     async rpc(fn: string) {
       if (fn === "ensure_idempotency_key") {
-        return { data: { was_processed: false }, error: null };
+        return { data: false, error: null };
       }
       if (fn === "run_allowlisted_sql") {
         return {
