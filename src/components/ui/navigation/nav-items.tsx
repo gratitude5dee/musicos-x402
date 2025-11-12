@@ -10,7 +10,7 @@ import {
   Database, ShoppingCart, Eye, Building, Building2, Trees, ArrowRightLeft, Share2, Link, Tv,
   User, Music, Landmark, TrendingUp, Droplets, CreditCard, Calendar, UserCircle,
   Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart,
-  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare, Radar
+  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare, Radar, Sparkles, ScanLine, Rss
 } from "lucide-react";
 
 export const navItems = [{
@@ -160,13 +160,13 @@ export const navItems = [{
     {
       name: "Scan",
       path: "/composer/scan",
-      icon: Scan,
+      icon: ScanLine,
       isNew: true
     },
     {
       name: "Feed",
       path: "/composer/feed",
-      icon: Radio
+      icon: Rss
     }
   ]
 }, {
