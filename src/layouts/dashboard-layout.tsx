@@ -10,13 +10,15 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Default to collapsed
 
   // Listen for sidebar state changes from localStorage
   useEffect(() => {
     const checkSidebarState = () => {
       const savedState = localStorage.getItem('sidebarCollapsed');
-      setSidebarCollapsed(savedState === 'true');
+      if (savedState !== null) {
+        setSidebarCollapsed(savedState === 'true');
+      }
     };
 
     // Initial check
