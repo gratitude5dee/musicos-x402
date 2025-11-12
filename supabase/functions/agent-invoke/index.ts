@@ -96,6 +96,8 @@ serve(async (req) => {
     const mcpServerUrl = Deno.env.get('MCP_SERVER_URL') || 'http://localhost:8974';
     const mcpBearerToken = Deno.env.get('MCP_BEARER_TOKEN');
 
+    const enabledTools = Array.isArray(agent.tools_enabled) ? agent.tools_enabled : [];
+
     // Step 1: Planning phase - Generate execution plan
     const planningResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -140,7 +142,6 @@ Return your plan as a JSON array of steps:
 
     const planningData = await planningResponse.json();
     const plan = JSON.parse(planningData.choices[0].message.content);
-    const enabledTools = Array.isArray(agent.tools_enabled) ? agent.tools_enabled : [];
 
     console.log('Execution plan generated:', plan);
 
