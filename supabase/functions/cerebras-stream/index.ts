@@ -90,8 +90,6 @@ serve(async (req) => {
     }
 
     const hasAccess = board.user_id === user.id || Boolean(collaborator);
-
-    const hasAccess = board.user_id === user.id || Boolean(collaborator);
     if (!hasAccess) {
       throw new Error('Access denied to this board');
     }

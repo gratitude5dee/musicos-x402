@@ -34,7 +34,7 @@ const getCryptoKey = async () => {
 
   return crypto.subtle.importKey(
     'raw',
-    rawKey,
+    rawKey.buffer as ArrayBuffer,
     { name: 'AES-GCM' },
     false,
     ['encrypt', 'decrypt']
@@ -44,32 +44,6 @@ const getCryptoKey = async () => {
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-if (!encryptionKeyBase64) {
-  throw new Error('USER_SECRETS_ENCRYPTION_KEY is not configured');
-}
-
-await sodium.ready;
-const encryptionKey = sodium.from_base64(encryptionKeyBase64, sodium.base64_variants.ORIGINAL);
-if (encryptionKey.length !== sodium.crypto_secretbox_KEYBYTES) {
-  throw new Error('USER_SECRETS_ENCRYPTION_KEY must be a 32-byte key encoded in base64');
-}
-
-const encryptSecret = (value: string) => {
-  const nonce = sodium.randombytes_buf(sodium.crypto_secretbox_NONCEBYTES);
-  const ciphertext = sodium.crypto_secretbox_easy(value, nonce, encryptionKey);
-  return {
-    ciphertext: sodium.to_base64(ciphertext, sodium.base64_variants.ORIGINAL),
-    nonce: sodium.to_base64(nonce, sodium.base64_variants.ORIGINAL),
-  };
-};
-
-const decryptSecret = (ciphertextBase64: string, nonceBase64: string) => {
-  const ciphertext = sodium.from_base64(ciphertextBase64, sodium.base64_variants.ORIGINAL);
-  const nonce = sodium.from_base64(nonceBase64, sodium.base64_variants.ORIGINAL);
-  const decrypted = sodium.crypto_secretbox_open_easy(ciphertext, nonce, encryptionKey);
-  return sodium.to_string(decrypted);
 };
 
 serve(async (req) => {
@@ -148,9 +122,9 @@ serve(async (req) => {
             const iv = toUint8Array(entry.encryption_iv);
             const cipherBytes = toUint8Array(entry.encrypted_value);
             const decrypted = await crypto.subtle.decrypt(
-              { name: 'AES-GCM', iv },
+              { name: 'AES-GCM', iv: iv.buffer as ArrayBuffer },
               cryptoKey,
-              cipherBytes
+              cipherBytes.buffer as ArrayBuffer
             );
             const value = decoder.decode(decrypted);
             return {
@@ -241,7 +215,7 @@ serve(async (req) => {
           );
         }
 
-        const { error } = await serviceClient
+        const { error } = await supabaseClient
           .from('user_secrets')
           .delete()
           .eq('user_id', user.id)

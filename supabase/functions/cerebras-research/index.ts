@@ -67,11 +67,7 @@ serve(async (req) => {
 
     let sessionIdentifier = sessionId || `research_${crypto.randomUUID()}`;
     console.log(`Research request - Session: ${sessionIdentifier}, Query: ${query.substring(0, 100)}...`);
-    let sessionRecordId: string | null = null;
-
-    const sessionIdentifier = sessionId || `research_${crypto.randomUUID()}`;
     const sessionTimestamp = new Date().toISOString();
-
     let sessionRecordId: string | null = null;
 
     const { data: existingSession, error: existingSessionError } = await supabase
