@@ -7,6 +7,7 @@ import SidebarSubmenu from "./sidebar-submenu";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import logo from "@/assets/universal-ai-logo.png";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 interface SidebarContentProps {
   navItems: {
     name: string;
@@ -147,16 +148,33 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       return directMatch;
     });
   };
-  return <>
+  return <TooltipProvider>
       <div className={`mb-8 mt-2 ${isCollapsed ? 'justify-center' : 'px-2'} flex items-center transition-all duration-300`}>
         <motion.div initial={false} animate={isCollapsed ? "collapsed" : "expanded"} variants={logoVariants} className="flex items-center">
-          <div className="relative cursor-pointer" onClick={() => navigate("/home")} title="Go to Dashboard">
-            <img 
-              src={logo} 
-              alt="UniversalAI Logo" 
-              className="w-10 h-10 object-contain"
-            />
-          </div>
+          {isCollapsed ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="relative cursor-pointer" onClick={() => navigate("/home")}>
+                  <img 
+                    src={logo} 
+                    alt="UniversalAI Logo" 
+                    className="w-10 h-10 object-contain"
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={8} className="bg-blue-darker/95 backdrop-blur-md border-cyan-400/40 shadow-[0_0_20px_rgba(8,145,178,0.5)] text-white text-sm font-medium">
+                UniversalAI Dashboard
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div className="relative cursor-pointer" onClick={() => navigate("/home")}>
+              <img 
+                src={logo} 
+                alt="UniversalAI Logo" 
+                className="w-10 h-10 object-contain"
+              />
+            </div>
+          )}
 
           {!isCollapsed && <motion.div className="flex flex-col ml-3" variants={textVariants}>
               <span className="text-blue-lightest font-medium leading-tight text-xl text-shadow-sm text-glow-blue">UniversalAI</span>
@@ -183,16 +201,32 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
         
       <div className="mt-auto pt-3 border-t border-blue-primary/30">
         {/* Log Out button */}
-        <button onClick={handleLogout} className={`flex items-center ${isCollapsed ? 'justify-center' : 'px-3'} py-2.5 text-sm text-blue-lightest hover:bg-blue-primary/30 hover:text-white rounded-lg transition-all duration-200 group w-full`} title={isCollapsed ? "Log Out" : ""}>
-          <div className={`${isCollapsed ? '' : 'mr-3'} h-5 w-5 text-blue-lighter flex items-center justify-center relative group-hover:text-white transition-colors duration-200`}>
-            <LogOut className="h-5 w-5" />
-            <span className="absolute inset-0 bg-transparent group-hover:bg-blue-primary/20 rounded-full transition-all duration-300 -z-10"></span>
-          </div>
-          {!isCollapsed && <motion.span initial="collapsed" animate="expanded" variants={textVariants} className="text-[13px] font-medium text-shadow-sm">
+        {isCollapsed ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button onClick={handleLogout} className="flex items-center justify-center py-2.5 text-sm text-blue-lightest hover:bg-blue-primary/30 hover:text-white rounded-lg transition-all duration-200 group w-full">
+                <div className="h-5 w-5 text-blue-lighter flex items-center justify-center relative group-hover:text-white transition-colors duration-200">
+                  <LogOut className="h-5 w-5" />
+                  <span className="absolute inset-0 bg-transparent group-hover:bg-blue-primary/20 rounded-full transition-all duration-300 -z-10"></span>
+                </div>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={8} className="bg-blue-darker/95 backdrop-blur-md border-cyan-400/40 shadow-[0_0_20px_rgba(8,145,178,0.5)] text-white text-sm font-medium">
               Log Out
-            </motion.span>}
-        </button>
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <button onClick={handleLogout} className="flex items-center px-3 py-2.5 text-sm text-blue-lightest hover:bg-blue-primary/30 hover:text-white rounded-lg transition-all duration-200 group w-full">
+            <div className="mr-3 h-5 w-5 text-blue-lighter flex items-center justify-center relative group-hover:text-white transition-colors duration-200">
+              <LogOut className="h-5 w-5" />
+              <span className="absolute inset-0 bg-transparent group-hover:bg-blue-primary/20 rounded-full transition-all duration-300 -z-10"></span>
+            </div>
+            <motion.span initial="collapsed" animate="expanded" variants={textVariants} className="text-[13px] font-medium text-shadow-sm">
+              Log Out
+            </motion.span>
+          </button>
+        )}
       </div>
-    </>;
+    </TooltipProvider>;
 };
 export default SidebarContent;
