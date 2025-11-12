@@ -3,6 +3,7 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@crossmint/client-sdk-react-ui";
 import { WalletInfo } from "./WalletInfo";
+import { WalletDropdown } from "@/components/wallet/WalletDropdown";
 import { Settings } from "./Settings";
 import logo from "@/assets/universal-ai-logo.png";
 
@@ -61,6 +62,7 @@ const Header: React.FC = () => {
       </div>
       
       <div className="flex items-center space-x-3">
+        <WalletDropdown />
         {user && <WalletInfo />}
         <Settings />
       </div>
