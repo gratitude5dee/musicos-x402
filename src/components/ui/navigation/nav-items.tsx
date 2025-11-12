@@ -5,12 +5,12 @@ import {
 } from "@/components/ui/icons";
 
 // For the remaining icons we'll continue using lucide-react for now, but gradually replace them
-import { 
-  Palette, BookOpen, Headphones, Infinity, UserRound, Users, Shield, Globe, 
-  Database, ShoppingCart, Eye, Building, Building2, Trees, ArrowRightLeft, Share2, Link, Tv, 
+import {
+  Palette, BookOpen, Headphones, Infinity, UserRound, Users, Shield, Globe,
+  Database, ShoppingCart, Eye, Building, Building2, Trees, ArrowRightLeft, Share2, Link, Tv,
   User, Music, Landmark, TrendingUp, Droplets, CreditCard, Calendar, UserCircle,
-  Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart, 
-  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare
+  Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart,
+  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare, Sparkles, Scan, Radio
 } from "lucide-react";
 
 export const navItems = [{
@@ -135,6 +135,39 @@ export const navItems = [{
     { name: "Invoices", path: "/event-toolkit/invoices", icon: FileText },
     { name: "Contacts", path: "/event-toolkit/contacts", icon: Users },
     { name: "QR Upload", path: "/event-toolkit/qr-upload", icon: QrCode },
+  ]
+}, {
+  name: "Composer",
+  path: "/composer",
+  icon: Sparkles,
+  hasSubmenu: true,
+  submenuItems: [
+    {
+      name: "Home",
+      path: "/composer",
+      icon: Home
+    },
+    {
+      name: "Chat",
+      path: "/composer/chat",
+      icon: MessageSquare
+    },
+    {
+      name: "Agents",
+      path: "/composer/agents",
+      icon: Users
+    },
+    {
+      name: "Scan",
+      path: "/composer/scan",
+      icon: Scan,
+      isNew: true
+    },
+    {
+      name: "Feed",
+      path: "/composer/feed",
+      icon: Radio
+    }
   ]
 }, {
   name: "Agents + Integrations",

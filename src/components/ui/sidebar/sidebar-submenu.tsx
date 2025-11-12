@@ -11,10 +11,12 @@ interface SubmenuProps {
     path: string;
     icon: React.ComponentType<{ className?: string; isGlowing?: boolean; glowColor?: "highlight" | "accent" | "white" }>;
     hasSubmenu?: boolean;
+    isNew?: boolean;
     submenuItems?: {
       name: string;
       path: string;
       icon: React.ComponentType<{ className?: string; isGlowing?: boolean; glowColor?: "highlight" | "accent" | "white" }>;
+      isNew?: boolean;
     }[];
   }[];
   currentPath: string;
@@ -194,12 +196,17 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                           : 'text-blue-lightest hover:bg-cyan-500/10 hover:text-white'}
                       `}
                     >
-                      <subItem.icon 
+                      <subItem.icon
                         className={`h-3.5 w-3.5 mr-2 ${isSubItemActive ? 'text-cyan-400 icon-glow-cyan' : 'text-blue-lighter'}`}
                         isGlowing={isSubItemActive}
-                        glowColor="highlight" 
+                        glowColor="highlight"
                       />
-                      <span className="text-shadow-sm">{subItem.name}</span>
+                      <span className="text-shadow-sm flex-1">{subItem.name}</span>
+                      {subItem.isNew && (
+                        <span className="text-[8px] font-bold px-1 py-0.5 rounded bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+                          NEW
+                        </span>
+                      )}
                     </Link>
                   )}
                 </motion.div>
@@ -357,13 +364,20 @@ const SidebarSubmenu: React.FC<SubmenuProps> = ({
                         : 'text-blue-lightest hover:bg-cyan-500/10 hover:text-white'}
                     `}
                   >
-                    <subItem.icon 
-                      className={`h-3.5 w-3.5 mr-2 ${isSubItemActive ? 'text-cyan-400 icon-glow-cyan' : 'text-blue-lighter group-hover:text-blue-lightest'}`} 
-                      isGlowing={isSubItemActive} 
+                    <subItem.icon
+                      className={`h-3.5 w-3.5 mr-2 ${isSubItemActive ? 'text-cyan-400 icon-glow-cyan' : 'text-blue-lighter group-hover:text-blue-lightest'}`}
+                      isGlowing={isSubItemActive}
                       glowColor={isSubItemActive ? "highlight" : "highlight"}
                     />
-                    <span className="text-shadow-sm">{subItem.name}</span>
-                    
+                    <span className="text-shadow-sm flex-1">{subItem.name}</span>
+
+                    {/* NEW badge */}
+                    {subItem.isNew && (
+                      <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-gradient-to-r from-green-500 to-emerald-500 text-white mr-2">
+                        NEW
+                      </span>
+                    )}
+
                     {/* Subtle active indicator */}
                     {isSubItemActive && (
                       <span className="absolute right-1 w-1 h-1 rounded-full bg-cyan-400 shadow-[0_0_5px_rgba(0,240,255,0.5)]"></span>
