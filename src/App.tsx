@@ -84,6 +84,9 @@ import ComposerChat from "./pages/composer/ComposerChat";
 import ComposerAgents from "./pages/composer/ComposerAgents";
 import ComposerScan from "./pages/composer/ComposerScan";
 import ComposerFeed from "./pages/composer/ComposerFeed";
+import ComposerWorkflows from "./pages/composer/ComposerWorkflows";
+import ComposerPlayground from "./pages/composer/ComposerPlayground";
+import ComposerAnalytics from "./pages/composer/ComposerAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -174,6 +177,9 @@ function App() {
                       <Route path="/composer" element={<ProtectedRoute><ComposerHome /></ProtectedRoute>} />
                       <Route path="/composer/chat" element={<ProtectedRoute><ComposerChat /></ProtectedRoute>} />
                       <Route path="/composer/agents" element={<ProtectedRoute><ComposerAgents /></ProtectedRoute>} />
+                      <Route path="/composer/workflows" element={<ProtectedRoute><ComposerWorkflows /></ProtectedRoute>} />
+                      <Route path="/composer/playground" element={<ProtectedRoute><ComposerPlayground /></ProtectedRoute>} />
+                      <Route path="/composer/analytics" element={<ProtectedRoute><ComposerAnalytics /></ProtectedRoute>} />
                       <Route path="/composer/scan" element={<ProtectedRoute><ComposerScan /></ProtectedRoute>} />
                       <Route path="/composer/feed" element={<ProtectedRoute><ComposerFeed /></ProtectedRoute>} />
 

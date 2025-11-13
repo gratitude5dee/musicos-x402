@@ -1,7 +1,7 @@
 import ComposerLayout from "@/layouts/composer-layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MessageSquare, Users, Scan, Radio } from "lucide-react";
+import { ArrowRight, MessageSquare, Users, Scan, Radio, Workflow, TestTube } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function ComposerHome() {
@@ -23,12 +23,26 @@ export default function ComposerHome() {
       gradient: "from-purple-500 to-pink-500",
     },
     {
+      title: "Workflow Builder",
+      description: "Create multi-agent workflows with visual orchestration",
+      icon: Workflow,
+      path: "/composer/workflows",
+      gradient: "from-purple-500 to-blue-500",
+      isNew: true,
+    },
+    {
+      title: "Agent Playground",
+      description: "Test and debug agents in a safe sandbox environment",
+      icon: TestTube,
+      path: "/composer/playground",
+      gradient: "from-cyan-500 to-blue-500",
+    },
+    {
       title: "Agent Scanner",
       description: "Scan and analyze agent activity, resources, and performance",
       icon: Scan,
       path: "/composer/scan",
       gradient: "from-green-500 to-emerald-500",
-      isNew: true,
     },
     {
       title: "Activity Feed",

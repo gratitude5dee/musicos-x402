@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { Home, MessageSquare, Users, Scan, Radio, Sparkles } from "lucide-react";
+import { Home, MessageSquare, Users, Scan, Radio, Sparkles, Workflow, TestTube } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +21,9 @@ export default function ComposerLayout({ children, title, subtitle }: ComposerLa
     { value: "home", label: "Home", path: "/composer", icon: Home },
     { value: "chat", label: "Chat", path: "/composer/chat", icon: MessageSquare },
     { value: "agents", label: "Agents", path: "/composer/agents", icon: Users },
-    { value: "scan", label: "Scan", path: "/composer/scan", icon: Scan, isNew: true },
+    { value: "workflows", label: "Workflows", path: "/composer/workflows", icon: Workflow, isNew: true },
+    { value: "playground", label: "Playground", path: "/composer/playground", icon: TestTube },
+    { value: "scan", label: "Scan", path: "/composer/scan", icon: Scan },
     { value: "feed", label: "Feed", path: "/composer/feed", icon: Radio },
   ];
 
