@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 interface CostMetrics {
   total_spend: number;
@@ -84,7 +84,7 @@ const CostOptimizer = () => {
         return acc;
       }, {} as Record<string, number>);
 
-      const highest_cost_agent = Object.entries(costByAgent).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
+      const highest_cost_agent = Object.entries(costByAgent).sort((a, b) => (b[1] as number) - (a[1] as number))[0]?.[0] || 'N/A';
 
       // Calculate trend (comparing last 50 vs previous 50)
       const recentCost = activities.slice(0, 50).reduce((sum, a) => sum + (a.cost_usd || 0), 0);
@@ -151,7 +151,7 @@ const CostOptimizer = () => {
         return acc;
       }, {} as Record<string, number>);
 
-      const highActivityAgents = Object.entries(agentActivityCount).filter(([_, count]) => count > 20);
+      const highActivityAgents = Object.entries(agentActivityCount).filter(([_, count]) => (count as number) > 20);
       if (highActivityAgents.length > 0) {
         recs.push({
           type: 'info',

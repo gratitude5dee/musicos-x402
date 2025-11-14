@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { Workflow, WorkflowStatus } from '@/types/workflow';
 import WorkflowBuilder from '@/components/composer/workflow/WorkflowBuilder';
 import WorkflowTemplates from '@/components/composer/workflow/WorkflowTemplates';
