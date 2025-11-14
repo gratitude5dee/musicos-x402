@@ -78,20 +78,23 @@ const ComposerPlayground = () => {
 
       if (error) throw error;
 
-      const history: TestExecution[] = (data || []).map(log => ({
-        id: log.id,
-        agent_id: log.agent_id,
-        agent_name: selectedAgent?.name || '',
-        input: log.metadata?.input,
-        output: log.metadata?.output,
-        error: log.error_message,
-        status: log.tool_status === 'success' ? 'success' : log.tool_status === 'error' ? 'failed' : 'running',
-        duration_ms: log.latency_ms,
-        cost_usd: log.cost_usd,
-        tokens: log.tokens_used,
-        started_at: log.created_at,
-        completed_at: log.completed_at,
-      }));
+      const history: TestExecution[] = (data || []).map(log => {
+        const metadata = (log.metadata as Record<string, any>) || {};
+        return {
+          id: log.id,
+          agent_id: log.agent_id,
+          agent_name: selectedAgent?.name || '',
+          input: metadata.input,
+          output: metadata.output,
+          error: log.error_message,
+          status: log.tool_status === 'success' ? 'success' : log.tool_status === 'error' ? 'failed' : 'running',
+          duration_ms: log.latency_ms,
+          cost_usd: log.cost_usd,
+          tokens: log.tokens_used,
+          started_at: log.created_at,
+          completed_at: log.completed_at,
+        };
+      });
 
       setExecutionHistory(history);
     } catch (error) {
