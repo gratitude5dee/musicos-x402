@@ -12,6 +12,7 @@ import {
   Trash2,
   Copy,
   ArrowLeft,
+  Zap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
