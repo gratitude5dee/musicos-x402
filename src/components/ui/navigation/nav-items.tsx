@@ -137,39 +137,6 @@ export const navItems = [{
     { name: "QR Upload", path: "/event-toolkit/qr-upload", icon: QrCode },
   ]
 }, {
-  name: "Composer",
-  path: "/composer",
-  icon: Sparkles,
-  hasSubmenu: true,
-  submenuItems: [
-    {
-      name: "Home",
-      path: "/composer",
-      icon: Home
-    },
-    {
-      name: "Chat",
-      path: "/composer/chat",
-      icon: MessageSquare
-    },
-    {
-      name: "Agents",
-      path: "/composer/agents",
-      icon: Users
-    },
-    {
-      name: "Scan",
-      path: "/composer/scan",
-      icon: ScanLine,
-      isNew: true
-    },
-    {
-      name: "Feed",
-      path: "/composer/feed",
-      icon: Rss
-    }
-  ]
-}, {
   name: "Agents + Integrations",
   path: "/agents-integrations",
   icon: NavAgentIcon,
@@ -210,6 +177,40 @@ export const navItems = [{
           name: "Contract Agent",
           path: "/collection/contract-agent",
           icon: Shield
+        }
+      ]
+    },
+    {
+      name: "Composer",
+      path: "/composer",
+      icon: Sparkles,
+      hasSubmenu: true,
+      submenuItems: [
+        {
+          name: "Home",
+          path: "/composer",
+          icon: Home
+        },
+        {
+          name: "Chat",
+          path: "/composer/chat",
+          icon: MessageSquare
+        },
+        {
+          name: "Agents",
+          path: "/composer/agents",
+          icon: Users
+        },
+        {
+          name: "Scan",
+          path: "/composer/scan",
+          icon: ScanLine,
+          isNew: true
+        },
+        {
+          name: "Feed",
+          path: "/composer/feed",
+          icon: Rss
         }
       ]
     },
