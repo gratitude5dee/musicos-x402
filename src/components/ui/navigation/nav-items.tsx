@@ -11,7 +11,7 @@ import {
   User, Music, Landmark, TrendingUp, Droplets, CreditCard, Calendar, UserCircle,
   Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart,
   Home, Banknote, Zap, Receipt, BarChart3, MessageSquare, Radar, Sparkles, ScanLine, Rss, 
-  Camera, Package, Truck, Search, Gavel, Vault
+  Camera, Package, Truck, Search, Gavel, Vault, GitBranch
 } from "lucide-react";
 
 export const navItems = [{
@@ -78,6 +78,7 @@ export const navItems = [{
         { name: "Disputes", path: "/disputes", icon: Gavel },
         { name: "IP Vault", path: "/vault", icon: Vault },
         { name: "IP Marketplace", path: "/ip-marketplace", icon: ShoppingCart },
+        { name: "Derivatives", path: "/derivatives", icon: GitBranch },
       ]
     },
     {
