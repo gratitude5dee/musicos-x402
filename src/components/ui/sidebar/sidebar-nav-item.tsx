@@ -12,6 +12,7 @@ interface NavItemProps {
     icon: React.ComponentType<{ className?: string; isGlowing?: boolean; glowColor?: "highlight" | "accent" | "white" }>;
     hasSubmenu?: boolean;
     isNew?: boolean;
+    isComingSoon?: boolean;
     submenuItems?: {
       name: string;
       path: string;
@@ -100,6 +101,11 @@ const SidebarNavItem: React.FC<NavItemProps> = ({
             {item.isNew && (
               <Badge className="text-[10px] uppercase tracking-wide bg-emerald-500/20 border-emerald-400/40 text-emerald-200">
                 New
+              </Badge>
+            )}
+            {item.isComingSoon && (
+              <Badge className="text-[10px] uppercase tracking-wide bg-blue-500/20 border-blue-400/40 text-blue-200">
+                Coming Soon
               </Badge>
             )}
           </motion.span>
