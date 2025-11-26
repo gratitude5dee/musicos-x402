@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,10 +21,17 @@ import {
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { InvoiceTable } from "@/components/finances/invoicing/InvoiceTable";
+import { useInvoices } from "@/hooks/useInvoices";
+import { InvoiceStatus } from "@/types/invoice";
 
 const Invoices = () => {
   const navigate = useNavigate();
   const { data: stats, isLoading } = useDashboardStats();
+  const [statusFilter, setStatusFilter] = useState<InvoiceStatus | 'all'>('all');
+  const { data: invoices = [], isLoading: isLoadingInvoices } = useInvoices({ 
+    status: statusFilter 
+  });
 
   const QuickActions = () => (
     <div className="mb-8">
@@ -196,61 +203,34 @@ const Invoices = () => {
         <QuickActions />
         <PerformanceMetrics />
 
-        {/* Filters & Content */}
+        {/* Invoice Table */}
         <motion.div 
           className="space-y-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Filters */}
           <Card className="bg-white/5 backdrop-blur-md border border-white/10">
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Filters</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Input placeholder="Search invoices..." className="bg-white/10 border-white/20 text-white placeholder:text-white/50" />
-                <Select>
-                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                    <SelectValue placeholder="All Statuses" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-blue-darker border-white/20">
-                    <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="sent">Sent</SelectItem>
-                    <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="overdue">Overdue</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select>
-                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                    <SelectValue placeholder="Date Range" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-blue-darker border-white/20">
-                    <SelectItem value="all">All Time</SelectItem>
-                    <SelectItem value="month">This Month</SelectItem>
-                    <SelectItem value="quarter">This Quarter</SelectItem>
-                    <SelectItem value="year">This Year</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-white">All Invoices</h3>
+                <Button 
+                  onClick={() => navigate("/event-toolkit/invoices/create")}
+                  className="bg-blue-primary hover:bg-blue-primary/80 text-white"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Invoice
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Empty State */}
-          <Card className="bg-white/5 backdrop-blur-md border border-white/10">
-            <CardContent className="p-12 text-center">
-              <div className="w-16 h-16 rounded-lg bg-blue-500/20 flex items-center justify-center mx-auto mb-6">
-                <FileText className="h-8 w-8 text-blue-400" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">No invoices created yet</h3>
-              <p className="text-blue-lightest/70 mb-6">Start tracking your earnings by creating your first invoice</p>
-              <Button 
-                onClick={() => navigate("/event-toolkit/invoices/create")}
-                className="bg-blue-primary hover:bg-blue-primary/80 text-white"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create Your First Invoice
-              </Button>
+              
+              <InvoiceTable 
+                invoices={invoices}
+                isLoading={isLoadingInvoices}
+                onRowClick={(invoice) => {
+                  console.log('Invoice clicked:', invoice);
+                  // TODO: Navigate to invoice detail page
+                }}
+              />
             </CardContent>
           </Card>
         </motion.div>
