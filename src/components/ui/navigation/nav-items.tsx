@@ -80,27 +80,7 @@ export const navItems = [{
         { name: "IP Marketplace", path: "/ip-marketplace", icon: ShoppingCart },
         { name: "Derivatives", path: "/derivatives", icon: GitBranch },
       ]
-    },
-    {
-      name: "Thread of Life",
-      path: "/thread-of-life",
-      icon: Trees
-    },
-    {
-      name: "Bridge",
-      path: "/bridge",
-      icon: ArrowRightLeft
-    },
-    {
-      name: "Marketplace Launch",
-      path: "/marketplace-launch",
-      icon: NavMarketplaceIcon
-    },
-    {
-      name: "Analytics",
-      path: "/analytics",
-      icon: NavAnalyticsIcon
-    },
+    }
   ]
 }, {
   name: "Marketing & Distribution",
@@ -177,6 +157,26 @@ export const navItems = [{
       name: "Agentic SEO",
       path: "/merchandise/agentic-seo",
       icon: Search
+    },
+    {
+      name: "Thread of Life",
+      path: "/thread-of-life",
+      icon: Trees
+    },
+    {
+      name: "Bridge",
+      path: "/bridge",
+      icon: ArrowRightLeft
+    },
+    {
+      name: "Marketplace Launch",
+      path: "/marketplace-launch",
+      icon: NavMarketplaceIcon
+    },
+    {
+      name: "Analytics",
+      path: "/analytics",
+      icon: NavAnalyticsIcon
     }
   ]
 }, {
