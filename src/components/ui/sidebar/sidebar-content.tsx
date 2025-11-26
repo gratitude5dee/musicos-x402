@@ -151,16 +151,16 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
     });
   };
   return <TooltipProvider>
-      <div className={`mb-8 mt-2 ${isCollapsed ? 'justify-center' : 'px-2'} flex items-center transition-all duration-300`}>
-        <motion.div initial={false} animate={isCollapsed ? "collapsed" : "expanded"} variants={logoVariants} className="flex items-center">
+      <div className={`mb-6 mt-2 ${isCollapsed ? 'justify-center' : 'px-2'} flex items-center transition-all duration-300`}>
+        <motion.div initial={false} animate={isCollapsed ? "collapsed" : "expanded"} variants={logoVariants} className={`flex items-center ${isCollapsed ? 'justify-center w-full' : ''}`}>
           {isCollapsed ? (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="relative cursor-pointer" onClick={() => navigate("/home")}>
+                <div className="relative cursor-pointer flex items-center justify-center w-10 h-10 border border-cyan-400/30 rounded-lg bg-blue-primary/10 hover:bg-blue-primary/20 transition-all duration-200" onClick={() => navigate("/home")}>
                   <img 
                     src={logo} 
                     alt="UniversalAI Logo" 
-                    className="w-10 h-10 object-contain"
+                    className="w-6 h-6 object-contain"
                   />
                 </div>
               </TooltipTrigger>
@@ -201,7 +201,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       })}
       </nav>
         
-      <div className="mt-auto pt-3 border-t border-blue-primary/30">
+      <div className="mt-auto pt-4 border-t border-cyan-400/20">
         {/* Log Out button */}
         {isCollapsed ? (
           <Tooltip>
