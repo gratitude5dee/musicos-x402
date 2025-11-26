@@ -95,6 +95,7 @@ import ComposerFeed from "./pages/composer/ComposerFeed";
 import ComposerWorkflows from "./pages/composer/ComposerWorkflows";
 import ComposerPlayground from "./pages/composer/ComposerPlayground";
 import ComposerAnalytics from "./pages/composer/ComposerAnalytics";
+import StablePay from "./pages/StablePay";
 
 const queryClient = new QueryClient();
 
@@ -200,6 +201,9 @@ function App() {
                       <Route path="/composer/analytics" element={<ProtectedRoute><ComposerAnalytics /></ProtectedRoute>} />
                       <Route path="/composer/scan" element={<ProtectedRoute><ComposerScan /></ProtectedRoute>} />
                       <Route path="/composer/feed" element={<ProtectedRoute><ComposerFeed /></ProtectedRoute>} />
+
+                      {/* StablePay Route */}
+                      <Route path="/stablepay" element={<StablePay />} />
 
                       <Route path="*" element={<NotFound />} />
                       </Routes>
