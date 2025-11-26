@@ -42,16 +42,16 @@ export function AssetGrid({ onSelectAsset, onManagePermissions }: AssetGridProps
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {filteredAssets.map((asset) => (
-        <Card key={asset.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+        <Card key={asset.id} className="glass-card border border-border/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] transition-all duration-300 cursor-pointer group">
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2">
-                <div className={`p-2 rounded-lg ${typeColors[asset.type]}/10`}>
+                <div className={`p-2 rounded-lg ${typeColors[asset.type]}/10 group-hover:${typeColors[asset.type]}/20 transition-colors`}>
                   {typeIcons[asset.type]}
                 </div>
                 <div className="flex-1">
-                  <CardTitle className="text-base line-clamp-1">{asset.name}</CardTitle>
-                  <CardDescription className="text-xs">
+                  <CardTitle className="text-base line-clamp-1 text-[hsl(var(--text-primary))]">{asset.name}</CardTitle>
+                  <CardDescription className="text-xs text-[hsl(var(--text-secondary))]">
                     {new Date(asset.createdAt).toLocaleDateString()}
                   </CardDescription>
                 </div>
@@ -81,25 +81,25 @@ export function AssetGrid({ onSelectAsset, onManagePermissions }: AssetGridProps
           </CardHeader>
           
           <CardContent className="pb-3">
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+            <p className="text-sm text-[hsl(var(--text-secondary))] line-clamp-2 mb-3">
               {asset.description}
             </p>
             
             <div className="flex flex-wrap gap-1">
               {asset.tags.slice(0, 3).map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs">
+                <Badge key={tag} variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
                   {tag}
                 </Badge>
               ))}
               {asset.tags.length > 3 && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
                   +{asset.tags.length - 3}
                 </Badge>
               )}
             </div>
           </CardContent>
 
-          <CardFooter className="pt-0 flex justify-between text-xs text-muted-foreground">
+          <CardFooter className="pt-0 flex justify-between text-xs text-[hsl(var(--text-secondary))]">
             <span className="capitalize">{asset.type.replace('_', ' ')}</span>
             {asset.fileSize && <span>{formatBytes(asset.fileSize)}</span>}
           </CardFooter>

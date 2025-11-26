@@ -90,17 +90,17 @@ export function DerivativeGrid({ derivatives, onSelect }: DerivativeGridProps) {
       </div>
 
       {filteredDerivatives.length === 0 ? (
-        <Card className="p-12 text-center">
+        <Card className="glass-card border border-border/50 p-12 text-center">
           <GitBranch className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-          <p className="text-muted-foreground">No derivatives found</p>
+          <p className="text-[hsl(var(--text-secondary))]">No derivatives found</p>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredDerivatives.map((derivative) => (
-            <Card key={derivative.id} className="p-4 hover:shadow-lg transition-shadow">
+            <Card key={derivative.id} className="glass-card border border-border/50 p-4 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] transition-all duration-300 group">
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
-                  <Badge variant="outline" className="capitalize">
+                  <Badge variant="outline" className="capitalize bg-primary/10 text-primary border-primary/20">
                     {derivative.derivativeType}
                   </Badge>
                   <Badge variant="outline" className={getStatusColor(derivative.status)}>
@@ -112,26 +112,26 @@ export function DerivativeGrid({ derivatives, onSelect }: DerivativeGridProps) {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-lg">{derivative.name}</h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                  <h3 className="font-semibold text-lg text-[hsl(var(--text-primary))] group-hover:text-primary transition-colors">{derivative.name}</h3>
+                  <p className="text-sm text-[hsl(var(--text-secondary))] line-clamp-2 mt-1">
                     {derivative.description}
                   </p>
                 </div>
 
                 {derivative.metadata.originalWork && (
                   <div className="text-sm">
-                    <span className="text-muted-foreground">Original:</span>{' '}
-                    <span className="font-medium">{derivative.metadata.originalWork}</span>
+                    <span className="text-[hsl(var(--text-secondary))]">Original:</span>{' '}
+                    <span className="font-medium text-[hsl(var(--text-primary))]">{derivative.metadata.originalWork}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between text-sm">
                   <div>
-                    <span className="text-muted-foreground">Royalty Share:</span>{' '}
-                    <span className="font-semibold">{derivative.royaltyShare}%</span>
+                    <span className="text-[hsl(var(--text-secondary))]">Royalty Share:</span>{' '}
+                    <span className="font-semibold text-[hsl(var(--text-primary))]">{derivative.royaltyShare}%</span>
                   </div>
                   {derivative.commercialUse && (
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-500 border-green-500/20">
                       Commercial Use
                     </Badge>
                   )}
