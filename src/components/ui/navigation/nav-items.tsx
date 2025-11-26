@@ -284,6 +284,11 @@ export const navItems = [{
     }
   ]
 }, {
+  name: "WZRD.trade",
+  path: "#",
+  icon: TrendingUp,
+  isComingSoon: true
+}, {
   name: "Profile",
   path: "/profile",
   icon: UserCircle
