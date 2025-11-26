@@ -137,7 +137,7 @@ export const navItems = [{
     { name: "QR Upload", path: "/event-toolkit/qr-upload", icon: QrCode },
   ]
 }, {
-  name: "Agents + Integrations",
+  name: "Agents",
   path: "/agents-integrations",
   icon: NavAgentIcon,
   hasSubmenu: true,
