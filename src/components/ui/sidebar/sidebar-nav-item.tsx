@@ -57,6 +57,7 @@ const SidebarNavItem: React.FC<NavItemProps> = ({
   const navigate = useNavigate();
 
   if (!item.hasSubmenu) {
+    const isExternalLink = item.path.startsWith('http');
     const linkContent = (
       <div className={`
         flex items-center py-2.5 my-1 rounded-lg text-sm font-medium transition-all duration-200
@@ -120,14 +121,27 @@ const SidebarNavItem: React.FC<NavItemProps> = ({
       return (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link 
-              to={item.path} 
-              className="relative block group"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              {linkContent}
-            </Link>
+            {isExternalLink ? (
+              <a 
+                href={item.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative block group"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                {linkContent}
+              </a>
+            ) : (
+              <Link 
+                to={item.path} 
+                className="relative block group"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                {linkContent}
+              </Link>
+            )}
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={8} className="bg-blue-darker/95 backdrop-blur-md border-cyan-400/40 shadow-[0_0_20px_rgba(8,145,178,0.5)] text-white text-sm font-medium">
             {item.name}
@@ -136,7 +150,18 @@ const SidebarNavItem: React.FC<NavItemProps> = ({
       );
     }
 
-    return (
+    return isExternalLink ? (
+      <a 
+        href={item.path}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="relative block group"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {linkContent}
+      </a>
+    ) : (
       <Link 
         to={item.path} 
         className="relative block group"
