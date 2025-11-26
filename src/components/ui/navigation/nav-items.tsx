@@ -234,6 +234,11 @@ export const navItems = [{
       name: "Observability",
       path: "/observability",
       icon: Eye
+    },
+    {
+      name: "Hyperrelational",
+      path: "https://dub.sh/hyperelational",
+      icon: Database
     }
   ]
 }, {
