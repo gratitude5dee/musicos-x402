@@ -70,7 +70,12 @@ export const navItems = [{
     {
       name: "IP Portal",
       path: "/rights",
-      icon: Shield
+      icon: Shield,
+      hasSubmenu: true,
+      submenuItems: [
+        { name: "Overview", path: "/rights" },
+        { name: "Royalty Graph", path: "/royalties" },
+      ]
     },
     {
       name: "Thread of Life",
