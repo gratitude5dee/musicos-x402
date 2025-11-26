@@ -2,11 +2,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useWebGLSetup } from '@/hooks/useWebGLSetup';
 
-interface CloudShaderProps {
-  className?: string;
-}
-
-const CloudShader: React.FC<CloudShaderProps> = ({ className }) => {
+const CloudShader: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const startTimeRef = useRef<number>(Date.now());
 
@@ -172,8 +168,8 @@ const CloudShader: React.FC<CloudShaderProps> = ({ className }) => {
   return (
     <canvas
       ref={canvasRef}
-      className={className || "fixed inset-0 w-full h-full"}
-      style={{ zIndex: -20 }}
+      className="fixed inset-0 w-full h-full"
+      style={{ zIndex: -1 }}
     />
   );
 };
