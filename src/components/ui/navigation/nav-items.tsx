@@ -10,7 +10,8 @@ import {
   Database, ShoppingCart, Eye, Building, Building2, Trees, ArrowRightLeft, Share2, Link, Tv,
   User, Music, Landmark, TrendingUp, Droplets, CreditCard, Calendar, UserCircle,
   Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart,
-  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare, Radar, Sparkles, ScanLine, Rss
+  Home, Banknote, Zap, Receipt, BarChart3, MessageSquare, Radar, Sparkles, ScanLine, Rss, 
+  Camera, Package, Truck, Search
 } from "lucide-react";
 
 export const navItems = [{
@@ -138,9 +139,37 @@ export const navItems = [{
     { name: "QR Upload", path: "/event-toolkit/qr-upload", icon: QrCode },
   ]
 }, {
-  name: "Audience Data",
-  path: "https://dub.sh/hyperelational",
-  icon: Database
+  name: "Merchandise",
+  path: "#",
+  icon: ShoppingCart,
+  hasSubmenu: true,
+  submenuItems: [
+    {
+      name: "Design Studio",
+      path: "/merchandise/design-studio",
+      icon: Camera
+    },
+    {
+      name: "Audience Data",
+      path: "https://dub.sh/hyperelational",
+      icon: Database
+    },
+    {
+      name: "Sourcing",
+      path: "/merchandise/sourcing",
+      icon: Package
+    },
+    {
+      name: "Order Fulfillment",
+      path: "/merchandise/fulfillment",
+      icon: Truck
+    },
+    {
+      name: "Agentic SEO",
+      path: "/merchandise/agentic-seo",
+      icon: Search
+    }
+  ]
 }, {
   name: "Agents",
   path: "/agents-integrations",
