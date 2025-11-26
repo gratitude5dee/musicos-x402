@@ -161,22 +161,25 @@ export const navItems = [{
     {
       name: "Thread of Life",
       path: "/thread-of-life",
-      icon: Trees
-    },
-    {
-      name: "Bridge",
-      path: "/bridge",
-      icon: ArrowRightLeft
-    },
-    {
-      name: "Marketplace Launch",
-      path: "/marketplace-launch",
-      icon: NavMarketplaceIcon
-    },
-    {
-      name: "Analytics",
-      path: "/analytics",
-      icon: NavAnalyticsIcon
+      icon: Trees,
+      hasSubmenu: true,
+      submenuItems: [
+        {
+          name: "Bridge",
+          path: "/bridge",
+          icon: ArrowRightLeft
+        },
+        {
+          name: "Marketplace Launch",
+          path: "/marketplace-launch",
+          icon: NavMarketplaceIcon
+        },
+        {
+          name: "Analytics",
+          path: "/analytics",
+          icon: NavAnalyticsIcon
+        }
+      ]
     }
   ]
 }, {
