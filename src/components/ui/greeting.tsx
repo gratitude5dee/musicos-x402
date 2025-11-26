@@ -80,11 +80,11 @@ const Greeting = () => {
     if (profileName) {
       return profileName;
     }
-    if (user?.user_metadata?.first_name) {
-      return user.user_metadata.first_name;
+    if (user?.display_name) {
+      return user.display_name.split(' ')[0];
     }
-    if (user?.user_metadata?.full_name) {
-      return user.user_metadata.full_name.split(' ')[0];
+    if (user?.username) {
+      return user.username;
     }
     if (user?.email) {
       return user.email.split('@')[0];

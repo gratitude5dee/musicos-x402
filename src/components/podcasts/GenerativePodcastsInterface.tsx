@@ -175,7 +175,7 @@ const GenerativePodcastsInterface = () => {
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
 
   const getDurationMinutes = (seconds?: number | null) => {
     if (!seconds || seconds <= 0) {
