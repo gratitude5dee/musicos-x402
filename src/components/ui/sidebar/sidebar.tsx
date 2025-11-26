@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
     >
       {/* CloudShader for sidebar background */}
       <div className="absolute inset-0 overflow-hidden">
-        <CloudShader />
+        <CloudShader className="absolute inset-0 w-full h-full" />
         {/* Overlay to make text more readable on shader background */}
         <div className="absolute inset-0 bg-blue-dark/70 z-1"></div>
       </div>
