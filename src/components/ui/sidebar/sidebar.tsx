@@ -68,12 +68,8 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* CloudShader for sidebar background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <CloudShader className="absolute inset-0 w-full h-full" />
-        {/* Overlay to make text more readable on shader background */}
-        <div className="absolute inset-0 bg-blue-dark/70 z-1"></div>
-      </div>
+      {/* Gradient overlay for sidebar */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-dark/90 via-blue-dark/80 to-blue-dark/90 z-0"></div>
 
       <div className={`h-full flex flex-col overflow-hidden relative z-10 transition-all duration-300 ${isExpanded ? 'p-5' : 'p-3'}`}>
         <SidebarContent 
