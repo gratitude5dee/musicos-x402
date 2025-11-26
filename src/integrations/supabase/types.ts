@@ -1704,6 +1704,107 @@ export type Database = {
           },
         ]
       }
+      evaluation_results: {
+        Row: {
+          created_at: string | null
+          criteria_breakdown: Json | null
+          detailed_reasoning: Json | null
+          generation_error: string | null
+          generation_time_ms: number | null
+          id: string
+          image_url: string | null
+          judge_confidence: string | null
+          judge_reasoning: string | null
+          judge_score: number | null
+          model_id: string
+          run_id: string
+          test_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          criteria_breakdown?: Json | null
+          detailed_reasoning?: Json | null
+          generation_error?: string | null
+          generation_time_ms?: number | null
+          id?: string
+          image_url?: string | null
+          judge_confidence?: string | null
+          judge_reasoning?: string | null
+          judge_score?: number | null
+          model_id: string
+          run_id: string
+          test_id: string
+        }
+        Update: {
+          created_at?: string | null
+          criteria_breakdown?: Json | null
+          detailed_reasoning?: Json | null
+          generation_error?: string | null
+          generation_time_ms?: number | null
+          id?: string
+          image_url?: string | null
+          judge_confidence?: string | null
+          judge_reasoning?: string | null
+          judge_score?: number | null
+          model_id?: string
+          run_id?: string
+          test_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluation_results_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evaluation_runs: {
+        Row: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          mode: string
+          models: string[]
+          parameters: Json | null
+          progress: number | null
+          status: string
+          tests: string[]
+          total_generations: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          mode?: string
+          models: string[]
+          parameters?: Json | null
+          progress?: number | null
+          status?: string
+          tests: string[]
+          total_generations?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          mode?: string
+          models?: string[]
+          parameters?: Json | null
+          progress?: number | null
+          status?: string
+          tests?: string[]
+          total_generations?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       event_assets: {
         Row: {
           ai_model_used: string | null
@@ -2095,73 +2196,63 @@ export type Database = {
       }
       generations: {
         Row: {
-          api_provider: string
-          callback_received_at: string | null
-          created_at: string
-          external_request_id: string | null
-          failure_reason: string | null
+          canvas_id: string | null
+          cost_credits: number | null
+          created_at: string | null
+          error: string | null
+          generation_time_ms: number | null
           id: string
-          project_id: string | null
-          request_payload: Json
-          result_media_asset_id: string | null
-          shot_id: string | null
-          status: string
-          updated_at: string
+          input_image_url: string | null
+          lora_url: string | null
+          model: string
+          negative_prompt: string | null
+          object_id: string | null
+          output_image_url: string | null
+          prompt: string
+          settings: Json | null
+          status: string | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
-          api_provider: string
-          callback_received_at?: string | null
-          created_at?: string
-          external_request_id?: string | null
-          failure_reason?: string | null
+          canvas_id?: string | null
+          cost_credits?: number | null
+          created_at?: string | null
+          error?: string | null
+          generation_time_ms?: number | null
           id?: string
-          project_id?: string | null
-          request_payload: Json
-          result_media_asset_id?: string | null
-          shot_id?: string | null
-          status?: string
-          updated_at?: string
+          input_image_url?: string | null
+          lora_url?: string | null
+          model: string
+          negative_prompt?: string | null
+          object_id?: string | null
+          output_image_url?: string | null
+          prompt: string
+          settings?: Json | null
+          status?: string | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
-          api_provider?: string
-          callback_received_at?: string | null
-          created_at?: string
-          external_request_id?: string | null
-          failure_reason?: string | null
+          canvas_id?: string | null
+          cost_credits?: number | null
+          created_at?: string | null
+          error?: string | null
+          generation_time_ms?: number | null
           id?: string
-          project_id?: string | null
-          request_payload?: Json
-          result_media_asset_id?: string | null
-          shot_id?: string | null
-          status?: string
-          updated_at?: string
+          input_image_url?: string | null
+          lora_url?: string | null
+          model?: string
+          negative_prompt?: string | null
+          object_id?: string | null
+          output_image_url?: string | null
+          prompt?: string
+          settings?: Json | null
+          status?: string | null
+          updated_at?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "generations_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "generations_result_media_asset_id_fkey"
-            columns: ["result_media_asset_id"]
-            isOneToOne: false
-            referencedRelation: "media_assets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "generations_shot_id_fkey"
-            columns: ["shot_id"]
-            isOneToOne: false
-            referencedRelation: "shots"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       gigs: {
         Row: {
@@ -2576,44 +2667,68 @@ export type Database = {
         Row: {
           created_at: string | null
           duration: number | null
+          duration_seconds: number | null
           end_time: number | null
+          file_size: number | null
           id: string
           media_type: string
           metadata: Json | null
+          mime_type: string | null
           name: string
           project_id: string
+          source_type: string | null
           start_time: number | null
           status: string | null
+          storage_bucket: string | null
+          storage_path: string | null
+          thumbnail_url: string | null
           updated_at: string | null
           url: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string | null
           duration?: number | null
+          duration_seconds?: number | null
           end_time?: number | null
+          file_size?: number | null
           id?: string
           media_type: string
           metadata?: Json | null
+          mime_type?: string | null
           name: string
           project_id: string
+          source_type?: string | null
           start_time?: number | null
           status?: string | null
+          storage_bucket?: string | null
+          storage_path?: string | null
+          thumbnail_url?: string | null
           updated_at?: string | null
           url?: string | null
+          user_id?: string
         }
         Update: {
           created_at?: string | null
           duration?: number | null
+          duration_seconds?: number | null
           end_time?: number | null
+          file_size?: number | null
           id?: string
           media_type?: string
           metadata?: Json | null
+          mime_type?: string | null
           name?: string
           project_id?: string
+          source_type?: string | null
           start_time?: number | null
           status?: string | null
+          storage_bucket?: string | null
+          storage_path?: string | null
+          thumbnail_url?: string | null
           updated_at?: string | null
           url?: string | null
+          user_id?: string
         }
         Relationships: [
           {
