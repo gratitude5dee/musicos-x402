@@ -135,7 +135,7 @@ export const navItems = [{
   submenuItems: [
     {
       name: "Design Studio",
-      path: "/merchandise/design-studio",
+      path: "/thread-of-life",
       icon: Camera
     },
     {
