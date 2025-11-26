@@ -58,24 +58,16 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
   const isExpanded = !isCollapsed || isHovered;
 
   return (
-    <>
-      {/* Invisible trigger zone on the left edge */}
-      <div 
-        className="fixed left-0 top-0 h-screen w-8 z-20"
-        onMouseEnter={handleMouseEnter}
-      />
-      
-      <motion.aside 
-        className="fixed left-0 top-0 h-screen flex flex-col border-r border-blue-primary/40 shadow-blue-glow transition-all duration-300 overflow-hidden z-30"
-        initial={false}
-        animate={{ 
-          x: isExpanded ? 0 : '-100%',
-          width: '16rem'
-        }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+    <motion.aside 
+      className="fixed left-0 top-0 h-screen flex flex-col border-r border-blue-primary/40 shadow-blue-glow transition-all duration-300 overflow-hidden z-30"
+      initial={false}
+      animate={{ 
+        width: isExpanded ? '16rem' : '4rem'
+      }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* CloudShader for sidebar background */}
       <div className="absolute inset-0 overflow-hidden">
         <CloudShader />
@@ -83,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
         <div className="absolute inset-0 bg-blue-dark/70 z-1"></div>
       </div>
 
-      <div className="p-5 h-full flex flex-col overflow-hidden relative z-10">
+      <div className={`h-full flex flex-col overflow-hidden relative z-10 transition-all duration-300 ${isExpanded ? 'p-5' : 'p-3'}`}>
         <SidebarContent 
           navItems={navItems} 
           isCollapsed={!isExpanded} 
@@ -103,7 +95,6 @@ const Sidebar: React.FC<SidebarProps> = ({ navItems }) => {
         </Button>
       )}
     </motion.aside>
-    </>
   );
 };
 

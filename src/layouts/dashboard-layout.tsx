@@ -39,7 +39,12 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <div className="min-h-screen bg-transparent">
       <Sidebar navItems={navItems} />
-      <div className="relative min-h-screen w-full">
+      <div 
+        className="relative min-h-screen w-full transition-all duration-300"
+        style={{
+          marginLeft: sidebarCollapsed ? '4rem' : '16rem'
+        }}
+      >
         <MainContent>{children}</MainContent>
       </div>
       <FuturisticCursor />
