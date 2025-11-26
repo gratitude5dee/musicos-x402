@@ -75,6 +75,7 @@ export const navItems = [{
       submenuItems: [
         { name: "Overview", path: "/rights" },
         { name: "Royalty Graph", path: "/royalties" },
+        { name: "Disputes", path: "/disputes" },
       ]
     },
     {
