@@ -136,7 +136,6 @@ export const navItems = [{
     { name: "Contacts", path: "/event-toolkit/contacts", icon: Users },
     { name: "QR Upload", path: "/event-toolkit/qr-upload", icon: QrCode },
     { name: "Booky", path: "https://booky.ai", icon: Calendar },
-    { name: "Audience Data", path: "https://dub.sh/hyperelational", icon: Database },
   ]
 }, {
   name: "Agents",
@@ -238,6 +237,10 @@ export const navItems = [{
       icon: Eye
     }
   ]
+}, {
+  name: "Audience Data",
+  path: "https://dub.sh/hyperelational",
+  icon: Database
 }, {
   name: "Finances",
   path: "#",
