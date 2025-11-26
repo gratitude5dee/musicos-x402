@@ -19,7 +19,8 @@
 /* Base cursor styles */
 .futuristic-cursor {
   position: fixed;
-  z-index: 99999;
+  z-index: 99999 !important;
+  isolation: isolate;
   pointer-events: none;
   width: 24px;
   height: 24px;

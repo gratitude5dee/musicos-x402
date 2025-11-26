@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import "./FuturisticCursor.css";
 
 interface FuturisticCursorProps {
@@ -12,7 +13,7 @@ const FuturisticCursor: React.FC<FuturisticCursorProps> = ({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const cursorRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
   
@@ -129,38 +130,39 @@ const FuturisticCursor: React.FC<FuturisticCursorProps> = ({
     !isVisible ? 'hidden' : '',
   ].filter(Boolean).join(' ');
 
-  return (
-    <>
-      <div
-        ref={cursorRef}
-        className={cursorClasses}
-        style={{
-          transform: `translate(${position.x}px, ${position.y}px)`,
-        }}
-      >
-        <div className="cursor-ring"></div>
-        <div className="cursor-dot"></div>
-        {isHovering && (
-          <div className="cursor-target">
-            <div className="target-bracket left"></div>
-            <div className="target-bracket right"></div>
-          </div>
-        )}
-        {isLoading && (
-          <div className="cursor-loading">
-            <div className="loading-dot dot1"></div>
-            <div className="loading-dot dot2"></div>
-            <div className="loading-dot dot3"></div>
-          </div>
-        )}
-        <div ref={particlesRef} className="cursor-particles">
-          <div className="particle p1"></div>
-          <div className="particle p2"></div>
-          <div className="particle p3"></div>
-          <div className="particle p4"></div>
+  return createPortal(
+    <div
+      ref={cursorRef}
+      className={cursorClasses}
+      style={{
+        left: position.x,
+        top: position.y,
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
+      <div className="cursor-ring"></div>
+      <div className="cursor-dot"></div>
+      {isHovering && (
+        <div className="cursor-target">
+          <div className="target-bracket left"></div>
+          <div className="target-bracket right"></div>
         </div>
+      )}
+      {isLoading && (
+        <div className="cursor-loading">
+          <div className="loading-dot dot1"></div>
+          <div className="loading-dot dot2"></div>
+          <div className="loading-dot dot3"></div>
+        </div>
+      )}
+      <div ref={particlesRef} className="cursor-particles">
+        <div className="particle p1"></div>
+        <div className="particle p2"></div>
+        <div className="particle p3"></div>
+        <div className="particle p4"></div>
       </div>
-    </>
+    </div>,
+    document.body
   );
 };
 
