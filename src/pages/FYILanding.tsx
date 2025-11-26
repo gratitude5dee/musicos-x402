@@ -97,16 +97,7 @@ const FYILanding = () => {
             transition={{ duration: 1, ease: "easeOut", staggerChildren: 0.15 }}
             className="space-y-8"
           >
-            <motion.img 
-              src={heroDevices}
-              alt="UniversalAI Dashboard on devices"
-              className="w-full max-w-4xl mx-auto"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-            />
-            
-            <motion.h1
+            <motion.h1 
               className="text-4xl md:text-7xl font-bold leading-tight max-w-4xl"
               style={{
                 background: 'linear-gradient(180deg, #ffffff 70%, #a3a3b8)',
@@ -118,6 +109,15 @@ const FYILanding = () => {
             >
               Your Entire Creative Workflow, Unified and Amplified.
             </motion.h1>
+            
+            <motion.img 
+              src={heroDevices}
+              alt="UniversalAI Dashboard on devices"
+              className="w-full max-w-4xl mx-auto"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={heroInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+            />
             
             <motion.p 
               className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed"
