@@ -11,6 +11,7 @@ import featureIdeasToProjects from '@/assets/feature-ideas-to-projects.jpg';
 import featureInTheLoop from '@/assets/feature-in-the-loop.jpg';
 import featureBuildProjects from '@/assets/feature-build-projects.jpg';
 import featureCalendar from '@/assets/feature-calendar.jpg';
+import heroDevices from '@/assets/hero-devices.png';
 
 // Section component for alternating content and mockups
 const Section: React.FC<{
@@ -94,9 +95,18 @@ const FYILanding = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={heroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, ease: "easeOut", staggerChildren: 0.15 }}
-            className="space-y-6"
+            className="space-y-8"
           >
-            <motion.h1 
+            <motion.img 
+              src={heroDevices}
+              alt="UniversalAI Dashboard on devices"
+              className="w-full max-w-4xl mx-auto"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={heroInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+            />
+            
+            <motion.h1
               className="text-4xl md:text-7xl font-bold leading-tight max-w-4xl"
               style={{
                 background: 'linear-gradient(180deg, #ffffff 70%, #a3a3b8)',
