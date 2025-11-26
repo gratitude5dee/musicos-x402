@@ -310,13 +310,14 @@ export const navItems = [{
       name: "RWA WZRD",
       path: "/treasury?tab=rwa-wzrd",
       icon: Building2
+    },
+    {
+      name: "WZRD.trade",
+      path: "#",
+      icon: TrendingUp,
+      isComingSoon: true
     }
   ]
-}, {
-  name: "WZRD.trade",
-  path: "#",
-  icon: TrendingUp,
-  isComingSoon: true
 }, {
   name: "Profile",
   path: "/profile",
