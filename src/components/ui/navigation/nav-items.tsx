@@ -237,7 +237,7 @@ export const navItems = [{
     }
   ]
 }, {
-  name: "Hyperrelational",
+  name: "Audience Data",
   path: "https://dub.sh/hyperelational",
   icon: Database
 }, {
