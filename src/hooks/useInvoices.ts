@@ -2,14 +2,35 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { MusicInvoice, InvoiceFilters, LineItem } from '@/types/invoice';
 import { Json } from '@/integrations/supabase/types';
+import { mockInvoices } from '@/lib/finances/__mocks__/invoice-fixtures';
 
 export const useInvoices = (filters?: InvoiceFilters) => {
   return useQuery({
     queryKey: ['invoices', filters],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      // Check if user is in guest mode
+      const isGuestMode = localStorage.getItem('guest_mode') === 'true';
       
-      if (!user) throw new Error('Not authenticated');
+      if (isGuestMode) {
+        // Return mock data for guest mode
+        let filtered = mockInvoices;
+        if (filters?.status && filters.status !== 'all') {
+          filtered = filtered.filter(inv => inv.status === filters.status);
+        }
+        return filtered;
+      }
+
+      // Check if user is authenticated
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        // Return mock data for unauthenticated users
+        let filtered = mockInvoices;
+        if (filters?.status && filters.status !== 'all') {
+          filtered = filtered.filter(inv => inv.status === filters.status);
+        }
+        return filtered;
+      }
 
       let query = supabase
         .from('invoices')
@@ -25,7 +46,7 @@ export const useInvoices = (filters?: InvoiceFilters) => {
             )
           )
         `)
-        .eq('user_id', user.id)
+        .eq('user_id', session.user.id)
         .order('created_at', { ascending: false });
 
       // Apply status filter
