@@ -10,6 +10,9 @@ import { AgentProvider } from "@/context/AgentContext";
 import { SolanaProvider } from "@/components/providers/SolanaProvider";
 import { EnhancedAuthProvider } from "@/context/EnhancedAuthContext";
 import { ProtectedRoute } from "@/components/ui/ProtectedRoute";
+import { EVMWalletProvider } from "@/context/EVMWalletContext";
+import { StoryClientProvider } from "@/context/StoryClientContext";
+import { IPKitProvider } from "@/providers/IPKitProvider";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
@@ -96,13 +99,16 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <SolanaProvider>
-            <EnhancedAuthProvider>
-              <WalletProvider>
-                <OnboardingProvider>
-                  <AgentProvider>
-                    <TooltipProvider>
-                      <Toaster />
-                      <Routes>
+            <EVMWalletProvider>
+              <StoryClientProvider chain="testnet">
+                <IPKitProvider chain="testnet">
+                  <EnhancedAuthProvider>
+                    <WalletProvider>
+                      <OnboardingProvider>
+                        <AgentProvider>
+                          <TooltipProvider>
+                            <Toaster />
+                            <Routes>
                       {/* Public routes */}
                       <Route path="/" element={<FYILanding />} />
                       <Route path="/auth" element={<Auth />} />
@@ -185,11 +191,14 @@ function App() {
 
                       <Route path="*" element={<NotFound />} />
                       </Routes>
-                    </TooltipProvider>
-                  </AgentProvider>
-                </OnboardingProvider>
-              </WalletProvider>
-            </EnhancedAuthProvider>
+                            </TooltipProvider>
+                          </AgentProvider>
+                        </OnboardingProvider>
+                      </WalletProvider>
+                    </EnhancedAuthProvider>
+                  </IPKitProvider>
+                </StoryClientProvider>
+              </EVMWalletProvider>
           </SolanaProvider>
         </AuthProvider>
       </BrowserRouter>

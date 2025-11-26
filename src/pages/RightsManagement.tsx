@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NetworkProvider } from "@/context/NetworkContext";
 import { NetworkSwitcher } from "@/components/rights/NetworkSwitcher";
 import { WalletStatusPanel } from "@/components/rights/WalletStatusPanel";
+import { StoryWalletConnect } from "@/components/wallet/StoryWalletConnect";
 import { AssetHeaderStrip } from "@/components/rights/AssetHeaderStrip";
 import { IPLineagePanel } from "@/components/rights/IPLineagePanel";
 import { LicensingAtAGlance } from "@/components/rights/LicensingAtAGlance";
@@ -39,8 +40,9 @@ const RightsManagement = () => {
             </div>
             <div className="flex items-center gap-3">
               <NetworkSwitcher />
+              <StoryWalletConnect />
               <WalletStatusPanel />
-              <Button 
+              <Button
                 className="bg-primary hover:bg-primary/80"
                 onClick={() => setIsRegistrationWizardOpen(true)}
               >
