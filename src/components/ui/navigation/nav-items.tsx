@@ -11,7 +11,7 @@ import {
   User, Music, Landmark, TrendingUp, Droplets, CreditCard, Calendar, UserCircle,
   Briefcase, LayoutDashboard, FileText, QrCode, UserPlus, Upload, FilePlus, FilePieChart,
   Home, Banknote, Zap, Receipt, BarChart3, MessageSquare, Radar, Sparkles, ScanLine, Rss, 
-  Camera, Package, Truck, Search
+  Camera, Package, Truck, Search, Gavel
 } from "lucide-react";
 
 export const navItems = [{
@@ -73,9 +73,9 @@ export const navItems = [{
       icon: Shield,
       hasSubmenu: true,
       submenuItems: [
-        { name: "Overview", path: "/rights" },
-        { name: "Royalty Graph", path: "/royalties" },
-        { name: "Disputes", path: "/disputes" },
+        { name: "Overview", path: "/rights", icon: Shield },
+        { name: "Royalty Graph", path: "/royalties", icon: BarChart3 },
+        { name: "Disputes", path: "/disputes", icon: Gavel },
       ]
     },
     {
