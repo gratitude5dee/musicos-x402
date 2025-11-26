@@ -76,6 +76,7 @@ export const navItems = [{
         { name: "Overview", path: "/rights", icon: Shield },
         { name: "Royalty Graph", path: "/royalties", icon: BarChart3 },
         { name: "Disputes", path: "/disputes", icon: Gavel },
+        { name: "IP Vault", path: "/vault", icon: Lock },
       ]
     },
     {
