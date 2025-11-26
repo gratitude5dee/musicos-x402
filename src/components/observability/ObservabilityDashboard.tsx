@@ -2,6 +2,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bot, FlaskConical, DollarSign, Zap, CheckCircle2, TrendingUp, TrendingDown, ArrowUpRight, Pause, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const ObservabilityDashboard = () => {
   const metrics = [
@@ -74,30 +75,37 @@ export const ObservabilityDashboard = () => {
       {/* Hero Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {metrics.map((metric, idx) => (
-          <Card key={idx} className="glassmorphism p-6 hover:shadow-card-glow transition-all duration-300">
-            <div className="flex items-start justify-between mb-4">
-              <metric.icon className={`w-8 h-8 ${metric.color}`} />
-              <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                metric.trend === "up" 
-                  ? "bg-success/10 text-success" 
-                  : "bg-muted/50 text-muted-foreground"
-              }`}>
-                {metric.change}
-              </span>
-            </div>
-            <div className="space-y-1">
-              <p className="text-3xl font-bold">{metric.value}</p>
-              <p className="text-sm text-muted-foreground">{metric.subtitle}</p>
-              <p className="text-xs text-muted-foreground">{metric.label}</p>
-            </div>
-          </Card>
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: idx * 0.05 }}
+          >
+            <Card className="glass-card p-6 hover-scale hover:shadow-card-glow transition-all duration-300">
+              <div className="flex items-start justify-between mb-4">
+                <metric.icon className={`w-8 h-8 ${metric.color}`} />
+                <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                  metric.trend === "up" 
+                    ? "bg-success/10 text-success" 
+                    : "bg-muted/50 text-[hsl(var(--text-secondary))]"
+                }`}>
+                  {metric.change}
+                </span>
+              </div>
+              <div className="space-y-1">
+                <p className="text-3xl font-bold text-[hsl(var(--text-primary))]">{metric.value}</p>
+                <p className="text-sm text-[hsl(var(--text-secondary))]">{metric.subtitle}</p>
+                <p className="text-xs text-[hsl(var(--text-tertiary))]">{metric.label}</p>
+              </div>
+            </Card>
+          </motion.div>
         ))}
       </div>
 
       {/* Live Activity Stream */}
-      <Card className="glassmorphism overflow-hidden">
+      <Card className="glass-card overflow-hidden">
         <div className="p-6 border-b border-border/50 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Live Activity Stream</h3>
+          <h3 className="text-lg font-semibold text-[hsl(var(--text-primary))]">Live Activity Stream</h3>
           <div className="flex items-center gap-2">
             <Button size="sm" variant="outline">
               <Pause className="w-3 h-3 mr-1" />
@@ -110,7 +118,7 @@ export const ObservabilityDashboard = () => {
         </div>
         <div className="divide-y divide-border/30">
           {activities.map((activity, idx) => (
-            <div key={idx} className="p-4 hover:bg-accent/5 transition-colors cursor-pointer">
+            <div key={idx} className="p-4 hover:bg-accent/5 transition-colors cursor-pointer group">
               <div className="flex items-start gap-4">
                 <div className={`w-2 h-2 rounded-full mt-2 ${
                   activity.status === "success" ? "bg-success" :
@@ -120,10 +128,10 @@ export const ObservabilityDashboard = () => {
                 }`} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs text-muted-foreground">{activity.time}</span>
-                    <span className="text-sm font-medium">{activity.event}</span>
+                    <span className="text-xs text-[hsl(var(--text-tertiary))]">{activity.time}</span>
+                    <span className="text-sm font-medium text-[hsl(var(--text-primary))]">{activity.event}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{activity.detail}</p>
+                  <p className="text-sm text-[hsl(var(--text-secondary))]">{activity.detail}</p>
                 </div>
               </div>
             </div>
@@ -133,7 +141,7 @@ export const ObservabilityDashboard = () => {
 
       {/* Quick Actions */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+        <h3 className="text-lg font-semibold text-[hsl(var(--text-primary))] mb-4">Quick Actions</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
             { icon: FlaskConical, label: "New Eval", action: "Create" },
@@ -143,25 +151,32 @@ export const ObservabilityDashboard = () => {
             { icon: CheckCircle2, label: "Alerts", action: "Configure" },
             { icon: Zap, label: "Health", action: "Monitor" }
           ].map((item, idx) => (
-            <Card key={idx} className="glassmorphism p-4 hover:shadow-card-glow transition-all duration-300 cursor-pointer group">
-              <item.icon className="w-6 h-6 text-studio-accent mb-3 group-hover:scale-110 transition-transform" />
-              <p className="font-medium text-sm mb-1">{item.label}</p>
-              <p className="text-xs text-muted-foreground">{item.action}</p>
-            </Card>
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+            >
+              <Card className="glass-card p-4 hover-scale hover:shadow-card-glow transition-all duration-300 cursor-pointer group">
+                <item.icon className="w-6 h-6 text-[hsl(var(--accent-purple))] mb-3 group-hover:scale-110 transition-transform" />
+                <p className="font-medium text-sm mb-1 text-[hsl(var(--text-primary))]">{item.label}</p>
+                <p className="text-xs text-[hsl(var(--text-secondary))]">{item.action}</p>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>
 
       {/* Agent Performance Matrix */}
-      <Card className="glassmorphism overflow-hidden">
+      <Card className="glass-card overflow-hidden">
         <div className="p-6 border-b border-border/50 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Agent Performance Matrix</h3>
+          <h3 className="text-lg font-semibold text-[hsl(var(--text-primary))]">Agent Performance Matrix</h3>
           <Button size="sm" variant="outline">Sort <ChevronDown className="w-3 h-3 ml-1" /></Button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="border-b border-border/30">
-              <tr className="text-left text-xs text-muted-foreground">
+              <tr className="text-left text-xs text-[hsl(var(--text-secondary))]">
                 <th className="p-4 font-medium">Agent Name</th>
                 <th className="p-4 font-medium">Status</th>
                 <th className="p-4 font-medium">Evals</th>
@@ -173,7 +188,7 @@ export const ObservabilityDashboard = () => {
             <tbody className="divide-y divide-border/30">
               {agents.map((agent, idx) => (
                 <tr key={idx} className="hover:bg-accent/5 transition-colors">
-                  <td className="p-4 font-medium">{agent.name}</td>
+                  <td className="p-4 font-medium text-[hsl(var(--text-primary))]">{agent.name}</td>
                   <td className="p-4">
                     <div className="flex gap-0.5">
                       {Array.from({ length: 5 }).map((_, i) => (
@@ -186,10 +201,10 @@ export const ObservabilityDashboard = () => {
                       ))}
                     </div>
                   </td>
-                  <td className="p-4 text-sm">{agent.evals}</td>
-                  <td className="p-4 text-sm">{agent.passRate}</td>
-                  <td className="p-4 text-sm">{agent.latency}</td>
-                  <td className="p-4 text-sm">{agent.cost}</td>
+                  <td className="p-4 text-sm text-[hsl(var(--text-secondary))]">{agent.evals}</td>
+                  <td className="p-4 text-sm text-[hsl(var(--text-secondary))]">{agent.passRate}</td>
+                  <td className="p-4 text-sm text-[hsl(var(--text-secondary))]">{agent.latency}</td>
+                  <td className="p-4 text-sm text-[hsl(var(--text-secondary))]">{agent.cost}</td>
                 </tr>
               ))}
             </tbody>

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Plus, AlertCircle, DollarSign, Bug, Edit, Eye, Trash2, CheckCircle2, Clock } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const AlertsManagement = () => {
   const [alerts, setAlerts] = useState([
@@ -71,8 +72,8 @@ export const AlertsManagement = () => {
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold">Alert Rules</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-2xl font-bold text-[hsl(var(--text-primary))]">Alert Rules</h2>
+            <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">
               Configure when and how to be notified
             </p>
           </div>
@@ -92,63 +93,70 @@ export const AlertsManagement = () => {
         </div>
 
         <div className="space-y-4">
-          {alerts.map((alert) => (
-            <Card key={alert.id} className="glassmorphism p-6 hover:shadow-card-glow transition-all">
-              <div className="space-y-4">
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3 flex-1">
-                    <alert.icon className={`w-6 h-6 ${alert.color} mt-1`} />
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold mb-2">{alert.title}</h3>
-                      <div className="space-y-1 text-sm text-muted-foreground">
-                        <p><span className="font-medium">Trigger:</span> {alert.trigger}</p>
-                        {alert.scope && <p><span className="font-medium">Scope:</span> {alert.scope}</p>}
-                        {alert.current && <p><span className="font-medium">Current:</span> {alert.current}</p>}
-                        <p><span className="font-medium">Channels:</span> {alert.channels.join(", ")}</p>
+          {alerts.map((alert, idx) => (
+            <motion.div
+              key={alert.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+            >
+              <Card className="glass-card p-6 hover-scale hover:shadow-card-glow transition-all">
+                <div className="space-y-4">
+                  {/* Header */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3 flex-1">
+                      <alert.icon className={`w-6 h-6 ${alert.color} mt-1`} />
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-[hsl(var(--text-primary))] mb-2">{alert.title}</h3>
+                         <div className="space-y-1 text-sm text-[hsl(var(--text-secondary))]">
+                          <p><span className="font-medium">Trigger:</span> {alert.trigger}</p>
+                          {alert.scope && <p><span className="font-medium">Scope:</span> {alert.scope}</p>}
+                          {alert.current && <p><span className="font-medium">Current:</span> {alert.current}</p>}
+                          <p><span className="font-medium">Channels:</span> {alert.channels.join(", ")}</p>
+                        </div>
                       </div>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                      <span className="text-sm font-medium text-success">Active</span>
+                    </div>
                   </div>
+
+                  {/* Footer */}
+                  {alert.recentTriggers !== undefined && (
+                    <div className="pt-4 border-t border-border/30">
+                      <p className="text-sm text-[hsl(var(--text-secondary))] mb-3">
+                        Recent Triggers: {alert.recentTriggers} in past {alert.recentTriggers === 0 ? "30 days" : "7 days"}
+                      </p>
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                    <span className="text-sm font-medium text-success">Active</span>
+                    <Button size="sm" variant="outline" className="gap-1">
+                      <Edit className="w-3 h-3" />
+                      Edit
+                    </Button>
+                    <Button size="sm" variant="outline" className="gap-1">
+                      Disable
+                    </Button>
+                    <Button size="sm" variant="outline" className="gap-1">
+                      <Eye className="w-3 h-3" />
+                      View History
+                    </Button>
+                    {alert.current && (
+                      <Button size="sm" variant="outline" className="gap-1">
+                        Adjust Threshold
+                      </Button>
+                    )}
+                    {alert.recentTriggers === 0 && (
+                      <Button size="sm" variant="outline" className="gap-1">
+                        Test Alert
+                      </Button>
+                    )}
                   </div>
                 </div>
-
-                {/* Footer */}
-                {alert.recentTriggers !== undefined && (
-                  <div className="pt-4 border-t border-border/30">
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Recent Triggers: {alert.recentTriggers} in past {alert.recentTriggers === 0 ? "30 days" : "7 days"}
-                    </p>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2">
-                  <Button size="sm" variant="outline" className="gap-1">
-                    <Edit className="w-3 h-3" />
-                    Edit
-                  </Button>
-                  <Button size="sm" variant="outline" className="gap-1">
-                    Disable
-                  </Button>
-                  <Button size="sm" variant="outline" className="gap-1">
-                    <Eye className="w-3 h-3" />
-                    View History
-                  </Button>
-                  {alert.current && (
-                    <Button size="sm" variant="outline" className="gap-1">
-                      Adjust Threshold
-                    </Button>
-                  )}
-                  {alert.recentTriggers === 0 && (
-                    <Button size="sm" variant="outline" className="gap-1">
-                      Test Alert
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -157,8 +165,8 @@ export const AlertsManagement = () => {
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold">Webhook Integrations</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-2xl font-bold text-[hsl(var(--text-primary))]">Webhook Integrations</h2>
+            <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">
               Receive real-time updates via HTTP callbacks
             </p>
           </div>
@@ -178,68 +186,75 @@ export const AlertsManagement = () => {
         </div>
 
         <div className="space-y-4">
-          {webhooks.map((webhook) => (
-            <Card key={webhook.id} className="glassmorphism p-6 hover:shadow-card-glow transition-all">
-              <div className="space-y-4">
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                      🔗 {webhook.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground font-mono mb-3">{webhook.endpoint}</p>
-                    
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium">Events:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {webhook.events.map((event, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
-                            {event}
-                          </Badge>
-                        ))}
+          {webhooks.map((webhook, idx) => (
+            <motion.div
+              key={webhook.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+            >
+              <Card className="glass-card p-6 hover-scale hover:shadow-card-glow transition-all">
+                <div className="space-y-4">
+                  {/* Header */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-[hsl(var(--text-primary))] mb-2 flex items-center gap-2">
+                        🔗 {webhook.name}
+                      </h3>
+                      <p className="text-sm text-[hsl(var(--text-secondary))] font-mono mb-3">{webhook.endpoint}</p>
+                      
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium text-[hsl(var(--text-primary))]">Events:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {webhook.events.map((event, eidx) => (
+                            <Badge key={eidx} variant="outline" className="text-xs">
+                              {event}
+                            </Badge>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Stats */}
-                <div className="pt-4 border-t border-border/30 space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      Last Delivery:
-                    </span>
-                    <span className="flex items-center gap-2">
-                      {webhook.lastDelivery}
-                      <CheckCircle2 className="w-4 h-4 text-success" />
-                      Success
-                    </span>
+                  {/* Stats */}
+                  <div className="pt-4 border-t border-border/30 space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-[hsl(var(--text-secondary))] flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        Last Delivery:
+                      </span>
+                      <span className="flex items-center gap-2 text-[hsl(var(--text-primary))]">
+                        {webhook.lastDelivery}
+                        <CheckCircle2 className="w-4 h-4 text-success" />
+                        Success
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-[hsl(var(--text-secondary))]">Success Rate:</span>
+                      <span className="font-medium text-[hsl(var(--text-primary))]">{webhook.successRate} ({webhook.deliveries} delivered)</span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Success Rate:</span>
-                    <span className="font-medium">{webhook.successRate} ({webhook.deliveries} delivered)</span>
-                  </div>
-                </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                  <Button size="sm" variant="outline" className="gap-1">
-                    <Edit className="w-3 h-3" />
-                    Edit
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    Test Webhook
-                  </Button>
-                  <Button size="sm" variant="outline" className="gap-1">
-                    <Eye className="w-3 h-3" />
-                    View Logs
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    Disable
-                  </Button>
+                  {/* Actions */}
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" variant="outline" className="gap-1">
+                      <Edit className="w-3 h-3" />
+                      Edit
+                    </Button>
+                    <Button size="sm" variant="outline">
+                      Test Webhook
+                    </Button>
+                    <Button size="sm" variant="outline" className="gap-1">
+                      <Eye className="w-3 h-3" />
+                      View Logs
+                    </Button>
+                    <Button size="sm" variant="outline">
+                      Disable
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>
