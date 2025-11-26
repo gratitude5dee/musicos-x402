@@ -105,9 +105,7 @@ const FYILanding = () => {
             WebkitTextFillColor: 'transparent',
             letterSpacing: '-2px',
             textShadow: '0 0 80px rgba(255, 255, 255, 0.15)'
-          }}>UniversalAI:
-
-
+          }}>UniversalAI: 
 Every Being is A Billion</motion.h1>
             
             <motion.img src={heroDevices} alt="UniversalAI Dashboard on devices" className="w-full max-w-4xl mx-auto" initial={{
