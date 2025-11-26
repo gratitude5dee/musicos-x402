@@ -1,54 +1,170 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { type User, getUserByWalletAddress, createOrUpdateUser } from '../utils/supabase';
+import { sendLoginCode, verifyLoginCode } from '../utils/thirdwebAPI';
 
-interface AuthContextType {
+interface AuthState {
+  isAuthenticated: boolean;
+  isLoading: boolean;
   user: User | null;
-  session: Session | null;
-  loading: boolean;
+  token: string | null;
+  walletAddress: string | null;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  session: null,
-  loading: true,
-});
+interface AuthContextType extends AuthState {
+  login: (email: string, code: string) => Promise<void>;
+  sendCode: (email: string) => Promise<void>;
+  logout: () => void;
+  updateUser: (updates: Partial<User>) => void;
+  refreshUser: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [authState, setAuthState] = useState<AuthState>({
+    isAuthenticated: false,
+    isLoading: true,
+    user: null,
+    token: null,
+    walletAddress: null,
+  });
 
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
+    const initializeAuth = async () => {
+      try {
+        const storedToken = localStorage.getItem('thirdweb_token');
+        const storedWalletAddress = localStorage.getItem('wallet_address');
+
+        if (storedToken && storedWalletAddress) {
+          const user = await getUserByWalletAddress(storedWalletAddress);
+          
+          if (user) {
+            setAuthState({
+              isAuthenticated: true,
+              isLoading: false,
+              user,
+              token: storedToken,
+              walletAddress: storedWalletAddress,
+            });
+          } else {
+            localStorage.removeItem('thirdweb_token');
+            localStorage.removeItem('wallet_address');
+            setAuthState(prev => ({ ...prev, isLoading: false }));
+          }
+        } else {
+          setAuthState(prev => ({ ...prev, isLoading: false }));
+        }
+      } catch (error) {
+        console.error('Failed to initialize auth:', error);
+        localStorage.removeItem('thirdweb_token');
+        localStorage.removeItem('wallet_address');
+        setAuthState(prev => ({ ...prev, isLoading: false }));
       }
-    );
+    };
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    initializeAuth();
   }, []);
 
+  const sendCode = async (email: string) => {
+    try {
+      await sendLoginCode(email);
+    } catch (error) {
+      console.error('Failed to send login code:', error);
+      throw error;
+    }
+  };
+
+  const login = async (email: string, code: string) => {
+    try {
+      setAuthState(prev => ({ ...prev, isLoading: true }));
+
+      const authResult = await verifyLoginCode(email, code);
+      const { token, walletAddress, isNewUser } = authResult;
+
+      localStorage.setItem('thirdweb_token', token);
+      localStorage.setItem('wallet_address', walletAddress);
+
+      let user: User;
+      if (isNewUser) {
+        user = await createOrUpdateUser(email, walletAddress);
+      } else {
+        const existingUser = await getUserByWalletAddress(walletAddress);
+        if (existingUser) {
+          user = existingUser;
+        } else {
+          user = await createOrUpdateUser(email, walletAddress);
+        }
+      }
+
+      setAuthState({
+        isAuthenticated: true,
+        isLoading: false,
+        user,
+        token,
+        walletAddress,
+      });
+    } catch (error) {
+      console.error('Login failed:', error);
+      setAuthState(prev => ({ ...prev, isLoading: false }));
+      throw error;
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('thirdweb_token');
+    localStorage.removeItem('wallet_address');
+    setAuthState({
+      isAuthenticated: false,
+      isLoading: false,
+      user: null,
+      token: null,
+      walletAddress: null,
+    });
+  };
+
+  const updateUser = (updates: Partial<User>) => {
+    setAuthState(prev => ({
+      ...prev,
+      user: prev.user ? { ...prev.user, ...updates } : null,
+    }));
+  };
+
+  const refreshUser = async () => {
+    if (!authState.walletAddress) return;
+
+    try {
+      const user = await getUserByWalletAddress(authState.walletAddress);
+      if (user) {
+        setAuthState(prev => ({ ...prev, user }));
+      }
+    } catch (error) {
+      console.error('Failed to refresh user:', error);
+    }
+  };
+
+  const contextValue: AuthContextType = {
+    ...authState,
+    login,
+    sendCode,
+    logout,
+    updateUser,
+    refreshUser,
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
