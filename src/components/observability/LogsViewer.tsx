@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Download, Pause, Play, RefreshCw, AlertCircle, Info, Bug, AlertTriangle, FileText, Eye, RotateCcw } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const LogsViewer = () => {
   const [autoRefresh, setAutoRefresh] = useState(true);
@@ -37,14 +38,14 @@ export const LogsViewer = () => {
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold">System Logs</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-2xl font-bold text-[hsl(var(--text-primary))]">System Logs</h2>
+            <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">
               Real-time and historical system activity
             </p>
           </div>
         </div>
 
-        <Card className="glassmorphism overflow-hidden">
+        <Card className="glass-card overflow-hidden">
           {/* Filters */}
           <div className="p-4 border-b border-border/50 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 flex-1">
@@ -86,7 +87,7 @@ export const LogsViewer = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b border-border/30 bg-accent/5">
-                <tr className="text-left text-xs text-muted-foreground">
+                <tr className="text-left text-xs text-[hsl(var(--text-secondary))]">
                   <th className="p-3 font-medium">Time</th>
                   <th className="p-3 font-medium">Level</th>
                   <th className="p-3 font-medium">Source</th>
@@ -103,8 +104,8 @@ export const LogsViewer = () => {
                         {log.level}
                       </Badge>
                     </td>
-                    <td className="p-3 text-sm font-medium">{log.source}</td>
-                    <td className="p-3 text-sm">{log.message}</td>
+                    <td className="p-3 text-sm font-medium text-[hsl(var(--text-primary))]">{log.source}</td>
+                    <td className="p-3 text-sm text-[hsl(var(--text-secondary))]">{log.message}</td>
                   </tr>
                 ))}
               </tbody>
@@ -115,7 +116,7 @@ export const LogsViewer = () => {
           <div className="p-4 border-t border-border/30 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full ${autoRefresh ? "bg-success animate-pulse" : "bg-muted"}`} />
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-[hsl(var(--text-secondary))]">
                 {autoRefresh ? "Auto-refresh enabled" : "Auto-refresh paused"}
               </span>
             </div>
@@ -125,11 +126,11 @@ export const LogsViewer = () => {
       </div>
 
       {/* Test Case Debugger */}
-      <Card className="glassmorphism p-6">
+      <Card className="glass-card p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold">Test Case Debugger</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-xl font-bold text-[hsl(var(--text-primary))]">Test Case Debugger</h2>
+            <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">
               Deep dive into individual test executions
             </p>
           </div>
@@ -147,9 +148,9 @@ export const LogsViewer = () => {
 
           {/* Input Data */}
           <div>
-            <p className="text-sm font-semibold mb-2">Input Data:</p>
+            <p className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-2">Input Data:</p>
             <Card className="bg-accent/5 p-4 border-border/30">
-              <pre className="text-xs font-mono">
+              <pre className="text-xs font-mono text-[hsl(var(--text-secondary))]">
 {`{
   "ticket_text": "Excel formula not calculating",
   "correct_label": "Software",
@@ -161,16 +162,16 @@ export const LogsViewer = () => {
 
           {/* Prompt */}
           <div>
-            <p className="text-sm font-semibold mb-2">Prompt Sent:</p>
+            <p className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-2">Prompt Sent:</p>
             <Card className="bg-accent/5 p-4 border-border/30">
               <div className="space-y-3">
                 <div>
                   <Badge variant="outline" className="text-xs mb-2">Developer Message</Badge>
-                  <p className="text-xs">You are an expert in categorizing IT support...</p>
+                  <p className="text-xs text-[hsl(var(--text-secondary))]">You are an expert in categorizing IT support...</p>
                 </div>
                 <div>
                   <Badge variant="outline" className="text-xs mb-2">User Message</Badge>
-                  <p className="text-xs">Excel formula not calculating</p>
+                  <p className="text-xs text-[hsl(var(--text-secondary))]">Excel formula not calculating</p>
                 </div>
               </div>
             </Card>
@@ -179,15 +180,15 @@ export const LogsViewer = () => {
           {/* Response */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm font-semibold mb-2">Model Response:</p>
+              <p className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-2">Model Response:</p>
               <Card className="bg-accent/5 p-4 border-border/30">
-                <p className="text-sm">Other</p>
+                <p className="text-sm text-[hsl(var(--text-secondary))]">Other</p>
               </Card>
             </div>
             <div>
-              <p className="text-sm font-semibold mb-2">Expected Output:</p>
+              <p className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-2">Expected Output:</p>
               <Card className="bg-accent/5 p-4 border-border/30">
-                <p className="text-sm">Software</p>
+                <p className="text-sm text-[hsl(var(--text-secondary))]">Software</p>
               </Card>
             </div>
           </div>
@@ -196,30 +197,30 @@ export const LogsViewer = () => {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <AlertCircle className="w-5 h-5 text-destructive" />
-              <p className="text-sm font-semibold">Grading Result: <span className="text-destructive">FAILED</span></p>
+              <p className="text-sm font-semibold text-[hsl(var(--text-primary))]">Grading Result: <span className="text-destructive">FAILED</span></p>
             </div>
-            <p className="text-sm text-muted-foreground">Reason: String mismatch ("Other" != "Software")</p>
+            <p className="text-sm text-[hsl(var(--text-secondary))]">Reason: String mismatch ("Other" != "Software")</p>
           </div>
 
           {/* Metadata */}
           <div>
-            <p className="text-sm font-semibold mb-2">Metadata:</p>
+            <p className="text-sm font-semibold text-[hsl(var(--text-primary))] mb-2">Metadata:</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-xs text-muted-foreground">Latency</p>
-                <p className="text-sm font-medium">189ms</p>
+                <p className="text-xs text-[hsl(var(--text-tertiary))]">Latency</p>
+                <p className="text-sm font-medium text-[hsl(var(--text-primary))]">189ms</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Tokens</p>
-                <p className="text-sm font-medium">86 (84 + 2)</p>
+                <p className="text-xs text-[hsl(var(--text-tertiary))]">Tokens</p>
+                <p className="text-sm font-medium text-[hsl(var(--text-primary))]">86 (84 + 2)</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Cost</p>
-                <p className="text-sm font-medium">$0.0011</p>
+                <p className="text-xs text-[hsl(var(--text-tertiary))]">Cost</p>
+                <p className="text-sm font-medium text-[hsl(var(--text-primary))]">$0.0011</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Model</p>
-                <p className="text-sm font-medium">gpt-4o-mini</p>
+                <p className="text-xs text-[hsl(var(--text-tertiary))]">Model</p>
+                <p className="text-sm font-medium text-[hsl(var(--text-primary))]">gpt-4o-mini</p>
               </div>
             </div>
           </div>

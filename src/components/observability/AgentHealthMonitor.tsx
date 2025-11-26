@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from "framer-motion";
 
 interface AgentHealth {
   agentId: string;
@@ -138,23 +139,26 @@ const AgentHealthMonitor = () => {
   return (
     <div className="space-y-6">
       {/* Agent List */}
-      <Card>
+      <Card className="glass-card">
         <CardHeader>
-          <CardTitle>Agent Health Status</CardTitle>
+          <CardTitle className="text-[hsl(var(--text-primary))]">Agent Health Status</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {agents.map((agent) => (
-              <div
+            {agents.map((agent, idx) => (
+              <motion.div
                 key={agent.agentId}
-                className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-accent cursor-pointer transition-colors"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-accent cursor-pointer transition-all hover-scale"
                 onClick={() => setSelectedAgent(agent.agentId)}
               >
                 <div className="flex items-center gap-4 flex-1">
                   <Circle className={`w-3 h-3 fill-current ${getStatusColor(agent.status)}`} />
                   <div className="flex-1">
-                    <div className="font-medium">{agent.name}</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="font-medium text-[hsl(var(--text-primary))]">{agent.name}</div>
+                    <div className="text-sm text-[hsl(var(--text-secondary))]">
                       {agent.status === 'offline' ? 'Offline' : `${agent.uptimePercentage}% uptime • ${agent.requestsPerMinute} RPM`}
                     </div>
                   </div>
@@ -186,7 +190,7 @@ const AgentHealthMonitor = () => {
                     <FileText className="w-4 h-4" />
                   </Button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </CardContent>
@@ -194,8 +198,13 @@ const AgentHealthMonitor = () => {
 
       {/* Selected Agent Details */}
       {agent && (
-        <Tabs defaultValue="performance">
-          <TabsList className="grid w-full grid-cols-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Tabs defaultValue="performance">
+            <TabsList className="glass-card grid w-full grid-cols-3">
             <TabsTrigger value="performance">Performance</TabsTrigger>
             <TabsTrigger value="metrics">Metrics</TabsTrigger>
             <TabsTrigger value="alerts">Alerts</TabsTrigger>
@@ -203,9 +212,9 @@ const AgentHealthMonitor = () => {
 
           <TabsContent value="performance" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <Card>
+              <Card className="glass-card">
                 <CardHeader>
-                  <CardTitle className="text-sm font-medium">Response Time</CardTitle>
+                  <CardTitle className="text-sm font-medium text-[hsl(var(--text-primary))]">Response Time</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={200}>
@@ -220,9 +229,9 @@ const AgentHealthMonitor = () => {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="glass-card">
                 <CardHeader>
-                  <CardTitle className="text-sm font-medium">Throughput</CardTitle>
+                  <CardTitle className="text-sm font-medium text-[hsl(var(--text-primary))]">Throughput</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={200}>
@@ -237,9 +246,9 @@ const AgentHealthMonitor = () => {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="glass-card">
                 <CardHeader>
-                  <CardTitle className="text-sm font-medium">Error Rate</CardTitle>
+                  <CardTitle className="text-sm font-medium text-[hsl(var(--text-primary))]">Error Rate</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={200}>
@@ -257,40 +266,40 @@ const AgentHealthMonitor = () => {
           </TabsContent>
 
           <TabsContent value="metrics">
-            <Card>
+            <Card className="glass-card">
               <CardContent className="pt-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2 text-[hsl(var(--text-secondary))]">
                       <Clock className="w-4 h-4" />
                       <span className="text-sm">Uptime</span>
                     </div>
-                    <div className="text-2xl font-bold">{formatUptime(agent.uptime)}</div>
-                    <div className="text-xs text-muted-foreground">{agent.uptimePercentage}%</div>
+                    <div className="text-2xl font-bold text-[hsl(var(--text-primary))]">{formatUptime(agent.uptime)}</div>
+                    <div className="text-xs text-[hsl(var(--text-tertiary))]">{agent.uptimePercentage}%</div>
                   </div>
 
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2 text-[hsl(var(--text-secondary))]">
                       <Activity className="w-4 h-4" />
                       <span className="text-sm">Requests/Min</span>
                     </div>
-                    <div className="text-2xl font-bold">{agent.requestsPerMinute}</div>
+                    <div className="text-2xl font-bold text-[hsl(var(--text-primary))]">{agent.requestsPerMinute}</div>
                   </div>
 
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2 text-[hsl(var(--text-secondary))]">
                       <TrendingUp className="w-4 h-4" />
                       <span className="text-sm">Avg Response</span>
                     </div>
-                    <div className="text-2xl font-bold">{agent.avgResponseTime}ms</div>
+                    <div className="text-2xl font-bold text-[hsl(var(--text-primary))]">{agent.avgResponseTime}ms</div>
                   </div>
 
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2 text-[hsl(var(--text-secondary))]">
                       <AlertCircle className="w-4 h-4" />
                       <span className="text-sm">Error Rate</span>
                     </div>
-                    <div className="text-2xl font-bold">{agent.errorRate}%</div>
+                    <div className="text-2xl font-bold text-[hsl(var(--text-primary))]">{agent.errorRate}%</div>
                   </div>
                 </div>
               </CardContent>
@@ -298,9 +307,9 @@ const AgentHealthMonitor = () => {
           </TabsContent>
 
           <TabsContent value="alerts">
-            <Card>
+            <Card className="glass-card">
               <CardHeader>
-                <CardTitle>Alert Configuration</CardTitle>
+                <CardTitle className="text-[hsl(var(--text-primary))]">Alert Configuration</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
@@ -326,7 +335,7 @@ const AgentHealthMonitor = () => {
                   </div>
 
                   <div className="space-y-4 pt-4 border-t">
-                    <h4 className="font-medium">Alert Thresholds</h4>
+                    <h4 className="font-medium text-[hsl(var(--text-primary))]">Alert Thresholds</h4>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
@@ -352,6 +361,7 @@ const AgentHealthMonitor = () => {
             </Card>
           </TabsContent>
         </Tabs>
+        </motion.div>
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Activity, FlaskConical, Target, TrendingUp, Terminal, Heart, ScrollText, Bell, Monitor } from "lucide-react";
+import { motion } from "framer-motion";
 import { ObservabilityDashboard } from "@/components/observability/ObservabilityDashboard";
 import { EvalsFramework } from "@/components/observability/EvalsFramework";
 import { ClusterAnalysis } from "@/components/observability/ClusterAnalysis";
@@ -20,33 +21,40 @@ const Observability = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6 p-6">
-        {/* Hero Header */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-studio-accent via-creative-primary to-business-primary bg-clip-text text-transparent">
-                Observability Command Center
-              </h1>
-              <p className="text-muted-foreground mt-2 text-lg">
-                Test Everything. Monitor Everything. Improve Everything.
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-success/10 border border-success/20">
-                <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                <span className="text-sm font-medium text-success">SYSTEM STATUS: OPTIMAL</span>
+        {/* Hero Header - Sticky with Glass Morphism */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/50 -mx-6 -mt-6 px-6 py-4 mb-6"
+        >
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-[hsl(var(--accent-purple))] via-[hsl(var(--accent-cyan))] to-[hsl(var(--accent-blue))] bg-clip-text text-transparent">
+                  Observability Command Center
+                </h1>
+                <p className="text-[hsl(var(--text-secondary))] mt-2 text-lg">
+                  Test Everything. Monitor Everything. Improve Everything.
+                </p>
               </div>
-              <Button size="sm" variant="outline" className="gap-2">
-                <Activity className="w-4 h-4" />
-                Auto-refresh: ON
-              </Button>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-success/10 border border-success/20">
+                  <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                  <span className="text-sm font-medium text-success">SYSTEM STATUS: OPTIMAL</span>
+                </div>
+                <Button size="sm" variant="outline" className="gap-2">
+                  <Activity className="w-4 h-4" />
+                  Auto-refresh: ON
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Navigation Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 lg:grid-cols-9 w-full bg-card/50 backdrop-blur-md border border-border/50 p-1">
+          <TabsList className="glass-card grid grid-cols-4 lg:grid-cols-9 w-full p-1">
             <TabsTrigger value="dashboard" className="gap-2">
               <Activity className="w-4 h-4" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -86,39 +94,93 @@ const Observability = () => {
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
-            <ObservabilityDashboard />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ObservabilityDashboard />
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="evals" className="space-y-6">
-            <EvalsFramework />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <EvalsFramework />
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="clusters" className="space-y-6">
-            <ClusterAnalysis />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ClusterAnalysis />
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
-            <AdvancedAnalytics />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AdvancedAnalytics />
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="command" className="space-y-6">
-            <CommandCenter />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CommandCenter />
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="health" className="space-y-6">
-            <AgentHealthMonitor />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AgentHealthMonitor />
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="activity" className="space-y-6">
-            <AgentActivityMonitor />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AgentActivityMonitor />
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="logs" className="space-y-6">
-            <LogsViewer />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <LogsViewer />
+            </motion.div>
           </TabsContent>
 
           <TabsContent value="alerts" className="space-y-6">
-            <AlertsManagement />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AlertsManagement />
+            </motion.div>
           </TabsContent>
         </Tabs>
       </div>

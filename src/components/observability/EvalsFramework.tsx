@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Upload, Play, Search, Filter, Settings, BarChart3, FileText, CheckCircle2, XCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface EvalSuite {
   id: string;
@@ -120,23 +121,29 @@ export const EvalsFramework = () => {
       {/* Eval Suites */}
       <div className="space-y-4">
         {mockEvalSuites.map((suite, idx) => (
-          <Card key={idx} className="glassmorphism p-6 hover:shadow-card-glow transition-all">
-            <div className="space-y-4">
-              {/* Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-2">📋 {suite.title}</h3>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>Tests: {suite.tests}</span>
-                    <span>•</span>
-                    <span className={suite.passRate >= 95 ? "text-success" : "text-amber-500"}>
-                      Pass Rate: {suite.passRate}%
-                    </span>
-                    <span>•</span>
-                    <span>Last Run: {suite.lastRun}</span>
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: idx * 0.1 }}
+          >
+            <Card className="glass-card p-6 hover-scale hover:shadow-card-glow transition-all">
+              <div className="space-y-4">
+                {/* Header */}
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-[hsl(var(--text-primary))] mb-2">📋 {suite.title}</h3>
+                    <div className="flex items-center gap-4 text-sm text-[hsl(var(--text-secondary))]">
+                      <span>Tests: {suite.tests}</span>
+                      <span>•</span>
+                      <span className={suite.passRate >= 95 ? "text-success" : "text-amber-500"}>
+                        Pass Rate: {suite.passRate}%
+                      </span>
+                      <span>•</span>
+                      <span>Last Run: {suite.lastRun}</span>
+                    </div>
+                    <p className="text-sm text-[hsl(var(--text-secondary))] mt-1">Agent: {suite.agent}</p>
                   </div>
-                  <p className="text-sm text-muted-foreground mt-1">Agent: {suite.agent}</p>
-                </div>
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                   suite.passRate >= 95 
                     ? "bg-success/10 text-success" 
@@ -148,10 +155,10 @@ export const EvalsFramework = () => {
 
               {/* Criteria */}
               <div>
-                <p className="text-sm font-medium mb-2">Testing Criteria:</p>
+                <p className="text-sm font-medium text-[hsl(var(--text-primary))] mb-2">Testing Criteria:</p>
                 <ul className="space-y-1">
                   {suite.criteria.map((criterion, cidx) => (
-                    <li key={cidx} className="text-sm text-muted-foreground pl-4">
+                    <li key={cidx} className="text-sm text-[hsl(var(--text-secondary))] pl-4">
                       • {criterion}
                     </li>
                   ))}
@@ -160,10 +167,10 @@ export const EvalsFramework = () => {
 
               {/* Recent Activity */}
               <div>
-                <p className="text-sm font-medium mb-2">Recent Activity:</p>
+                <p className="text-sm font-medium text-[hsl(var(--text-primary))] mb-2">Recent Activity:</p>
                 <div className="space-y-1">
                   {suite.recentRuns.map((run, ridx) => (
-                    <div key={ridx} className="text-sm text-muted-foreground flex items-center gap-2">
+                    <div key={ridx} className="text-sm text-[hsl(var(--text-secondary))] flex items-center gap-2">
                       <CheckCircle2 className="w-3 h-3 text-success" />
                       <span>Run #{run.runNumber}: {run.passed} passed</span>
                     </div>
@@ -192,17 +199,18 @@ export const EvalsFramework = () => {
               </div>
             </div>
           </Card>
+          </motion.div>
         ))}
       </div>
 
       {/* Empty State Hint */}
-      <Card className="glassmorphism p-8 text-center">
+      <Card className="glass-card p-8 text-center">
         <div className="space-y-3">
-          <div className="w-16 h-16 rounded-full bg-studio-accent/10 flex items-center justify-center mx-auto">
-            <Plus className="w-8 h-8 text-studio-accent" />
+          <div className="w-16 h-16 rounded-full bg-[hsl(var(--accent-purple))]/10 flex items-center justify-center mx-auto">
+            <Plus className="w-8 h-8 text-[hsl(var(--accent-purple))]" />
           </div>
-          <h3 className="text-lg font-semibold">Create Your First Eval</h3>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          <h3 className="text-lg font-semibold text-[hsl(var(--text-primary))]">Create Your First Eval</h3>
+          <p className="text-sm text-[hsl(var(--text-secondary))] max-w-md mx-auto">
             Get started by creating an evaluation suite to test and improve your AI agent outputs continuously
           </p>
           <Button className="gap-2">
