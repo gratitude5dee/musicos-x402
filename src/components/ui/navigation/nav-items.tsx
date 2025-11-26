@@ -138,6 +138,10 @@ export const navItems = [{
     { name: "Booky", path: "https://booky.ai", icon: Calendar },
   ]
 }, {
+  name: "Audience Data",
+  path: "https://dub.sh/hyperelational",
+  icon: Database
+}, {
   name: "Agents",
   path: "/agents-integrations",
   icon: NavAgentIcon,
@@ -237,10 +241,6 @@ export const navItems = [{
       icon: Eye
     }
   ]
-}, {
-  name: "Audience Data",
-  path: "https://dub.sh/hyperelational",
-  icon: Database
 }, {
   name: "Finances",
   path: "#",
