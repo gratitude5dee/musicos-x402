@@ -21,12 +21,12 @@ export const navItems = [{
   submenuItems: [
     {
       name: "WZRD.Studio",
-      path: "/wzrd/studio",
+      path: "https://studio.universal-ai.xyz",
       icon: Palette
     },
     {
       name: "KNWLG WRKR",
-      path: "/wzrd/library",
+      path: "https://work.universal-ai.xyz",
       icon: BookOpen
     },
     {
