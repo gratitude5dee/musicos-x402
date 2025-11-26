@@ -307,17 +307,15 @@ export const navItems = [{
       icon: Building2
     },
     {
+      name: "Agent Banking",
+      path: "/treasury?tab=banking",
+      icon: Landmark
+    },
+    {
       name: "WZRD.trade",
       path: "#",
       icon: TrendingUp,
-      hasSubmenu: true,
-      submenuItems: [
-        {
-          name: "Agent Banking",
-          path: "/treasury?tab=banking",
-          icon: Landmark
-        }
-      ]
+      isComingSoon: true
     }
   ]
 }, {
