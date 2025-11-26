@@ -131,11 +131,11 @@ export const navItems = [{
   hasSubmenu: true,
   submenuItems: [
     { name: "Dashboard", path: "/event-toolkit/dashboard", icon: LayoutDashboard },
+    { name: "Booky", path: "https://booky.ai", icon: Calendar },
     { name: "Gigs", path: "/event-toolkit/gigs", icon: Calendar },
     { name: "Invoices", path: "/event-toolkit/invoices", icon: FileText },
     { name: "Contacts", path: "/event-toolkit/contacts", icon: Users },
     { name: "QR Upload", path: "/event-toolkit/qr-upload", icon: QrCode },
-    { name: "Booky", path: "https://booky.ai", icon: Calendar },
   ]
 }, {
   name: "Audience Data",
