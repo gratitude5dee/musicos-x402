@@ -24,6 +24,7 @@ import Analytics from "./pages/Analytics";
 import RightsManagement from "./pages/RightsManagement";
 import RoyaltiesPage from "./pages/RoyaltiesPage";
 import DisputesPage from "./pages/DisputesPage";
+import IPVaultPage from "./pages/IPVaultPage";
 import ThreadOfLife from "./pages/ThreadOfLife";
 import Bridge from "./pages/Bridge";
 import AgentMarketplace from "./pages/AgentMarketplace";
@@ -127,6 +128,7 @@ function App() {
                       <Route path="/rights" element={<ProtectedRoute><RightsManagement /></ProtectedRoute>} />
                       <Route path="/royalties" element={<ProtectedRoute><RoyaltiesPage /></ProtectedRoute>} />
                       <Route path="/disputes" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
+                      <Route path="/vault" element={<ProtectedRoute><IPVaultPage /></ProtectedRoute>} />
                       <Route path="/disputes/raise" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
                       <Route path="/disputes/:disputeId" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
                       <Route path="/thread-of-life" element={<ProtectedRoute><ThreadOfLife /></ProtectedRoute>} />
