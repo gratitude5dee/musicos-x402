@@ -68,6 +68,11 @@ export const navItems = [{
       icon: Music
     },
     {
+      name: "EARTONE",
+      path: "https://eartone.wzrdtech.xyz",
+      icon: Headphones
+    },
+    {
       name: "IP Portal",
       path: "/rights",
       icon: Shield,
