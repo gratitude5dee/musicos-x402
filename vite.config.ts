@@ -31,8 +31,13 @@ export default defineConfig(({ mode }) => ({
     },
     rollupOptions: {
       onwarn(warning, warn) {
-        // Suppress annotation warnings from thirdweb
-        if (warning.code === 'ANNOTATION' || warning.message?.includes('@__PURE__')) {
+        // Suppress annotation warnings from thirdweb and other packages
+        if (
+          warning.code === 'ANNOTATION' ||
+          warning.message?.includes('@__PURE__') ||
+          warning.message?.includes('#__PURE__') ||
+          warning.message?.includes('externalized for browser compatibility')
+        ) {
           return;
         }
         warn(warning);
