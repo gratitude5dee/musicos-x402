@@ -131,7 +131,7 @@ export default function WalletLogin() {
                   <div className="w-full border-t border-[hsl(var(--glass-warm-border))]"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-3 text-[hsl(var(--text-tertiary))] bg-[hsl(var(--glass-warm-bg))] rounded-full">
+                  <span className="px-3 text-[hsl(var(--text-tertiary))] bg-[hsl(var(--glass-warm-surface-2)/0.95)] rounded-full">
                     or continue with
                   </span>
                 </div>
@@ -140,7 +140,7 @@ export default function WalletLogin() {
               {/* Guest Access */}
               <Button
                 variant="outline"
-                className="w-full border-[hsl(var(--glass-warm-border))] bg-[hsl(var(--glass-warm-bg))] hover:bg-[hsl(var(--accent-gold)/0.1)] hover:border-[hsl(var(--accent-gold)/0.3)] text-[hsl(var(--text-secondary))] transition-all duration-300"
+                className="w-full border-[hsl(var(--glass-warm-border))] bg-[hsl(var(--glass-warm-surface-2)/0.85)] hover:bg-[hsl(var(--accent-gold)/0.1)] hover:border-[hsl(var(--accent-gold)/0.3)] text-[hsl(var(--text-secondary))] transition-all duration-300"
                 onClick={handleGuestAccess}
               >
                 Enter as Guest
