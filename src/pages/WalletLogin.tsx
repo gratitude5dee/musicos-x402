@@ -7,6 +7,7 @@ import { Wallet, Sparkles, Brain, LayoutDashboard, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CosmicShader from "@/components/ui/shaders/CosmicShader";
 import { useEnhancedAuth } from "@/context/EnhancedAuthContext";
+import { useThirdwebAuth } from "@/context/ThirdwebAuthContext";
 
 interface FeatureItem {
   icon: React.ElementType;
@@ -18,6 +19,7 @@ export default function WalletLogin() {
   const account = useActiveAccount();
   const navigate = useNavigate();
   const { enableGuestMode } = useEnhancedAuth();
+  const { isNewUser, onboardingCompleted, isLoading } = useThirdwebAuth();
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const featureIcons: FeatureItem[] = [
@@ -27,16 +29,21 @@ export default function WalletLogin() {
     { icon: Users, label: "Assistants", color: "hsl(var(--chart-2))" },
   ];
 
-  // Auto-redirect to home when connected
+  // Smart redirect based on user status
   useEffect(() => {
-    if (account && !isRedirecting) {
+    if (account && !isRedirecting && !isLoading) {
       setIsRedirecting(true);
       const timeout = setTimeout(() => {
-        navigate("/home", { replace: true });
+        // New users or users who haven't completed onboarding go to /onboarding
+        if (isNewUser || !onboardingCompleted) {
+          navigate("/onboarding", { replace: true });
+        } else {
+          navigate("/home", { replace: true });
+        }
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [account, navigate, isRedirecting]);
+  }, [account, navigate, isRedirecting, isLoading, isNewUser, onboardingCompleted]);
 
   const handleGuestAccess = () => {
     enableGuestMode();
@@ -159,7 +166,9 @@ export default function WalletLogin() {
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>Redirecting to dashboard...</span>
+                <span>
+                  {isLoading ? "Checking account..." : isNewUser || !onboardingCompleted ? "Redirecting to onboarding..." : "Redirecting to dashboard..."}
+                </span>
               </div>
             </motion.div>
           )}

@@ -8,6 +8,8 @@ interface ThirdwebAuthState {
   walletAddress: string | null;
   userId: string | null;
   error: string | null;
+  isNewUser: boolean;
+  onboardingCompleted: boolean;
 }
 
 interface ThirdwebAuthContextValue extends ThirdwebAuthState {
@@ -28,6 +30,8 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
     walletAddress: null,
     userId: null,
     error: null,
+    isNewUser: false,
+    onboardingCompleted: false,
   });
 
   // Sync wallet with database when account changes
@@ -39,6 +43,8 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
         walletAddress: null,
         userId: null,
         isLoading: false,
+        isNewUser: false,
+        onboardingCompleted: false,
       }));
       return;
     }
@@ -62,6 +68,8 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
         walletAddress: account.address,
         userId: data?.user?.id || null,
         error: null,
+        isNewUser: data?.isNewUser ?? false,
+        onboardingCompleted: data?.onboardingCompleted ?? false,
       });
 
       console.log('Wallet synced:', account.address);
@@ -95,6 +103,8 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
         walletAddress: null,
         userId: null,
         error: null,
+        isNewUser: false,
+        onboardingCompleted: false,
       });
 
       // Clear any local storage tokens
