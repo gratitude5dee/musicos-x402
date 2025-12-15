@@ -17,6 +17,9 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Stub Node.js crypto modules for browser compatibility
+      "@turnkey/api-key-stamper/dist/nodecrypto.mjs": path.resolve(__dirname, "./src/stubs/turnkey-nodecrypto.ts"),
+      "@turnkey/viem/node_modules/@turnkey/api-key-stamper/dist/nodecrypto.mjs": path.resolve(__dirname, "./src/stubs/turnkey-nodecrypto.ts"),
     },
   },
   optimizeDeps: {
@@ -29,6 +32,7 @@ export default defineConfig(({ mode }) => ({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       onwarn(warning, warn) {
         // Suppress annotation warnings from thirdweb and other packages
@@ -41,6 +45,14 @@ export default defineConfig(({ mode }) => ({
           return;
         }
         warn(warning);
+      },
+      output: {
+        manualChunks: {
+          'vendor-thirdweb': ['thirdweb'],
+          'vendor-wagmi': ['wagmi', 'viem'],
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
+        },
       },
     },
   },
