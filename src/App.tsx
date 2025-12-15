@@ -13,6 +13,8 @@ import { ProtectedRoute } from "@/components/ui/ProtectedRoute";
 import { EVMWalletProvider } from "@/context/EVMWalletContext";
 import { StoryClientProvider } from "@/context/StoryClientContext";
 import { IPKitProvider } from "@/providers/IPKitProvider";
+import { ThirdwebProviderWrapper } from "@/providers/ThirdwebProvider";
+import { RequireWallet } from "@/components/auth/RequireWallet";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
@@ -44,6 +46,9 @@ import AgentsIntegrations from "./pages/AgentsIntegrations";
 import MarketingDistribution from "./pages/MarketingDistribution";
 import Landing from "./pages/Landing";
 import FYILanding from "./pages/FYILanding";
+import WalletLogin from "./pages/WalletLogin";
+import WalletDashboard from "./pages/WalletDashboard";
+import WalletDashboardChat from "./pages/WalletDashboardChat";
 
 // Event Toolkit Pages
 import Dashboard from "./pages/event-toolkit/Dashboard";
@@ -102,111 +107,125 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <SolanaProvider>
-            <EVMWalletProvider>
-              <StoryClientProvider chain="testnet">
-                <IPKitProvider chain="testnet">
-                  <EnhancedAuthProvider>
-                    <WalletProvider>
-                      <OnboardingProvider>
-                        <AgentProvider>
-                          <TooltipProvider>
-                            <Toaster />
-                            <Routes>
-                      {/* Public routes */}
-                      <Route path="/" element={<FYILanding />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="/sign-in" element={<Index />} />
-                      <Route path="/landing" element={<Landing />} />
+      <ThirdwebProviderWrapper>
+        <BrowserRouter>
+          <AuthProvider>
+            <SolanaProvider>
+              <EVMWalletProvider>
+                <StoryClientProvider chain="testnet">
+                  <IPKitProvider chain="testnet">
+                    <EnhancedAuthProvider>
+                      <WalletProvider>
+                        <OnboardingProvider>
+                          <AgentProvider>
+                            <TooltipProvider>
+                              <Toaster />
+                              <Routes>
+                                {/* Public routes */}
+                                <Route path="/" element={<FYILanding />} />
+                                <Route path="/auth" element={<Auth />} />
+                                <Route path="/sign-in" element={<Index />} />
+                                <Route path="/landing" element={<Landing />} />
 
-                      {/* Protected routes */}
-                      <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-                      <Route path="/home" element={<ProtectedRoute><ArtistHome /></ProtectedRoute>} />
-                      <Route path="/gallery" element={<ProtectedRoute><Gallery /></ProtectedRoute>} />
-                      <Route path="/library" element={<ProtectedRoute><AssetLibrary /></ProtectedRoute>} />
-                      <Route path="/treasury" element={<ProtectedRoute><TreasureVault /></ProtectedRoute>} />
-                      <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
-                      <Route path="/rights" element={<ProtectedRoute><RightsManagement /></ProtectedRoute>} />
-                      <Route path="/royalties" element={<ProtectedRoute><RoyaltiesPage /></ProtectedRoute>} />
-                      <Route path="/disputes" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
-                      <Route path="/vault" element={<ProtectedRoute><IPVaultPage /></ProtectedRoute>} />
-                      <Route path="/ip-marketplace" element={<ProtectedRoute><IPMarketplacePage /></ProtectedRoute>} />
-                      <Route path="/derivatives" element={<ProtectedRoute><DerivativesPage /></ProtectedRoute>} />
-                      <Route path="/disputes/raise" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
-                      <Route path="/disputes/:disputeId" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
-                      <Route path="/thread-of-life" element={<ProtectedRoute><ThreadOfLife /></ProtectedRoute>} />
-                      <Route path="/bridge" element={<ProtectedRoute><Bridge /></ProtectedRoute>} />
-                      <Route path="/agent-marketplace" element={<ProtectedRoute><AgentMarketplace /></ProtectedRoute>} />
-                      <Route path="/marketplace/agents/:agentId" element={<ProtectedRoute><AgentDetail /></ProtectedRoute>} />
-                      <Route path="/create-agent" element={<ProtectedRoute><CreateAgent /></ProtectedRoute>} />
-                      <Route path="/agent-chat" element={<ProtectedRoute><AgentChat /></ProtectedRoute>} />
-                      <Route path="/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
-                      <Route path="/agents-integrations" element={<ProtectedRoute><AgentsIntegrations /></ProtectedRoute>} />
-                      <Route path="/marketing-distribution" element={<ProtectedRoute><MarketingDistribution /></ProtectedRoute>} />
-                      <Route path="/marketplace-launch" element={<ProtectedRoute><MarketplaceLaunch /></ProtectedRoute>} />
-                      <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
-                      <Route path="/observatory" element={<ProtectedRoute><EnhancedObservability /></ProtectedRoute>} />
-                      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                      <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
-                      <Route path="/spellcraft-contracts" element={<ProtectedRoute><SpellcraftContracts /></ProtectedRoute>} />
-                      <Route path="/touring" element={<ProtectedRoute><Touring /></ProtectedRoute>} />
+                                {/* Wallet Auth Routes */}
+                                <Route path="/wallet-login" element={<WalletLogin />} />
+                                <Route path="/wallet-dashboard" element={
+                                  <RequireWallet>
+                                    <WalletDashboard />
+                                  </RequireWallet>
+                                } />
+                                <Route path="/wallet-dashboard/chat" element={
+                                  <RequireWallet>
+                                    <WalletDashboardChat />
+                                  </RequireWallet>
+                                } />
 
-                      {/* Event Toolkit Routes - Protected */}
-                      <Route path="/event-toolkit/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/gigs" element={<ProtectedRoute><Gigs /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/gigs/create" element={<ProtectedRoute><CreateGig /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/invoices/create" element={<ProtectedRoute><CreateInvoice /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/contacts/create" element={<ProtectedRoute><CreateContact /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/content" element={<ProtectedRoute><ContentManager /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/qr-upload" element={<ProtectedRoute><QrUploadManager /></ProtectedRoute>} />
-                      <Route path="/event-toolkit/qr-upload/create" element={<ProtectedRoute><CreateQrCampaign /></ProtectedRoute>} />
+                                {/* Protected routes */}
+                                <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+                                <Route path="/home" element={<ProtectedRoute><ArtistHome /></ProtectedRoute>} />
+                                <Route path="/gallery" element={<ProtectedRoute><Gallery /></ProtectedRoute>} />
+                                <Route path="/library" element={<ProtectedRoute><AssetLibrary /></ProtectedRoute>} />
+                                <Route path="/treasury" element={<ProtectedRoute><TreasureVault /></ProtectedRoute>} />
+                                <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+                                <Route path="/rights" element={<ProtectedRoute><RightsManagement /></ProtectedRoute>} />
+                                <Route path="/royalties" element={<ProtectedRoute><RoyaltiesPage /></ProtectedRoute>} />
+                                <Route path="/disputes" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
+                                <Route path="/vault" element={<ProtectedRoute><IPVaultPage /></ProtectedRoute>} />
+                                <Route path="/ip-marketplace" element={<ProtectedRoute><IPMarketplacePage /></ProtectedRoute>} />
+                                <Route path="/derivatives" element={<ProtectedRoute><DerivativesPage /></ProtectedRoute>} />
+                                <Route path="/disputes/raise" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
+                                <Route path="/disputes/:disputeId" element={<ProtectedRoute><DisputesPage /></ProtectedRoute>} />
+                                <Route path="/thread-of-life" element={<ProtectedRoute><ThreadOfLife /></ProtectedRoute>} />
+                                <Route path="/bridge" element={<ProtectedRoute><Bridge /></ProtectedRoute>} />
+                                <Route path="/agent-marketplace" element={<ProtectedRoute><AgentMarketplace /></ProtectedRoute>} />
+                                <Route path="/marketplace/agents/:agentId" element={<ProtectedRoute><AgentDetail /></ProtectedRoute>} />
+                                <Route path="/create-agent" element={<ProtectedRoute><CreateAgent /></ProtectedRoute>} />
+                                <Route path="/agent-chat" element={<ProtectedRoute><AgentChat /></ProtectedRoute>} />
+                                <Route path="/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
+                                <Route path="/agents-integrations" element={<ProtectedRoute><AgentsIntegrations /></ProtectedRoute>} />
+                                <Route path="/marketing-distribution" element={<ProtectedRoute><MarketingDistribution /></ProtectedRoute>} />
+                                <Route path="/marketplace-launch" element={<ProtectedRoute><MarketplaceLaunch /></ProtectedRoute>} />
+                                <Route path="/observability" element={<ProtectedRoute><Observability /></ProtectedRoute>} />
+                                <Route path="/observatory" element={<ProtectedRoute><EnhancedObservability /></ProtectedRoute>} />
+                                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                                <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+                                <Route path="/spellcraft-contracts" element={<ProtectedRoute><SpellcraftContracts /></ProtectedRoute>} />
+                                <Route path="/touring" element={<ProtectedRoute><Touring /></ProtectedRoute>} />
 
-                      {/* Agent Collection Routes - Protected */}
-                      <Route path="/collection/booking-agent" element={<Navigate to="/collection/booking-agent/gigs" replace />} />
-                      <Route path="/collection/booking-agent/gigs" element={<ProtectedRoute><BookingAgent /></ProtectedRoute>} />
-                      <Route path="/collection/booking-agent/booky" element={<ProtectedRoute><BookyView /></ProtectedRoute>} />
-                      <Route path="/collection/booking-agent/contracts" element={<ProtectedRoute><ContractsView /></ProtectedRoute>} />
-                      <Route path="/collection/booking-agent/payments" element={<ProtectedRoute><PaymentsView /></ProtectedRoute>} />
-                      <Route path="/collection/invoice-agent" element={<ProtectedRoute><InvoiceAgent /></ProtectedRoute>} />
-                      <Route path="/collection/social-media" element={<ProtectedRoute><SocialMediaAgent /></ProtectedRoute>} />
-                      <Route path="/collection/contract-agent" element={<ProtectedRoute><ContractAgent /></ProtectedRoute>} />
-                      <Route path="/agents/scan" element={<ProtectedRoute><AgentScanPage /></ProtectedRoute>} />
+                                {/* Event Toolkit Routes - Protected */}
+                                <Route path="/event-toolkit/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/gigs" element={<ProtectedRoute><Gigs /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/gigs/create" element={<ProtectedRoute><CreateGig /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/invoices/create" element={<ProtectedRoute><CreateInvoice /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/contacts/create" element={<ProtectedRoute><CreateContact /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/content" element={<ProtectedRoute><ContentManager /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/qr-upload" element={<ProtectedRoute><QrUploadManager /></ProtectedRoute>} />
+                                <Route path="/event-toolkit/qr-upload/create" element={<ProtectedRoute><CreateQrCampaign /></ProtectedRoute>} />
 
-                      {/* Distribution Routes - Protected */}
-                      <Route path="/distribution" element={<ProtectedRoute><DistributionOverview /></ProtectedRoute>} />
-                      <Route path="/distribution/social-media" element={<ProtectedRoute><SocialMediaWzrd /></ProtectedRoute>} />
-                      <Route path="/distribution/media-channels" element={<ProtectedRoute><MediaChannels /></ProtectedRoute>} />
-                      <Route path="/distribution/independent" element={<ProtectedRoute><IndependentChannels /></ProtectedRoute>} />
-                      <Route path="/distribution/on-chain" element={<ProtectedRoute><OnChainDistribution /></ProtectedRoute>} />
-                      <Route path="/distribution/sync-licensing" element={<ProtectedRoute><SyncLicensing /></ProtectedRoute>} />
+                                {/* Agent Collection Routes - Protected */}
+                                <Route path="/collection/booking-agent" element={<Navigate to="/collection/booking-agent/gigs" replace />} />
+                                <Route path="/collection/booking-agent/gigs" element={<ProtectedRoute><BookingAgent /></ProtectedRoute>} />
+                                <Route path="/collection/booking-agent/booky" element={<ProtectedRoute><BookyView /></ProtectedRoute>} />
+                                <Route path="/collection/booking-agent/contracts" element={<ProtectedRoute><ContractsView /></ProtectedRoute>} />
+                                <Route path="/collection/booking-agent/payments" element={<ProtectedRoute><PaymentsView /></ProtectedRoute>} />
+                                <Route path="/collection/invoice-agent" element={<ProtectedRoute><InvoiceAgent /></ProtectedRoute>} />
+                                <Route path="/collection/social-media" element={<ProtectedRoute><SocialMediaAgent /></ProtectedRoute>} />
+                                <Route path="/collection/contract-agent" element={<ProtectedRoute><ContractAgent /></ProtectedRoute>} />
+                                <Route path="/agents/scan" element={<ProtectedRoute><AgentScanPage /></ProtectedRoute>} />
 
-                      {/* WZRD Routes - Protected */}
-                      <Route path="/wzrd/studio" element={<ProtectedRoute><WzrdStudio /></ProtectedRoute>} />
-                      <Route path="/wzrd/library" element={<ProtectedRoute><WzrdLibrary /></ProtectedRoute>} />
-                      <Route path="/wzrd/research" element={<ProtectedRoute><WzrdResearch /></ProtectedRoute>} />
-                      <Route path="/wzrd/podcasts" element={<ProtectedRoute><WzrdPodcasts /></ProtectedRoute>} />
-                      <Route path="/wzrd/infinite-library" element={<ProtectedRoute><WzrdInfiniteLibrary /></ProtectedRoute>} />
-                      <Route path="/wzrd/companions" element={<ProtectedRoute><WzrdCompanions /></ProtectedRoute>} />
+                                {/* Distribution Routes - Protected */}
+                                <Route path="/distribution" element={<ProtectedRoute><DistributionOverview /></ProtectedRoute>} />
+                                <Route path="/distribution/social-media" element={<ProtectedRoute><SocialMediaWzrd /></ProtectedRoute>} />
+                                <Route path="/distribution/media-channels" element={<ProtectedRoute><MediaChannels /></ProtectedRoute>} />
+                                <Route path="/distribution/independent" element={<ProtectedRoute><IndependentChannels /></ProtectedRoute>} />
+                                <Route path="/distribution/on-chain" element={<ProtectedRoute><OnChainDistribution /></ProtectedRoute>} />
+                                <Route path="/distribution/sync-licensing" element={<ProtectedRoute><SyncLicensing /></ProtectedRoute>} />
 
-                      {/* Composer Routes - Protected */}
-                      <Route path="/composer" element={<ProtectedRoute><ComposerHome /></ProtectedRoute>} />
-                      <Route path="/composer/chat" element={<ProtectedRoute><ComposerChat /></ProtectedRoute>} />
-                      <Route path="/composer/agents" element={<ProtectedRoute><ComposerAgents /></ProtectedRoute>} />
-                      <Route path="/composer/workflows" element={<ProtectedRoute><ComposerWorkflows /></ProtectedRoute>} />
-                      <Route path="/composer/playground" element={<ProtectedRoute><ComposerPlayground /></ProtectedRoute>} />
-                      <Route path="/composer/analytics" element={<ProtectedRoute><ComposerAnalytics /></ProtectedRoute>} />
-                      <Route path="/composer/scan" element={<ProtectedRoute><ComposerScan /></ProtectedRoute>} />
-                      <Route path="/composer/feed" element={<ProtectedRoute><ComposerFeed /></ProtectedRoute>} />
+                                {/* WZRD Routes - Protected */}
+                                <Route path="/wzrd/studio" element={<ProtectedRoute><WzrdStudio /></ProtectedRoute>} />
+                                <Route path="/wzrd/library" element={<ProtectedRoute><WzrdLibrary /></ProtectedRoute>} />
+                                <Route path="/wzrd/research" element={<ProtectedRoute><WzrdResearch /></ProtectedRoute>} />
+                                <Route path="/wzrd/podcasts" element={<ProtectedRoute><WzrdPodcasts /></ProtectedRoute>} />
+                                <Route path="/wzrd/infinite-library" element={<ProtectedRoute><WzrdInfiniteLibrary /></ProtectedRoute>} />
+                                <Route path="/wzrd/companions" element={<ProtectedRoute><WzrdCompanions /></ProtectedRoute>} />
 
-                      {/* StablePay Route */}
-                      <Route path="/stablepay" element={<StablePay />} />
+                                {/* Composer Routes - Protected */}
+                                <Route path="/composer" element={<ProtectedRoute><ComposerHome /></ProtectedRoute>} />
+                                <Route path="/composer/chat" element={<ProtectedRoute><ComposerChat /></ProtectedRoute>} />
+                                <Route path="/composer/agents" element={<ProtectedRoute><ComposerAgents /></ProtectedRoute>} />
+                                <Route path="/composer/workflows" element={<ProtectedRoute><ComposerWorkflows /></ProtectedRoute>} />
+                                <Route path="/composer/playground" element={<ProtectedRoute><ComposerPlayground /></ProtectedRoute>} />
+                                <Route path="/composer/analytics" element={<ProtectedRoute><ComposerAnalytics /></ProtectedRoute>} />
+                                <Route path="/composer/scan" element={<ProtectedRoute><ComposerScan /></ProtectedRoute>} />
+                                <Route path="/composer/feed" element={<ProtectedRoute><ComposerFeed /></ProtectedRoute>} />
 
-                      <Route path="*" element={<NotFound />} />
-                      </Routes>
+                                {/* StablePay Route */}
+                                <Route path="/stablepay" element={<StablePay />} />
+
+                                <Route path="*" element={<NotFound />} />
+                              </Routes>
                             </TooltipProvider>
                           </AgentProvider>
                         </OnboardingProvider>
@@ -215,9 +234,10 @@ function App() {
                   </IPKitProvider>
                 </StoryClientProvider>
               </EVMWalletProvider>
-          </SolanaProvider>
-        </AuthProvider>
-      </BrowserRouter>
+            </SolanaProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </ThirdwebProviderWrapper>
     </QueryClientProvider>
   );
 }
