@@ -24,15 +24,16 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
   const account = useActiveAccount();
   const { disconnect } = useDisconnect();
   
-  const [state, setState] = useState<ThirdwebAuthState>({
+const [state, setState] = useState<ThirdwebAuthState>({
     isAuthenticated: false,
-    isLoading: true,
+    isLoading: false, // Start false to allow immediate redirect check
     walletAddress: null,
     userId: null,
     error: null,
     isNewUser: false,
     onboardingCompleted: false,
   });
+  const [hasSynced, setHasSynced] = useState(false);
 
   // Sync wallet with database when account changes
   const syncWallet = useCallback(async () => {
@@ -46,6 +47,12 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
         isNewUser: false,
         onboardingCompleted: false,
       }));
+      setHasSynced(false);
+      return;
+    }
+
+    // Skip if already synced for this address
+    if (hasSynced && state.walletAddress === account.address) {
       return;
     }
 
@@ -71,6 +78,7 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
         isNewUser: data?.isNewUser ?? false,
         onboardingCompleted: data?.onboardingCompleted ?? false,
       });
+      setHasSynced(true);
 
       console.log('Wallet synced:', account.address);
     } catch (err) {
@@ -82,8 +90,9 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
         walletAddress: account.address,
         error: err instanceof Error ? err.message : 'Failed to sync wallet',
       }));
+      setHasSynced(true);
     }
-  }, [account?.address]);
+  }, [account?.address, hasSynced, state.walletAddress]);
 
   // Auto-sync when account changes
   useEffect(() => {

@@ -29,19 +29,16 @@ export default function WalletLogin() {
     { icon: Users, label: "Assistants", color: "hsl(var(--chart-2))" },
   ];
 
-  // Smart redirect based on user status
+  // Smart redirect based on user status - triggers immediately when wallet connects
   useEffect(() => {
     if (account && !isRedirecting && !isLoading) {
       setIsRedirecting(true);
-      const timeout = setTimeout(() => {
-        // New users or users who haven't completed onboarding go to /onboarding
-        if (isNewUser || !onboardingCompleted) {
-          navigate("/onboarding", { replace: true });
-        } else {
-          navigate("/home", { replace: true });
-        }
-      }, 1000);
-      return () => clearTimeout(timeout);
+      // Immediate redirect - no delay needed
+      if (isNewUser || !onboardingCompleted) {
+        navigate("/onboarding", { replace: true });
+      } else {
+        navigate("/home", { replace: true });
+      }
     }
   }, [account, navigate, isRedirecting, isLoading, isNewUser, onboardingCompleted]);
 
@@ -66,15 +63,12 @@ export default function WalletLogin() {
         <CosmicShader />
       </div>
 
-      {/* Glass Card Container */}
+      {/* Liquid Glass Card Container */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="max-w-md w-full space-y-6 glass-card p-8 rounded-2xl border border-border/20 backdrop-blur-xl relative z-10 shadow-2xl"
-        style={{
-          background: 'linear-gradient(135deg, hsl(var(--card)/0.8) 0%, hsl(var(--card)/0.6) 100%)',
-        }}
+        className="max-w-md w-full space-y-6 liquid-glass-card p-8 relative z-10"
       >
         {/* Header */}
         <div className="text-center">
@@ -82,14 +76,14 @@ export default function WalletLogin() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center"
+            className="w-16 h-16 mx-auto mb-4 rounded-2xl liquid-glass-icon flex items-center justify-center"
           >
-            <Wallet className="h-8 w-8 text-primary" />
+            <Wallet className="h-8 w-8 text-[hsl(var(--accent-gold))]" />
           </motion.div>
-          <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-[hsl(var(--accent-warm-white))] to-[hsl(var(--accent-gold))] bg-clip-text text-transparent">
             MusicOS
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-[hsl(var(--text-secondary))]">
             Connect your wallet to access your creative workspace
           </p>
         </div>
@@ -107,9 +101,9 @@ export default function WalletLogin() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 + index * 0.1 }}
-              className="flex items-center gap-3 text-sm text-muted-foreground"
+              className="flex items-center gap-3 text-sm text-[hsl(var(--text-tertiary))]"
             >
-              <Sparkles className="h-4 w-4 text-primary flex-shrink-0" />
+              <Sparkles className="h-4 w-4 text-[hsl(var(--accent-gold))] flex-shrink-0" />
               <span>{feature}</span>
             </motion.div>
           ))}
@@ -119,7 +113,7 @@ export default function WalletLogin() {
         <div className="space-y-4">
           {!account ? (
             <div className="flex flex-col items-center gap-4">
-              <div className="w-full flex justify-center [&_button]:!w-full [&_button]:!rounded-lg [&_button]:!py-3 [&_button]:!text-base [&_button]:!font-medium">
+              <div className="w-full flex justify-center [&_button]:!w-full [&_button]:!rounded-xl [&_button]:!py-3 [&_button]:!text-base [&_button]:!font-medium [&_button]:!bg-gradient-to-r [&_button]:!from-[hsl(var(--accent-gold))] [&_button]:!to-[hsl(var(--accent-amber))] [&_button]:!border-0 [&_button]:!text-[hsl(var(--bg-primary))]">
                 <ConnectButton
                   client={client}
                   theme="dark"
@@ -134,10 +128,10 @@ export default function WalletLogin() {
               {/* Divider */}
               <div className="relative w-full py-2">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border/30"></div>
+                  <div className="w-full border-t border-[hsl(var(--glass-warm-border))]"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-3 text-muted-foreground bg-card/80 rounded-full">
+                  <span className="px-3 text-[hsl(var(--text-tertiary))] bg-[hsl(var(--glass-warm-bg))] rounded-full">
                     or continue with
                   </span>
                 </div>
@@ -146,7 +140,7 @@ export default function WalletLogin() {
               {/* Guest Access */}
               <Button
                 variant="outline"
-                className="w-full border-border/30 hover:bg-accent/10 hover:border-accent/30 transition-all duration-300"
+                className="w-full border-[hsl(var(--glass-warm-border))] bg-[hsl(var(--glass-warm-bg))] hover:bg-[hsl(var(--accent-gold)/0.1)] hover:border-[hsl(var(--accent-gold)/0.3)] text-[hsl(var(--text-secondary))] transition-all duration-300"
                 onClick={handleGuestAccess}
               >
                 Enter as Guest
@@ -158,14 +152,14 @@ export default function WalletLogin() {
               animate={{ opacity: 1, scale: 1 }}
               className="space-y-4"
             >
-              <div className="text-center p-4 rounded-xl bg-primary/10 border border-primary/20">
-                <p className="text-sm text-muted-foreground mb-1">Connected as</p>
-                <p className="font-mono text-primary font-medium">
+              <div className="text-center p-4 rounded-xl liquid-glass-stat">
+                <p className="text-sm text-[hsl(var(--text-tertiary))] mb-1">Connected as</p>
+                <p className="font-mono text-[hsl(var(--accent-gold))] font-medium">
                   {truncateAddress(account.address)}
                 </p>
               </div>
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <div className="flex items-center justify-center gap-2 text-sm text-[hsl(var(--text-tertiary))]">
+                <div className="w-2 h-2 bg-[hsl(var(--success))] rounded-full animate-pulse"></div>
                 <span>
                   {isLoading ? "Checking account..." : isNewUser || !onboardingCompleted ? "Redirecting to onboarding..." : "Redirecting to dashboard..."}
                 </span>
@@ -184,21 +178,21 @@ export default function WalletLogin() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 + index * 0.1, duration: 0.3 }}
             >
-              <div className="p-2 rounded-xl bg-background/50 backdrop-blur-sm border border-border/20 mb-2 hover:border-primary/30 transition-colors">
+              <div className="p-2 rounded-xl liquid-glass-stat mb-2 hover:border-[hsl(var(--accent-gold)/0.3)] transition-colors">
                 <item.icon
                   className="h-5 w-5"
                   style={{ color: item.color }}
                 />
               </div>
-              <span className="text-xs text-muted-foreground">{item.label}</span>
+              <span className="text-xs text-[hsl(var(--text-tertiary))]">{item.label}</span>
             </motion.div>
           ))}
         </div>
 
         {/* Footer */}
-        <div className="text-center text-xs text-muted-foreground pt-4 border-t border-border/10">
+        <div className="text-center text-xs text-[hsl(var(--text-tertiary))] pt-4 border-t border-[hsl(var(--glass-warm-border))]">
           <p>By signing in, you agree to our Terms of Service and Privacy Policy</p>
-          <p className="mt-2 text-primary/60">Powered by Thirdweb • Secure & Non-custodial</p>
+          <p className="mt-2 text-[hsl(var(--accent-gold)/0.6)]">Powered by Thirdweb • Secure & Non-custodial</p>
         </div>
       </motion.div>
     </motion.div>
