@@ -14,6 +14,7 @@ import { EVMWalletProvider } from "@/context/EVMWalletContext";
 import { StoryClientProvider } from "@/context/StoryClientContext";
 import { IPKitProvider } from "@/providers/IPKitProvider";
 import { ThirdwebProviderWrapper } from "@/providers/ThirdwebProvider";
+import { ThirdwebAuthProvider } from "@/context/ThirdwebAuthContext";
 import { RequireWallet } from "@/components/auth/RequireWallet";
 import WalletLogin from "./pages/WalletLogin";
 import Onboarding from "./pages/Onboarding";
@@ -107,7 +108,8 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThirdwebProviderWrapper>
         <BrowserRouter>
-          <AuthProvider>
+          <ThirdwebAuthProvider>
+            <AuthProvider>
             <SolanaProvider>
               <EVMWalletProvider>
                 <StoryClientProvider chain="testnet">
@@ -236,6 +238,7 @@ function App() {
               </EVMWalletProvider>
             </SolanaProvider>
           </AuthProvider>
+          </ThirdwebAuthProvider>
         </BrowserRouter>
       </ThirdwebProviderWrapper>
     </QueryClientProvider>
