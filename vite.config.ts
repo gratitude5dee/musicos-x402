@@ -17,13 +17,13 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Stub Node.js crypto modules for browser compatibility
-      "@turnkey/api-key-stamper/dist/nodecrypto.mjs": path.resolve(__dirname, "./src/stubs/turnkey-nodecrypto.ts"),
-      "@turnkey/viem/node_modules/@turnkey/api-key-stamper/dist/nodecrypto.mjs": path.resolve(__dirname, "./src/stubs/turnkey-nodecrypto.ts"),
+      // Properly stub the Node.js crypto modules used by @turnkey
+      "node:crypto": path.resolve(__dirname, "./src/stubs/node-crypto.ts"),
     },
   },
   optimizeDeps: {
     include: ['thirdweb', 'thirdweb/react'],
+    exclude: ['@turnkey/api-key-stamper', '@turnkey/viem'],
     esbuildOptions: {
       target: 'esnext',
     },
@@ -32,26 +32,40 @@ export default defineConfig(({ mode }) => ({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
-    chunkSizeWarningLimit: 2000,
+    chunkSizeWarningLimit: 3000,
+    minify: mode === 'production' ? 'esbuild' : false,
+    sourcemap: mode !== 'production',
     rollupOptions: {
+      external: [
+        // Externalize Node.js-only @turnkey modules
+        /node_modules\/@turnkey\/.*\/dist\/nodecrypto\.mjs/,
+      ],
       onwarn(warning, warn) {
-        // Suppress annotation warnings from thirdweb and other packages
+        // Suppress various warnings from thirdweb and dependencies
         if (
           warning.code === 'ANNOTATION' ||
+          warning.code === 'MODULE_LEVEL_DIRECTIVE' ||
           warning.message?.includes('@__PURE__') ||
           warning.message?.includes('#__PURE__') ||
-          warning.message?.includes('externalized for browser compatibility')
+          warning.message?.includes('externalized for browser compatibility') ||
+          warning.message?.includes('createPrivateKey') ||
+          warning.message?.includes('createSign')
         ) {
           return;
         }
         warn(warning);
       },
       output: {
-        manualChunks: {
-          'vendor-thirdweb': ['thirdweb'],
-          'vendor-wagmi': ['wagmi', 'viem'],
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
+        manualChunks(id) {
+          // Split large dependencies into chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('thirdweb')) return 'vendor-thirdweb';
+            if (id.includes('wagmi') || id.includes('viem')) return 'vendor-wagmi';
+            if (id.includes('react-dom')) return 'vendor-react-dom';
+            if (id.includes('react-router')) return 'vendor-react-router';
+            if (id.includes('@radix-ui')) return 'vendor-radix';
+            if (id.includes('framer-motion')) return 'vendor-motion';
+          }
         },
       },
     },
@@ -59,5 +73,6 @@ export default defineConfig(({ mode }) => ({
   define: {
     // Polyfill for Node.js globals
     'process.env': {},
+    global: 'globalThis',
   },
 }));

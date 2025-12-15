@@ -15,8 +15,7 @@ import { StoryClientProvider } from "@/context/StoryClientContext";
 import { IPKitProvider } from "@/providers/IPKitProvider";
 import { ThirdwebProviderWrapper } from "@/providers/ThirdwebProvider";
 import { RequireWallet } from "@/components/auth/RequireWallet";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
+import WalletLogin from "./pages/WalletLogin";
 import Onboarding from "./pages/Onboarding";
 import ArtistHome from "./pages/ArtistHome";
 import Gallery from "./pages/Gallery";
@@ -46,7 +45,6 @@ import AgentsIntegrations from "./pages/AgentsIntegrations";
 import MarketingDistribution from "./pages/MarketingDistribution";
 import Landing from "./pages/Landing";
 import FYILanding from "./pages/FYILanding";
-import WalletLogin from "./pages/WalletLogin";
 import WalletDashboard from "./pages/WalletDashboard";
 import WalletDashboardChat from "./pages/WalletDashboardChat";
 
@@ -121,14 +119,16 @@ function App() {
                             <TooltipProvider>
                               <Toaster />
                               <Routes>
-                                {/* Public routes */}
+                                {/* Public routes - Wallet Login is the primary auth */}
                                 <Route path="/" element={<FYILanding />} />
-                                <Route path="/auth" element={<Auth />} />
-                                <Route path="/sign-in" element={<Index />} />
-                                <Route path="/landing" element={<Landing />} />
-
-                                {/* Wallet Auth Routes */}
                                 <Route path="/wallet-login" element={<WalletLogin />} />
+                                <Route path="/landing" element={<Landing />} />
+                                
+                                {/* Redirect old auth routes to wallet-login */}
+                                <Route path="/auth" element={<Navigate to="/wallet-login" replace />} />
+                                <Route path="/sign-in" element={<Navigate to="/wallet-login" replace />} />
+
+                                {/* Wallet Dashboard Routes */}
                                 <Route path="/wallet-dashboard" element={
                                   <RequireWallet>
                                     <WalletDashboard />
