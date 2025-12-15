@@ -4,15 +4,15 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode, command }) => ({
   server: {
     host: "::",
     port: 8080,
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    // Only tag components during dev-server sessions (avoids heavy work during builds)
+    command === "serve" && mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -32,9 +32,11 @@ export default defineConfig(({ mode }) => ({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    // Keep dev builds lightweight to avoid Node OOM in constrained environments
+    reportCompressedSize: false,
     chunkSizeWarningLimit: 3000,
     minify: mode === 'production' ? 'esbuild' : false,
-    sourcemap: mode !== 'production',
+    sourcemap: false,
     rollupOptions: {
       external: [
         // Externalize Node.js-only @turnkey modules
@@ -56,17 +58,20 @@ export default defineConfig(({ mode }) => ({
         warn(warning);
       },
       output: {
-        manualChunks(id) {
-          // Split large dependencies into chunks
-          if (id.includes('node_modules')) {
-            if (id.includes('thirdweb')) return 'vendor-thirdweb';
-            if (id.includes('wagmi') || id.includes('viem')) return 'vendor-wagmi';
-            if (id.includes('react-dom')) return 'vendor-react-dom';
-            if (id.includes('react-router')) return 'vendor-react-router';
-            if (id.includes('@radix-ui')) return 'vendor-radix';
-            if (id.includes('framer-motion')) return 'vendor-motion';
-          }
-        },
+        // Chunk splitting is useful for production, but can be memory-heavy in constrained dev builds
+        manualChunks:
+          mode === 'production'
+            ? (id) => {
+                if (id.includes('node_modules')) {
+                  if (id.includes('thirdweb')) return 'vendor-thirdweb';
+                  if (id.includes('wagmi') || id.includes('viem')) return 'vendor-wagmi';
+                  if (id.includes('react-dom')) return 'vendor-react-dom';
+                  if (id.includes('react-router')) return 'vendor-react-router';
+                  if (id.includes('@radix-ui')) return 'vendor-radix';
+                  if (id.includes('framer-motion')) return 'vendor-motion';
+                }
+              }
+            : undefined,
       },
     },
   },
