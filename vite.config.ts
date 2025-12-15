@@ -30,28 +30,24 @@ export default defineConfig(({ mode, command }) => ({
   },
   build: {
     target: "esnext",
-    cssCodeSplit: false,
-    modulePreload: false,
-    assetsInlineLimit: 0,
+    // Let Vite split CSS per chunk to avoid a single huge CSS asset in memory
+    cssCodeSplit: true,
+    modulePreload: { polyfill: false },
     commonjsOptions: {
       transformMixedEsModules: true,
     },
-    // Keep dev builds lightweight to avoid Node OOM in constrained environments
     reportCompressedSize: false,
     chunkSizeWarningLimit: 5000,
-    minify: false, // Disable minification entirely to reduce memory
+    // Smaller output generally lowers Rollup's peak memory during "rendering chunks"
+    minify: "esbuild",
     sourcemap: false,
-    // Reduce memory during chunk rendering
     rollupOptions: {
-      treeshake: false, // Disable tree-shaking to reduce memory
-      maxParallelFileOps: 1, // Single file at a time
-      cache: false, // Disable caching to reduce memory
+      treeshake: true,
+      maxParallelFileOps: 1,
       external: [
-        // Externalize Node.js-only @turnkey modules
         /node_modules\/\@turnkey\/.*\/dist\/nodecrypto\.mjs/,
       ],
       onwarn(warning, warn) {
-        // Suppress various warnings from thirdweb and dependencies
         if (
           warning.code === "ANNOTATION" ||
           warning.code === "MODULE_LEVEL_DIRECTIVE" ||
@@ -66,10 +62,10 @@ export default defineConfig(({ mode, command }) => ({
         warn(warning);
       },
       output: {
-        // Aggressive chunk splitting to reduce memory during rendering
+        compact: true,
+        hoistTransitiveImports: false,
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
-            // Split thirdweb into smaller chunks
             if (id.includes("thirdweb/dist/esm/wallets")) return "vendor-tw-wallets";
             if (id.includes("thirdweb/dist/esm/react")) return "vendor-tw-react";
             if (id.includes("thirdweb")) return "vendor-tw-core";
