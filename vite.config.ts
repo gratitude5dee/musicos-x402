@@ -37,6 +37,7 @@ export default defineConfig(({ mode, command }) => ({
     chunkSizeWarningLimit: 3000,
     minify: mode === 'production' ? 'esbuild' : false,
     sourcemap: false,
+    // Reduce memory during chunk rendering by forcing aggressive splitting in ALL modes
     rollupOptions: {
       external: [
         // Externalize Node.js-only @turnkey modules
@@ -58,20 +59,19 @@ export default defineConfig(({ mode, command }) => ({
         warn(warning);
       },
       output: {
-        // Chunk splitting is useful for production, but can be memory-heavy in constrained dev builds
-        manualChunks:
-          mode === 'production'
-            ? (id) => {
-                if (id.includes('node_modules')) {
-                  if (id.includes('thirdweb')) return 'vendor-thirdweb';
-                  if (id.includes('wagmi') || id.includes('viem')) return 'vendor-wagmi';
-                  if (id.includes('react-dom')) return 'vendor-react-dom';
-                  if (id.includes('react-router')) return 'vendor-react-router';
-                  if (id.includes('@radix-ui')) return 'vendor-radix';
-                  if (id.includes('framer-motion')) return 'vendor-motion';
-                }
-              }
-            : undefined,
+        // Enable chunk splitting in ALL modes to reduce memory during rendering
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('thirdweb')) return 'vendor-thirdweb';
+            if (id.includes('wagmi') || id.includes('viem')) return 'vendor-wagmi';
+            if (id.includes('react-dom')) return 'vendor-react-dom';
+            if (id.includes('react-router')) return 'vendor-react-router';
+            if (id.includes('@radix-ui')) return 'vendor-radix';
+            if (id.includes('framer-motion')) return 'vendor-motion';
+            if (id.includes('@tanstack')) return 'vendor-tanstack';
+            if (id.includes('recharts') || id.includes('d3')) return 'vendor-charts';
+          }
+        },
       },
     },
   },
