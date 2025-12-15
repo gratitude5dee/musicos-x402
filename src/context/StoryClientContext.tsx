@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useMemo, ReactNode } from 'react';
-import { StoryClient, StoryConfig } from '@story-protocol/core-sdk';
-import { createWalletClient, custom, type WalletClient, type Chain } from 'viem';
+import React, { createContext, useContext, ReactNode, useEffect, useMemo, useState } from 'react';
+import type { StoryClient, StoryConfig } from '@story-protocol/core-sdk';
+import { custom, type Chain } from 'viem';
 import { useAccount, useWalletClient } from 'wagmi';
 
 // Story Protocol chain configurations
@@ -65,25 +65,47 @@ export function StoryClientProvider({ children, chain = 'testnet' }: StoryClient
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
 
-  const storyChain = chain === 'testnet' ? aeneidTestnet : storyMainnet;
+  const storyChain = useMemo(() => (chain === 'testnet' ? aeneidTestnet : storyMainnet), [chain]);
 
-  const client = useMemo(() => {
-    if (!isConnected || !walletClient || !address) {
-      return null;
+  const [client, setClient] = useState<StoryClient | null>(null);
+
+  // IMPORTANT: @story-protocol/core-sdk pulls in Node-only dotenv on import.
+  // We dynamically import it ONLY when a wagmi wallet is actually connected.
+  useEffect(() => {
+    let cancelled = false;
+
+    async function init() {
+      if (!isConnected || !walletClient || !address) {
+        setClient(null);
+        return;
+      }
+
+      try {
+        const { StoryClient } = await import('@story-protocol/core-sdk');
+
+        const config: StoryConfig = {
+          account: walletClient.account,
+          transport: custom(walletClient.transport),
+          chainId: chain === 'testnet' ? 'aeneid' : 'mainnet',
+        };
+
+        const nextClient = StoryClient.newClient(config);
+        if (!cancelled) {
+          setClient(nextClient);
+        }
+      } catch (error) {
+        console.error('Failed to initialize Story Protocol client:', error);
+        if (!cancelled) {
+          setClient(null);
+        }
+      }
     }
 
-    try {
-      const config: StoryConfig = {
-        account: walletClient.account,
-        transport: custom(walletClient.transport),
-        chainId: chain === 'testnet' ? 'aeneid' : 'mainnet',
-      };
+    init();
 
-      return StoryClient.newClient(config);
-    } catch (error) {
-      console.error('Failed to initialize Story Protocol client:', error);
-      return null;
-    }
+    return () => {
+      cancelled = true;
+    };
   }, [isConnected, walletClient, address, chain]);
 
   const value: StoryClientContextValue = {
@@ -102,3 +124,4 @@ export function useStoryClient() {
   }
   return context;
 }
+
