@@ -19,4 +19,28 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ['thirdweb', 'thirdweb/react'],
+    esbuildOptions: {
+      target: 'esnext',
+    },
+  },
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      onwarn(warning, warn) {
+        // Suppress annotation warnings from thirdweb
+        if (warning.code === 'ANNOTATION' || warning.message?.includes('@__PURE__')) {
+          return;
+        }
+        warn(warning);
+      },
+    },
+  },
+  define: {
+    // Polyfill for Node.js globals
+    'process.env': {},
+  },
 }));
