@@ -128,6 +128,15 @@ serve(async (req) => {
       // Non-fatal - continue
     }
 
+    // Check if user has completed onboarding from profiles table
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('onboarding_completed')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    const onboardingCompleted = profile?.onboarding_completed ?? false;
+
     // Return success response
     return jsonResponse(
       existingUser ? 200 : 201,
@@ -140,6 +149,8 @@ serve(async (req) => {
           display_name: user.display_name,
           created_at: user.created_at,
         },
+        isNewUser: !existingUser,
+        onboardingCompleted,
         cached: !!existingUser,
       },
       correlationId,
