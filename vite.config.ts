@@ -86,8 +86,12 @@ export default defineConfig(({ mode, command }) => ({
     },
   },
   define: {
-    // Polyfill for Node.js globals
+    // Polyfill for Node.js globals + reduce bundle size in builds
+    // Even when running `vite build --mode development`, we still want production-style dead-code elimination.
     'process.env': {},
+    'process.env.NODE_ENV': JSON.stringify('production'),
+    'import.meta.env.DEV': 'false',
+    'import.meta.env.PROD': 'true',
     global: 'globalThis',
   },
 }));
