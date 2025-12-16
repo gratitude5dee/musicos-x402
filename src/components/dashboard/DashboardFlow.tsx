@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   ReactFlow,
   Background,
@@ -33,54 +33,61 @@ const nodeTypes = {
 };
 
 const initialNodes: DashboardNode[] = [
+  // Header row with greeting
   {
     id: 'greeting-1',
     type: DASHBOARD_NODE_TYPES.GREETING,
-    position: { x: 50, y: 50 },
+    position: { x: 50, y: 30 },
     data: { label: 'Greeting' },
-    style: { width: 300, height: 120 },
+    style: { width: 700, height: 100 },
   },
+  // Stats row
   {
     id: 'financial-1',
     type: DASHBOARD_NODE_TYPES.FINANCIAL,
-    position: { x: 400, y: 50 },
+    position: { x: 50, y: 160 },
     data: { label: 'Financial Overview' },
-    style: { width: 500, height: 400 },
+    style: { width: 900, height: 140 },
   },
+  // Main content - left column
   {
     id: 'creations-1',
     type: DASHBOARD_NODE_TYPES.CREATIONS,
-    position: { x: 50, y: 200 },
-    data: { label: 'Recent Creations' },
-    style: { width: 400, height: 300 },
+    position: { x: 50, y: 330 },
+    data: { label: 'Recent Contacts' },
+    style: { width: 380, height: 420 },
   },
-  {
-    id: 'voice-1',
-    type: DASHBOARD_NODE_TYPES.VOICE_ASSISTANT,
-    position: { x: 950, y: 50 },
-    data: { label: 'Voice Assistant' },
-    style: { width: 350, height: 400 },
-  },
-  {
-    id: 'schedule-1',
-    type: DASHBOARD_NODE_TYPES.SCHEDULE,
-    position: { x: 950, y: 500 },
-    data: { label: 'Schedule & Calendar' },
-    style: { width: 350, height: 350 },
-  },
-  {
-    id: 'chat-1',
-    type: DASHBOARD_NODE_TYPES.CHAT,
-    position: { x: 50, y: 550 },
-    data: { label: 'Chat Interface' },
-    style: { width: 450, height: 600 },
-  },
+  // Main content - center column
   {
     id: 'actions-1',
     type: DASHBOARD_NODE_TYPES.ACTIONS,
-    position: { x: 550, y: 500 },
-    data: { label: 'Suggested Actions' },
-    style: { width: 350, height: 250 },
+    position: { x: 460, y: 330 },
+    data: { label: 'Revenue Targets' },
+    style: { width: 320, height: 320 },
+  },
+  // Right sidebar - top
+  {
+    id: 'voice-1',
+    type: DASHBOARD_NODE_TYPES.VOICE_ASSISTANT,
+    position: { x: 810, y: 330 },
+    data: { label: 'Quick Actions' },
+    style: { width: 280, height: 280 },
+  },
+  // Right sidebar - middle
+  {
+    id: 'chat-1',
+    type: DASHBOARD_NODE_TYPES.CHAT,
+    position: { x: 460, y: 680 },
+    data: { label: 'AI Chat' },
+    style: { width: 280, height: 340 },
+  },
+  // Right sidebar - bottom
+  {
+    id: 'schedule-1',
+    type: DASHBOARD_NODE_TYPES.SCHEDULE,
+    position: { x: 770, y: 640 },
+    data: { label: 'Recent Activity' },
+    style: { width: 320, height: 380 },
   },
 ];
 
@@ -110,10 +117,10 @@ const DashboardFlow = () => {
         fitView
         className="bg-transparent"
         style={{ backgroundColor: 'transparent' }}
-        defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+        defaultViewport={{ x: 0, y: 0, zoom: 0.85 }}
       >
         <Background 
-          color="rgba(255, 255, 255, 0.1)" 
+          color="rgba(255, 255, 255, 0.05)" 
           gap={20} 
           size={1}
           style={{ backgroundColor: 'transparent' }}
@@ -121,21 +128,21 @@ const DashboardFlow = () => {
         <Controls 
           className="react-flow__controls-glass"
           style={{
-            background: 'rgba(255, 255, 255, 0.1)',
+            background: 'rgba(30, 25, 20, 0.8)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '8px',
+            border: '1px solid rgba(255, 200, 100, 0.15)',
+            borderRadius: '12px',
           }}
         />
         <MiniMap 
           className="react-flow__minimap-glass"
           style={{
-            background: 'rgba(255, 255, 255, 0.1)',
+            background: 'rgba(30, 25, 20, 0.8)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '8px',
+            border: '1px solid rgba(255, 200, 100, 0.15)',
+            borderRadius: '12px',
           }}
-          nodeColor={() => 'rgba(155, 135, 245, 0.6)'}
+          nodeColor={() => 'rgba(168, 85, 247, 0.6)'}
         />
       </ReactFlow>
     </div>
