@@ -7,17 +7,7 @@ import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { useContentManager } from '@/hooks/useContentManager';
 import { useToast } from '@/hooks/use-toast';
-
-// Liquid Glass Background
-const LiquidGlassBackground = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div className="absolute top-0 -left-4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-orb" />
-      <div className="absolute top-0 -right-4 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-orb animation-delay-2000" />
-      <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-orb animation-delay-4000" />
-    </div>
-  );
-};
+import NavigationHint from '../NavigationHint';
 
 // Holographic File Card
 const HolographicFileCard = ({ file, status, index }) => {
@@ -26,58 +16,35 @@ const HolographicFileCard = ({ file, status, index }) => {
     if (type === 'image') return <File className={`${iconClass} text-cyan-400`}/>;
     if (type === 'video') return <Video className={`${iconClass} text-purple-400`}/>;
     if (type === 'voice') return <Mic className={`${iconClass} text-orange-400`}/>;
-    return <File className={`${iconClass} text-slate-400`}/>;
+    return <File className={`${iconClass} text-white/40`}/>;
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -50, scale: 0.8 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
-      exit={{ opacity: 0, x: 50, scale: 0.8 }}
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05, type: "spring", stiffness: 200 }}
-      whileHover={{ y: -2, scale: 1.02 }}
-      className="relative group"
+      className="relative bg-white/[0.02] border border-white/[0.06] p-4 rounded-xl"
     >
-      {/* Holographic shimmer effect */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000" />
-
-      <div className="relative backdrop-blur-xl bg-white/10 p-4 rounded-xl border border-white/20 overflow-hidden">
-        {/* Animated gradient border */}
-        <div className="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 animate-hue-rotate opacity-50" />
-        
-        <div className="relative flex items-center justify-between">
-          <div className="flex items-center">
-            {getFileIcon(file.type)}
-            <span className="text-white font-medium">{file.name}</span>
-          </div>
-          
-          {status?.error ? (
-            <span className="text-sm text-red-400">Upload failed</span>
-          ) : !status?.completed ? (
-            <div className="relative w-24 h-2">
-              <div className="absolute inset-0 bg-white/10 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${status?.progress ?? 0}%` }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
-              <motion.div
-                className="absolute top-0 h-full w-4 bg-white/30 blur-md"
-                animate={{ left: `${Math.max(0, (status?.progress ?? 0) - 2)}%` }}
-              />
-            </div>
-          ) : (
-            <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <CheckCircle className="h-5 w-5 text-cyan-400"/>
-            </motion.div>
-          )}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          {getFileIcon(file.type)}
+          <span className="text-white/80 font-medium text-sm">{file.name}</span>
         </div>
+        
+        {status?.error ? (
+          <span className="text-sm text-red-400">Failed</span>
+        ) : !status?.completed ? (
+          <div className="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${status?.progress ?? 0}%` }}
+            />
+          </div>
+        ) : (
+          <CheckCircle className="h-5 w-5 text-cyan-400"/>
+        )}
       </div>
     </motion.div>
   );
@@ -196,19 +163,19 @@ const TrainingDataStep = ({ onNext, onBack }) => {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <LiquidGlassBackground />
+    <div 
+      className="relative p-8 lg:p-10 rounded-3xl bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-2xl max-w-3xl mx-auto cursor-pointer"
+      onClick={handleAreaClick}
+      role="button"
+      tabIndex={0}
+    >
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/5 via-transparent to-cyan-500/5 pointer-events-none" />
       
-      <div 
-        className="w-full max-w-4xl backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 p-8 cursor-pointer"
-        onClick={handleAreaClick}
-        role="button"
-        tabIndex={0}
-        aria-label="Click anywhere or press Enter/Space to continue (upload files first)"
-      >
+      <div className="relative">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-white mb-4">Training Data Upload</h2>
-          <p className="text-white/70">Upload files to train your AI agent</p>
+          <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2">Training Data Upload</h2>
+          <p className="text-white/50">Upload files to train your AI agent</p>
         </div>
 
         {/* Upload Area */}
@@ -216,23 +183,27 @@ const TrainingDataStep = ({ onNext, onBack }) => {
           {...getRootProps()}
           className={`
             border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300 dropzone
-            ${isDragActive ? 'border-cyan-400 bg-cyan-400/10' : 'border-white/30 hover:border-white/50'}
+            ${isDragActive 
+              ? 'border-cyan-400/50 bg-cyan-400/5' 
+              : 'border-white/10 hover:border-white/20 bg-white/[0.01]'
+            }
           `}
           data-interactive="true"
+          onClick={(e) => e.stopPropagation()}
         >
           <input {...getInputProps()} />
-          <UploadCloud className="h-12 w-12 text-white/50 mx-auto mb-4" />
-          <p className="text-white text-lg mb-2">
+          <UploadCloud className="h-10 w-10 text-white/30 mx-auto mb-4" />
+          <p className="text-white/70 mb-2">
             {isDragActive ? 'Drop files here...' : 'Drag & drop files here, or click to select'}
           </p>
-          <p className="text-white/50">Supports images, videos, and audio files</p>
+          <p className="text-white/40 text-sm">Supports images, videos, and audio files</p>
         </div>
 
         {/* Uploaded Files */}
         {uploadedFiles.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold text-white mb-4">Uploaded Files</h3>
-            <div className="space-y-3">
+          <div className="mt-6">
+            <h3 className="text-sm font-medium text-white/60 mb-3">Uploaded Files</h3>
+            <div className="space-y-2">
               {uploadedFiles.map((file, index) => (
                 <HolographicFileCard
                   key={file.id || file.name}
@@ -246,22 +217,24 @@ const TrainingDataStep = ({ onNext, onBack }) => {
         )}
 
         {/* Navigation */}
-        <div className="flex justify-between mt-8 pt-6 border-t border-white/10">
+        <div className="flex justify-between items-center mt-8 pt-6 border-t border-white/[0.06]">
           <Button
             variant="ghost"
-            onClick={onBack}
-            className="text-white/70 hover:text-white hover:bg-white/10"
+            onClick={(e) => { e.stopPropagation(); onBack(); }}
+            className="text-white/60 hover:text-white hover:bg-white/5"
           >
             <ArrowLeft className="mr-2 h-4 w-4" /> Back
           </Button>
           <Button
-            onClick={onNext}
+            onClick={(e) => { e.stopPropagation(); onNext(); }}
             disabled={onboardingFiles.length === 0}
-            className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border-0 disabled:opacity-50"
           >
             Next <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
+        
+        <NavigationHint showBack className="mt-6" />
       </div>
     </div>
   );
