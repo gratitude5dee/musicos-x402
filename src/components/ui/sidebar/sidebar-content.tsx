@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useThirdwebAuth } from "@/context/ThirdwebAuthContext";
 import { LogOut } from "lucide-react";
 import SidebarNavItem from "./sidebar-nav-item";
 import SidebarSubmenu from "./sidebar-submenu";
@@ -42,6 +42,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { signOut } = useThirdwebAuth();
   const currentPath = location.pathname;
   const searchParams = new URLSearchParams(location.search);
   const currentTab = searchParams.get("tab");
@@ -100,12 +101,9 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   }, [isCollapsed, navItems, currentPath, currentTab]);
   const handleLogout = async () => {
     try {
-      const {
-        error
-      } = await supabase.auth.signOut();
-      if (error) throw error;
+      await signOut();
       toast.success("Successfully logged out!");
-      navigate("/landing");
+      navigate("/");
     } catch (error: any) {
       console.error("Logout error:", error);
       toast.error("Error logging out");

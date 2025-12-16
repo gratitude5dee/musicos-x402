@@ -1,6 +1,5 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from '@crossmint/client-sdk-react-ui';
+import { useThirdwebAuth } from '@/context/ThirdwebAuthContext';
 
 interface WalletContextType {
   address: string;
@@ -24,45 +23,21 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [address, setAddress] = useState<string>('');
   const [balance, setBalance] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { user } = useAuth();
+  const { walletAddress, isAuthenticated } = useThirdwebAuth();
   
-  const fetchWallet = async () => {
-    // Set a demo address if user isn't available (Crossmint not configured)
-    if (!user) {
-      setAddress('8yCk...Z1vQ'); // Demo address
-      return;
+  // Update address when wallet address changes
+  useEffect(() => {
+    if (walletAddress) {
+      // Format the address for display
+      const formatted = `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
+      setAddress(formatted);
+    } else if (!isAuthenticated) {
+      setAddress('');
     }
-    
-    try {
-      // Attempt to fetch real wallet, but don't error if API isn't available
-      try {
-        const response = await fetch('/api/create-wallet', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userId: user.id }),
-        });
-        
-        if (response.ok) {
-          const { address: walletAddress } = await response.json();
-          setAddress(walletAddress);
-          return;
-        }
-      } catch (error) {
-        console.log('Wallet API not available, using demo wallet');
-      }
-      
-      // Fallback to demo address if API call fails
-      setAddress('8yCk...Z1vQ');
-      
-    } catch (error) {
-      console.error('Error fetching wallet:', error);
-    }
-  };
+  }, [walletAddress, isAuthenticated]);
   
   const fetchBalance = async () => {
-    if (!address) return;
+    if (!walletAddress) return;
     
     setIsLoading(true);
     try {
@@ -77,13 +52,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
   
   useEffect(() => {
-    // Small delay to prevent immediate fetch on mount
-    const timer = setTimeout(() => {
-      fetchWallet();
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, [user]);
+    if (walletAddress) {
+      fetchBalance();
+    }
+  }, [walletAddress]);
   
   useEffect(() => {
     if (address) {
