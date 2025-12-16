@@ -38,8 +38,12 @@ export default defineConfig(({ mode, command }) => ({
     },
     reportCompressedSize: false,
     chunkSizeWarningLimit: 5000,
-    // Smaller output generally lowers Rollup's peak memory during "rendering chunks"
-    minify: "esbuild",
+
+    // Avoid inlining assets (keeps chunks smaller and lowers peak memory)
+    assetsInlineLimit: 0,
+
+    // Dev builds don't need minification; it can significantly increase peak memory usage
+    minify: mode === "development" ? false : "esbuild",
     sourcemap: false,
     rollupOptions: {
       treeshake: true,
@@ -86,12 +90,8 @@ export default defineConfig(({ mode, command }) => ({
     },
   },
   define: {
-    // Polyfill for Node.js globals + reduce bundle size in builds
-    // Even when running `vite build --mode development`, we still want production-style dead-code elimination.
-    'process.env': {},
-    'process.env.NODE_ENV': JSON.stringify('production'),
-    'import.meta.env.DEV': 'false',
-    'import.meta.env.PROD': 'true',
-    global: 'globalThis',
+    // Polyfill for Node.js globals
+    "process.env": {},
+    global: "globalThis",
   },
 }));
