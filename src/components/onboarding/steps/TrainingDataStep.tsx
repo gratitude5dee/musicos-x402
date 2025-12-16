@@ -62,7 +62,7 @@ const TrainingDataStep = ({ onNext, onBack }) => {
   const { handleAreaClick } = useOnboardingNavigation({
     onNext,
     onBack,
-    disabled: onboardingFiles.length === 0
+    disabled: false
   });
 
   useEffect(() => {
@@ -175,7 +175,7 @@ const TrainingDataStep = ({ onNext, onBack }) => {
       <div className="relative">
         <div className="text-center mb-8">
           <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2">Training Data Upload</h2>
-          <p className="text-white/50">Upload files to train your AI agent</p>
+          <p className="text-white/50">Upload files to train your AI agent, or skip this step</p>
         </div>
 
         {/* Upload Area */}
@@ -227,10 +227,9 @@ const TrainingDataStep = ({ onNext, onBack }) => {
           </Button>
           <Button
             onClick={(e) => { e.stopPropagation(); onNext(); }}
-            disabled={onboardingFiles.length === 0}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border-0 disabled:opacity-50"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border-0"
           >
-            Next <ArrowRight className="ml-2 h-4 w-4" />
+            {uploadedFiles.length > 0 ? 'Next' : 'Skip'} <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
         
