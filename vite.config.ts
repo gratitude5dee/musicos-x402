@@ -46,9 +46,9 @@ export default defineConfig(({ mode, command }) => ({
     minify: mode === "development" ? false : "esbuild",
     sourcemap: false,
     rollupOptions: {
-      // Disable treeshaking for dev builds to drastically reduce Rollup's peak memory
-      treeshake: mode !== "development",
-      maxParallelFileOps: 1,
+      // Keep treeshaking enabled even in "development" mode builds to avoid bundling unused code
+      // (especially large optional dependency graphs like thirdweb/wallets).
+      treeshake: true,
       external: [/node_modules\/\@turnkey\/.*\/dist\/nodecrypto\.mjs/],
       onwarn(warning, warn) {
         if (
