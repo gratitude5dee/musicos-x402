@@ -16,14 +16,16 @@ const FinalizationStep = () => {
     
     try {
       await saveOnboardingData();
-      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
-      
-      setTimeout(() => {
-        navigate('/home');
-      }, 2000);
     } catch (error) {
-      setIsFinalizing(false);
+      console.error('Error saving onboarding data:', error);
+      // Continue to navigate even if save fails
     }
+    
+    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+    
+    setTimeout(() => {
+      navigate('/home');
+    }, 2000);
   };
   
   return (
