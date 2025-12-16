@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useAuth } from "@crossmint/client-sdk-react-ui";
+import { useThirdwebAuth } from "@/context/ThirdwebAuthContext";
 import { WalletInfo } from "./WalletInfo";
 import { WalletDropdown } from "@/components/wallet/WalletDropdown";
 import { Settings } from "./Settings";
@@ -10,9 +10,7 @@ import logo from "@/assets/universal-ai-logo.png";
 const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {
-    user
-  } = useAuth();
+  const { isAuthenticated } = useThirdwebAuth();
 
   // Get the current page title based on the route
   const getPageTitle = () => {
@@ -63,7 +61,7 @@ const Header: React.FC = () => {
       
       <div className="flex items-center space-x-3">
         <WalletDropdown />
-        {user && <WalletInfo />}
+        {isAuthenticated && <WalletInfo />}
         <Settings />
       </div>
     </motion.header>
