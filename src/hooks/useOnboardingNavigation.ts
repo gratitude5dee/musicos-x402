@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 interface UseOnboardingNavigationProps {
   onNext: () => void;
@@ -11,30 +11,41 @@ export const useOnboardingNavigation = ({
   onBack, 
   disabled = false 
 }: UseOnboardingNavigationProps) => {
+  
+  const handleNext = useCallback(() => {
+    if (!disabled) onNext();
+  }, [onNext, disabled]);
+
+  const handleBack = useCallback(() => {
+    if (!disabled && onBack) onBack();
+  }, [onBack, disabled]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (disabled) return;
       
-      // Prevent navigation if user is typing in an input or interacting with a select
+      // Prevent navigation if user is typing in an input
       const target = event.target as HTMLElement;
       const isTyping = target.tagName === 'INPUT' || 
                       target.tagName === 'TEXTAREA' || 
                       target.contentEditable === 'true' ||
                       target.closest('[role="combobox"]') ||
-                      target.closest('[role="button"]');
+                      target.closest('[role="listbox"]');
       
       if (isTyping) return;
 
       switch (event.key) {
         case 'Enter':
         case ' ':
+        case 'ArrowRight':
           event.preventDefault();
-          onNext();
+          handleNext();
           break;
+        case 'ArrowLeft':
         case 'Escape':
           if (onBack) {
             event.preventDefault();
-            onBack();
+            handleBack();
           }
           break;
       }
@@ -42,12 +53,11 @@ export const useOnboardingNavigation = ({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [onNext, onBack, disabled]);
+  }, [handleNext, handleBack, onBack, disabled]);
 
   const handleAreaClick = (event: React.MouseEvent) => {
     if (disabled) return;
     
-    // Only trigger if clicking on the background area, not on interactive elements
     const target = event.target as HTMLElement;
     const isInteractive = target.closest('button') || 
                          target.closest('input') || 
@@ -58,9 +68,9 @@ export const useOnboardingNavigation = ({
                          target.hasAttribute('data-interactive');
     
     if (!isInteractive && event.target === event.currentTarget) {
-      onNext();
+      handleNext();
     }
   };
 
-  return { handleAreaClick };
+  return { handleAreaClick, handleNext, handleBack };
 };
