@@ -19,7 +19,7 @@ export default function WalletLogin() {
   const account = useActiveAccount();
   const navigate = useNavigate();
   const { enableGuestMode } = useEnhancedAuth();
-  const { isNewUser, onboardingCompleted, isLoading } = useThirdwebAuth();
+  const { isNewUser, onboardingCompleted, isLoading, hasSynced } = useThirdwebAuth();
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const featureIcons: FeatureItem[] = [
@@ -29,18 +29,17 @@ export default function WalletLogin() {
     { icon: Users, label: "Assistants", color: "hsl(var(--chart-2))" },
   ];
 
-  // Smart redirect based on user status - triggers immediately when wallet connects
+  // Smart redirect based on user status - wait for sync before redirecting
   useEffect(() => {
-    if (account && !isRedirecting && !isLoading) {
+    if (account && hasSynced && !isRedirecting && !isLoading) {
       setIsRedirecting(true);
-      // Immediate redirect - no delay needed
       if (isNewUser || !onboardingCompleted) {
         navigate("/onboarding", { replace: true });
       } else {
         navigate("/home", { replace: true });
       }
     }
-  }, [account, navigate, isRedirecting, isLoading, isNewUser, onboardingCompleted]);
+  }, [account, hasSynced, navigate, isRedirecting, isLoading, isNewUser, onboardingCompleted]);
 
   const handleGuestAccess = () => {
     enableGuestMode();
@@ -161,7 +160,11 @@ export default function WalletLogin() {
               <div className="flex items-center justify-center gap-2 text-sm text-[hsl(var(--text-tertiary))]">
                 <div className="w-2 h-2 bg-[hsl(var(--success))] rounded-full animate-pulse"></div>
                 <span>
-                  {isLoading ? "Checking account..." : isNewUser || !onboardingCompleted ? "Redirecting to onboarding..." : "Redirecting to dashboard..."}
+                  {!hasSynced || isLoading 
+                    ? "Syncing wallet..." 
+                    : isNewUser || !onboardingCompleted 
+                      ? "Redirecting to onboarding..." 
+                      : "Redirecting to dashboard..."}
                 </span>
               </div>
             </motion.div>

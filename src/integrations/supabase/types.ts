@@ -3949,6 +3949,7 @@ export type Database = {
           dialogue: string | null
           failure_reason: string | null
           id: string
+          image_progress: number | null
           image_status: string | null
           image_url: string | null
           luma_generation_id: string | null
@@ -3970,6 +3971,7 @@ export type Database = {
           dialogue?: string | null
           failure_reason?: string | null
           id?: string
+          image_progress?: number | null
           image_status?: string | null
           image_url?: string | null
           luma_generation_id?: string | null
@@ -3991,6 +3993,7 @@ export type Database = {
           dialogue?: string | null
           failure_reason?: string | null
           id?: string
+          image_progress?: number | null
           image_status?: string | null
           image_url?: string | null
           luma_generation_id?: string | null
@@ -5358,6 +5361,30 @@ export type Database = {
           status?: string
           transaction_hash?: string | null
           transaction_type?: string
+          updated_at?: string
+          user_id?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      wallet_users: {
+        Row: {
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
           updated_at?: string
           user_id?: string
           wallet_address?: string
