@@ -16,6 +16,7 @@ interface ThirdwebAuthContextValue extends ThirdwebAuthState {
   syncWallet: () => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
+  hasSynced: boolean;
 }
 
 const ThirdwebAuthContext = createContext<ThirdwebAuthContextValue | null>(null);
@@ -140,6 +141,7 @@ const [state, setState] = useState<ThirdwebAuthState>({
         syncWallet,
         signOut,
         clearError,
+        hasSynced,
       }}
     >
       {children}
