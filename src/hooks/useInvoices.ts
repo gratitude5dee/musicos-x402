@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { MusicInvoice, InvoiceFilters, LineItem } from '@/types/invoice';
-import { Json } from '@/integrations/supabase/types';
 import { mockInvoices } from '@/lib/finances/__mocks__/invoice-fixtures';
 
 export const useInvoices = (filters?: InvoiceFilters) => {
