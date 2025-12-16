@@ -46,11 +46,10 @@ export default defineConfig(({ mode, command }) => ({
     minify: mode === "development" ? false : "esbuild",
     sourcemap: false,
     rollupOptions: {
-      treeshake: true,
+      // Disable treeshaking for dev builds to drastically reduce Rollup's peak memory
+      treeshake: mode !== "development",
       maxParallelFileOps: 1,
-      external: [
-        /node_modules\/\@turnkey\/.*\/dist\/nodecrypto\.mjs/,
-      ],
+      external: [/node_modules\/\@turnkey\/.*\/dist\/nodecrypto\.mjs/],
       onwarn(warning, warn) {
         if (
           warning.code === "ANNOTATION" ||
@@ -66,7 +65,8 @@ export default defineConfig(({ mode, command }) => ({
         warn(warning);
       },
       output: {
-        compact: true,
+        // Compact output is essentially a light minify step; skip it for dev builds to save memory
+        compact: mode !== "development",
         hoistTransitiveImports: false,
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
@@ -75,12 +75,16 @@ export default defineConfig(({ mode, command }) => ({
             if (id.includes("thirdweb")) return "vendor-tw-core";
             if (id.includes("wagmi")) return "vendor-wagmi";
             if (id.includes("viem")) return "vendor-viem";
+            if (id.includes("@solana/web3.js")) return "vendor-solana";
             if (id.includes("react-dom")) return "vendor-react-dom";
             if (id.includes("react-router")) return "vendor-react-router";
             if (id.includes("@radix-ui")) return "vendor-radix";
             if (id.includes("framer-motion")) return "vendor-motion";
             if (id.includes("@tanstack")) return "vendor-tanstack";
             if (id.includes("recharts") || id.includes("d3")) return "vendor-charts";
+            if (id.includes("mapbox-gl") || id.includes("react-map-gl")) return "vendor-mapbox";
+            if (id.includes("react-force-graph")) return "vendor-force-graph";
+            if (id.includes("fabric")) return "vendor-fabric";
             if (id.includes("@supabase")) return "vendor-supabase";
             if (id.includes("lucide")) return "vendor-icons";
             return "vendor-misc";
