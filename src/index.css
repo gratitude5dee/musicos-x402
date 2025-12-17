@@ -221,7 +221,77 @@
     pointer-events: none;
   }
 
-  /* Liquid Glass Icon Container */
+  /* Liquid Glass Card - Hero variant for prominent sections */
+  .liquid-glass-card-hero {
+    position: relative;
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 32px;
+    background: linear-gradient(
+      145deg,
+      hsl(var(--glass-warm-surface-1) / 0.92) 0%,
+      hsl(var(--glass-warm-surface-2) / 0.80) 40%,
+      hsl(var(--glass-warm-surface-3) / 0.85) 100%
+    );
+    border: 1px solid hsl(var(--glass-warm-border) / 0.25);
+    box-shadow:
+      0 16px 64px hsl(var(--bg-primary) / 0.65),
+      0 0 120px hsl(var(--accent-gold) / 0.08),
+      0 0 60px hsl(var(--accent-purple) / 0.06),
+      inset 0 1px 0 hsl(var(--glass-warm-highlight) / 0.15),
+      inset 0 -1px 0 hsl(var(--bg-primary) / 0.40);
+  }
+
+  .liquid-glass-card-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--accent-purple) / 0.3) 0%,
+      hsl(var(--accent-gold) / 0.2) 30%,
+      transparent 50%,
+      transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Liquid Glass Card - Draggable variant with enhanced hover */
+  .liquid-glass-card-draggable {
+    position: relative;
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border-radius: 24px;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--glass-warm-surface-1) / 0.86) 0%,
+      hsl(var(--glass-warm-surface-2) / 0.74) 55%,
+      hsl(var(--glass-warm-surface-3) / 0.80) 100%
+    );
+    border: 1px solid hsl(var(--glass-warm-border) / 0.16);
+    box-shadow:
+      0 8px 32px hsl(var(--bg-primary) / 0.50),
+      0 0 60px hsl(var(--accent-gold) / 0.04),
+      inset 0 1px 0 hsl(var(--glass-warm-highlight) / 0.10),
+      inset 0 -1px 0 hsl(var(--bg-primary) / 0.30);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .liquid-glass-card-draggable:hover {
+    border-color: hsl(var(--accent-gold) / 0.28);
+    box-shadow:
+      0 12px 48px hsl(var(--bg-primary) / 0.60),
+      0 0 80px hsl(var(--accent-purple) / 0.08),
+      inset 0 1px 0 hsl(var(--glass-warm-highlight) / 0.14);
+  }
+
+
   .liquid-glass-icon {
     background: linear-gradient(
       135deg,

@@ -12,7 +12,7 @@ const QuickActionsCard = () => {
   ];
 
   return (
-    <div className="liquid-glass-card rounded-2xl p-4">
+    <div className="liquid-glass-card-draggable rounded-2xl p-4 h-full">
       <div className="flex items-center gap-2 mb-4">
         <div className="p-2 rounded-lg bg-amber-500/20">
           <Zap className="w-4 h-4 text-amber-400" />

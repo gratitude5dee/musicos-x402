@@ -12,7 +12,7 @@ const RecentActivityCard = () => {
   ];
 
   return (
-    <div className="liquid-glass-card rounded-2xl">
+    <div className="liquid-glass-card-draggable rounded-2xl h-full">
       <div className="p-4 border-b border-white/5">
         <h3 className="text-lg font-semibold text-white">Recent Activity</h3>
       </div>
