@@ -319,8 +319,8 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({
   return (
     <div 
       ref={mountRef} 
-      className="w-full rounded-xl overflow-hidden"
-      style={{ height: size }}
+      className="rounded-xl overflow-hidden"
+      style={{ width: size, height: size }}
     />
   );
 };

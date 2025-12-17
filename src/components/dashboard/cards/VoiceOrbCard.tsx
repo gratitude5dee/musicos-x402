@@ -31,7 +31,7 @@ const VoiceOrbCard = () => {
       </div>
 
       {/* Voice Orb Container */}
-      <div className="relative flex items-center justify-center mb-6">
+      <div className="relative flex items-center justify-center mb-6" style={{ width: 280, height: 280 }}>
         {/* Outer glow ring */}
         <motion.div 
           className="absolute w-[320px] h-[320px] rounded-full"
