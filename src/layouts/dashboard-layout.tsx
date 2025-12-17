@@ -38,17 +38,25 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-transparent relative">
-      <CloudShader />
-      <Sidebar navItems={navItems} />
-      <div 
-        className="relative min-h-screen w-full transition-all duration-300 z-10"
-        style={{
-          marginLeft: sidebarCollapsed ? '4rem' : '16rem'
-        }}
-      >
-        <MainContent>{children}</MainContent>
+    <div className="min-h-screen bg-transparent relative overflow-hidden">
+      {/* Background shader - always behind everything */}
+      <div className="fixed inset-0 z-0">
+        <CloudShader />
       </div>
+      
+      {/* Content layer */}
+      <div className="relative z-10">
+        <Sidebar navItems={navItems} />
+        <div 
+          className="relative min-h-screen w-full transition-all duration-300"
+          style={{
+            marginLeft: sidebarCollapsed ? '4rem' : '16rem'
+          }}
+        >
+          <MainContent>{children}</MainContent>
+        </div>
+      </div>
+      
       <FuturisticCursor />
     </div>
   );

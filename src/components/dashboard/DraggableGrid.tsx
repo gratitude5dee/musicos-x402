@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { Reorder, motion } from 'framer-motion';
+import DraggableCard from './DraggableCard';
 import GreetingCard from './cards/GreetingCard';
 import StatsRow from './cards/StatsRow';
 import RecentContactsCard from './cards/RecentContactsCard';
@@ -8,7 +9,48 @@ import QuickActionsCard from './cards/QuickActionsCard';
 import VoiceOrbCard from './cards/VoiceOrbCard';
 import RecentActivityCard from './cards/RecentActivityCard';
 
+const CARD_IDS = ['contacts', 'revenue', 'actions', 'activity'] as const;
+type CardId = typeof CARD_IDS[number];
+
 const DraggableGrid = () => {
+  const [cardOrder, setCardOrder] = useState<CardId[]>([...CARD_IDS]);
+
+  // Load saved order from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('dashboardCardOrder');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as CardId[];
+        // Validate that all cards are present
+        if (CARD_IDS.every(id => parsed.includes(id))) {
+          setCardOrder(parsed);
+        }
+      } catch (e) {
+        console.error('Failed to parse saved card order:', e);
+      }
+    }
+  }, []);
+
+  // Save order to localStorage
+  useEffect(() => {
+    localStorage.setItem('dashboardCardOrder', JSON.stringify(cardOrder));
+  }, [cardOrder]);
+
+  const renderCard = (id: CardId) => {
+    switch (id) {
+      case 'contacts':
+        return <RecentContactsCard />;
+      case 'revenue':
+        return <RevenueTargetsCard />;
+      case 'actions':
+        return <QuickActionsCard />;
+      case 'activity':
+        return <RecentActivityCard />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* Static Header Section */}
@@ -44,40 +86,25 @@ const DraggableGrid = () => {
         </div>
       </motion.div>
 
-      {/* Cards Grid Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+      {/* Draggable Cards Grid Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <Reorder.Group
+          axis="y"
+          values={cardOrder}
+          onReorder={setCardOrder}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <RecentContactsCard />
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <RevenueTargetsCard />
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <QuickActionsCard />
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <RecentActivityCard />
-        </motion.div>
-      </div>
+          {cardOrder.map((id) => (
+            <DraggableCard key={id} id={id}>
+              {renderCard(id)}
+            </DraggableCard>
+          ))}
+        </Reorder.Group>
+      </motion.div>
     </div>
   );
 };
