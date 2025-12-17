@@ -10,13 +10,15 @@ import VoiceOrbCard from './cards/VoiceOrbCard';
 import RecentActivityCard from './cards/RecentActivityCard';
 
 const STORAGE_KEY = 'dashboard-card-order';
-const DEFAULT_ORDER = ['contacts', 'targets', 'actions', 'voice', 'activity'];
+const DEFAULT_ORDER = ['contacts', 'targets', 'actions', 'activity'];
 
 const DraggableGrid = () => {
   const [cardOrder, setCardOrder] = useState<string[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : DEFAULT_ORDER;
+      const parsed = saved ? JSON.parse(saved) : DEFAULT_ORDER;
+      // Filter out 'voice' if it exists in saved order (migrating old data)
+      return parsed.filter((id: string) => id !== 'voice');
     }
     return DEFAULT_ORDER;
   });
@@ -33,8 +35,6 @@ const DraggableGrid = () => {
         return <RevenueTargetsCard />;
       case 'actions':
         return <QuickActionsCard />;
-      case 'voice':
-        return <VoiceOrbCard />;
       case 'activity':
         return <RecentActivityCard />;
       default:
@@ -42,25 +42,8 @@ const DraggableGrid = () => {
     }
   };
 
-  const getCardSpan = (cardId: string) => {
-    switch (cardId) {
-      case 'contacts':
-        return 'lg:col-span-4';
-      case 'targets':
-        return 'lg:col-span-4';
-      case 'actions':
-        return 'lg:col-span-4';
-      case 'voice':
-        return 'lg:col-span-6';
-      case 'activity':
-        return 'lg:col-span-6';
-      default:
-        return 'lg:col-span-4';
-    }
-  };
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Static Header Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -79,23 +62,37 @@ const DraggableGrid = () => {
         <StatsRow />
       </motion.div>
 
+      {/* Aria Voice Orb - Centered Hero Section */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="flex justify-center"
+      >
+        <div className="relative">
+          {/* Ambient glow rings */}
+          <div className="absolute inset-0 -m-8 rounded-full bg-gradient-to-r from-purple-500/20 via-cyan-500/20 to-pink-500/20 blur-3xl animate-pulse" />
+          <div className="absolute inset-0 -m-4 rounded-full bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-cyan-500/10 blur-2xl" />
+          <VoiceOrbCard />
+        </div>
+      </motion.div>
+
       {/* Draggable Cards Section */}
       <Reorder.Group
         axis="y"
         values={cardOrder}
         onReorder={setCardOrder}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
         {cardOrder.map((cardId, index) => (
           <DraggableCard
             key={cardId}
             id={cardId}
-            className={`col-span-1 md:col-span-1 ${getCardSpan(cardId)}`}
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               className="h-full"
             >
               {renderCard(cardId)}
@@ -108,10 +105,10 @@ const DraggableGrid = () => {
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="text-center text-white/40 text-sm"
+        transition={{ delay: 1.2 }}
+        className="text-center text-white/30 text-sm"
       >
-        Drag cards to rearrange your dashboard
+        ✦ Grab any card to rearrange your dashboard ✦
       </motion.p>
     </div>
   );

@@ -14,7 +14,7 @@ const RecentContactsCard = () => {
   ];
 
   return (
-    <div className="liquid-glass-card rounded-2xl h-full">
+    <div className="liquid-glass-card-draggable rounded-2xl h-full">
       <div className="p-4 border-b border-white/5 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-white">Recent Contacts</h3>
         <div className="flex items-center gap-2">

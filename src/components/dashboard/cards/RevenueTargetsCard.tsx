@@ -5,7 +5,7 @@ import { ProgressTarget } from '../ui/ProgressTarget';
 
 const RevenueTargetsCard = () => {
   return (
-    <div className="liquid-glass-card rounded-2xl p-4">
+    <div className="liquid-glass-card-draggable rounded-2xl p-4 h-full">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">Revenue Targets</h3>
         <motion.button
