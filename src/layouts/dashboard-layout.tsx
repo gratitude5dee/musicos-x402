@@ -38,14 +38,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-transparent relative overflow-hidden">
+    <div className="min-h-screen bg-transparent relative overflow-hidden" style={{ isolation: 'isolate' }}>
       {/* Background shader - always behind everything */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 -z-10 pointer-events-none">
         <CloudShader />
       </div>
       
       {/* Content layer */}
-      <div className="relative z-10">
+      <div className="relative z-10" style={{ minHeight: '100vh' }}>
         <Sidebar navItems={navItems} />
         <div 
           className="relative min-h-screen w-full transition-all duration-300"
