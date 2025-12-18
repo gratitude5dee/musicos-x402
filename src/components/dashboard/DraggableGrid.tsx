@@ -8,8 +8,9 @@ import RevenueTargetsCard from './cards/RevenueTargetsCard';
 import QuickActionsCard from './cards/QuickActionsCard';
 import VoiceOrbCard from './cards/VoiceOrbCard';
 import RecentActivityCard from './cards/RecentActivityCard';
+import { RecentCreationsCard } from './cards/RecentCreationsCard';
 
-const CARD_IDS = ['contacts', 'revenue', 'actions', 'activity'] as const;
+const CARD_IDS = ['creations', 'contacts', 'revenue', 'actions', 'activity'] as const;
 type CardId = typeof CARD_IDS[number];
 
 const DraggableGrid = () => {
@@ -38,6 +39,8 @@ const DraggableGrid = () => {
 
   const renderCard = (id: CardId) => {
     switch (id) {
+      case 'creations':
+        return <RecentCreationsCard />;
       case 'contacts':
         return <RecentContactsCard />;
       case 'revenue':
