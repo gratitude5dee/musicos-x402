@@ -6,6 +6,14 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-payment',
 };
 
+// Dynamic thirdweb loader to avoid build-time module resolution
+async function loadThirdweb() {
+  const thirdwebX402 = await (Function('return import("npm:thirdweb@5.105.41/x402")')() as Promise<any>);
+  const thirdweb = await (Function('return import("npm:thirdweb@5.105.41")')() as Promise<any>);
+  const chains = await (Function('return import("npm:thirdweb@5.105.41/chains")')() as Promise<any>);
+  return { ...thirdwebX402, ...thirdweb, ...chains };
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -39,10 +47,8 @@ serve(async (req) => {
       );
     }
 
-    // Import thirdweb x402 SDK
-    const { settlePayment, facilitator: createFacilitator } = await import('npm:thirdweb@5.105.41/x402');
-    const { createThirdwebClient } = await import('npm:thirdweb@5.105.41');
-    const { baseSepolia } = await import('npm:thirdweb@5.105.41/chains');
+    // Load thirdweb dynamically at runtime
+    const { settlePayment, facilitator: createFacilitator, createThirdwebClient, baseSepolia } = await loadThirdweb();
 
     const client = createThirdwebClient({
       secretKey: Deno.env.get('THIRDWEB_SECRET_KEY')!,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Header from '@/components/landing/Header';
@@ -79,6 +79,13 @@ const FYILanding = () => {
     threshold: 0.1,
     triggerOnce: true
   });
+
+  // Failsafe: skip intro after 10 seconds if animation doesn't complete
+  useEffect(() => {
+    const timeout = setTimeout(() => setShowIntro(false), 10000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   if (showIntro) {
     return <MatrixIntroAnimation onComplete={() => setShowIntro(false)} />;
   }
