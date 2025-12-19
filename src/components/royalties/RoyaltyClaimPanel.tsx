@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DollarSign, TrendingUp, Clock } from 'lucide-react';
 import { ClaimableAmount } from '@/types/royalty';
 import { formatUnits } from 'viem';
+import { RoyaltyDistributionDashboard } from './RoyaltyDistributionDashboard';
 
 interface RoyaltyClaimPanelProps {
   ipId: Address;
@@ -25,6 +26,7 @@ export function RoyaltyClaimPanel({
   const [selectedTokens, setSelectedTokens] = useState<Set<Address>>(new Set());
   const [isClaiming, setIsClaiming] = useState(false);
   const [isSnapshotting, setIsSnapshotting] = useState(false);
+  const [showDistribution, setShowDistribution] = useState(false);
 
   const toggleToken = (token: Address) => {
     const newSelection = new Set(selectedTokens);
@@ -73,18 +75,33 @@ export function RoyaltyClaimPanel({
             Select tokens to claim from your royalty vault
           </p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleSnapshot}
-          disabled={isSnapshotting}
-        >
-          <Clock className="w-4 h-4 mr-2" />
-          {isSnapshotting ? 'Creating...' : 'Snapshot'}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowDistribution(!showDistribution)}
+          >
+            {showDistribution ? 'View Claims' : 'Distribute'}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSnapshot}
+            disabled={isSnapshotting}
+          >
+            <Clock className="w-4 h-4 mr-2" />
+            {isSnapshotting ? 'Creating...' : 'Snapshot'}
+          </Button>
+        </div>
       </div>
 
-      <div className="space-y-3 mb-6">
+      {showDistribution ? (
+        <div className="py-2">
+          <RoyaltyDistributionDashboard />
+        </div>
+      ) : (
+        <>
+          <div className="space-y-3 mb-6">
         {claimableTokens.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-sm text-text-secondary">No claimable royalties available</p>
@@ -132,6 +149,8 @@ export function RoyaltyClaimPanel({
             {isClaiming ? 'Claiming...' : `Claim ${selectedTokens.size} Token${selectedTokens.size > 1 ? 's' : ''}`}
           </Button>
         </div>
+      )}
+        </>
       )}
     </Card>
   );

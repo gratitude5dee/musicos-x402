@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Receipt, Plus, Trash2, Loader2, Download, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { X402InvoicePayment } from "@/components/invoices/X402InvoicePayment";
 import type { Database } from "@/integrations/supabase/types";
 
 interface LineItem {
@@ -371,6 +372,19 @@ Payment Terms: Net 30 days
                 <Plus className="mr-2 h-4 w-4" />
                 Create Another
               </Button>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-border">
+              <X402InvoicePayment
+                invoiceId={invoice.invoiceId}
+                amount={invoice.totals.total}
+                currency={invoice.currency}
+                sellerWalletAddress="0x0000000000000000000000000000000000000000"
+                onPaymentComplete={(txId) => {
+                  setInvoice(null);
+                  setLoading(false);
+                }}
+              />
             </div>
           </div>
         )}
