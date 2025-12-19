@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useActiveAccount } from 'thirdweb/react';
+import { useActiveAccount, useActiveWallet } from 'thirdweb/react';
 import { wrapFetchWithPayment } from 'thirdweb/x402';
 import { createThirdwebClient } from 'thirdweb';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ export const X402InvoicePayment: React.FC<X402InvoicePaymentProps> = ({
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const account = useActiveAccount();
+  const wallet = useActiveWallet();
   const { toast } = useToast();
 
   const client = createThirdwebClient({
@@ -32,7 +33,7 @@ export const X402InvoicePayment: React.FC<X402InvoicePaymentProps> = ({
   });
 
   const handlePayment = async () => {
-    if (!account) {
+    if (!wallet || !account) {
       setError('Please connect your wallet first');
       return;
     }
@@ -41,8 +42,8 @@ export const X402InvoicePayment: React.FC<X402InvoicePaymentProps> = ({
     setError(null);
 
     try {
-      // Create payment-wrapped fetch
-      const fetchWithPayment = wrapFetchWithPayment(fetch, client, account);
+      // Create payment-wrapped fetch using wallet (not account)
+      const fetchWithPayment = wrapFetchWithPayment(fetch, client, wallet);
 
       // Call the x402-protected payment endpoint
       const response = await fetchWithPayment(
@@ -111,7 +112,7 @@ export const X402InvoicePayment: React.FC<X402InvoicePaymentProps> = ({
 
         <Button
           onClick={handlePayment}
-          disabled={isPending || !account}
+          disabled={isPending || !wallet || !account}
           className="w-full"
           size="lg"
         >
