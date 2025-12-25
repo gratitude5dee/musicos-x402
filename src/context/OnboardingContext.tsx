@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useThirdwebAuth } from '@/context/ThirdwebAuthContext';
 
 export type UploadedTrainingFile = {
   type: 'image' | 'video' | 'voice';
@@ -37,6 +38,7 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { userId, syncWallet } = useThirdwebAuth();
   const [state, setState] = useState<OnboardingState>({
     creatorName: '',
     connectedAccounts: [],
@@ -70,13 +72,8 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const saveOnboardingData = async () => {
     setLoading(true);
     try {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError) throw userError;
-      if (!user?.id) throw new Error('User not authenticated');
+      // Use Thirdweb userId instead of Supabase auth (wallet auth doesn't use Supabase sessions)
+      if (!userId) throw new Error('User not authenticated');
 
       const { error } = await supabase
         .from('profiles')
@@ -88,9 +85,12 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
           onboarding_completed: true,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', user.id);
+        .eq('id', userId);
 
       if (error) throw error;
+
+      // Re-sync wallet to update onboardingCompleted state
+      await syncWallet();
 
       toast({
         title: "Profile saved!",
