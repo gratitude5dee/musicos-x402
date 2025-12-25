@@ -43,6 +43,7 @@ const OnboardingPage = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="relative z-10"
           >
             {steps[step]}
           </motion.div>
