@@ -1,8 +1,12 @@
 const THIRDWEB_API_BASE = 'https://api.thirdweb.com/v1';
 const CLIENT_ID = import.meta.env.VITE_THIRDWEB_CLIENT_ID;
 
-if (!CLIENT_ID || CLIENT_ID === 'your_thirdweb_client_id_here') {
-  console.error('⚠️ thirdweb Client ID is not set! Please add VITE_THIRDWEB_CLIENT_ID to your .env file');
+// Validate client ID on module load
+if (!CLIENT_ID) {
+  console.error(
+    '[ThirdwebAPI] VITE_THIRDWEB_CLIENT_ID is not configured. ' +
+    'Please add it to your Lovable secrets to enable Thirdweb authentication.'
+  );
 }
 
 export interface AuthResponse {

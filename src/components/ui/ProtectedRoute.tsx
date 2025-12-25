@@ -1,9 +1,13 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useEnhancedAuth } from "@/context/EnhancedAuthContext";
+import { useThirdwebAuth } from "@/context/ThirdwebAuthContext";
+import { useActiveAccount } from "thirdweb/react";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, isGuestMode } = useEnhancedAuth();
+  const { onboardingCompleted, isLoading: thirdwebLoading, hasSynced } = useThirdwebAuth();
+  const account = useActiveAccount();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,13 +21,18 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   // Show loading spinner while auth is loading
-  if (loading || isLoading) {
+  if (loading || isLoading || thirdwebLoading) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
-  // If no user and not in guest mode, redirect to auth
-  if (!user && !isGuestMode) {
-    return <Navigate to="/auth" replace />;
+  // If no user and no wallet and not in guest mode, redirect to wallet login
+  if (!user && !account && !isGuestMode) {
+    return <Navigate to="/wallet-login" replace />;
+  }
+
+  // If wallet connected but hasn't completed onboarding, redirect there
+  if (account && hasSynced && !onboardingCompleted && !isGuestMode) {
+    return <Navigate to="/onboarding" replace />;
   }
 
   // User is authenticated or in guest mode, render the protected content
