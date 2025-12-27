@@ -12,8 +12,12 @@ interface ThirdwebAuthState {
   onboardingCompleted: boolean;
 }
 
+interface SyncOptions {
+  force?: boolean;
+}
+
 interface ThirdwebAuthContextValue extends ThirdwebAuthState {
-  syncWallet: () => Promise<void>;
+  syncWallet: (options?: SyncOptions) => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
   hasSynced: boolean;
@@ -25,9 +29,9 @@ export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }
   const account = useActiveAccount();
   const { disconnect } = useDisconnect();
   
-const [state, setState] = useState<ThirdwebAuthState>({
+  const [state, setState] = useState<ThirdwebAuthState>({
     isAuthenticated: false,
-    isLoading: false, // Start false to allow immediate redirect check
+    isLoading: false,
     walletAddress: null,
     userId: null,
     error: null,
@@ -37,7 +41,9 @@ const [state, setState] = useState<ThirdwebAuthState>({
   const [hasSynced, setHasSynced] = useState(false);
 
   // Sync wallet with database when account changes
-  const syncWallet = useCallback(async () => {
+  const syncWallet = useCallback(async (options?: SyncOptions) => {
+    const force = options?.force ?? false;
+    
     if (!account?.address) {
       setState(prev => ({
         ...prev,
@@ -52,11 +58,13 @@ const [state, setState] = useState<ThirdwebAuthState>({
       return;
     }
 
-    // Skip if already synced for this address
-    if (hasSynced && state.walletAddress === account.address) {
+    // Skip if already synced for this address (unless force is true)
+    if (!force && hasSynced && state.walletAddress === account.address) {
+      console.log('Skipping sync - already synced for this address');
       return;
     }
 
+    console.log('Syncing wallet...', { force, address: account.address });
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
@@ -70,6 +78,8 @@ const [state, setState] = useState<ThirdwebAuthState>({
 
       if (error) throw error;
 
+      console.log('Wallet sync response:', data);
+
       setState({
         isAuthenticated: true,
         isLoading: false,
@@ -81,7 +91,7 @@ const [state, setState] = useState<ThirdwebAuthState>({
       });
       setHasSynced(true);
 
-      console.log('Wallet synced:', account.address);
+      console.log('Wallet synced:', account.address, 'onboardingCompleted:', data?.onboardingCompleted);
     } catch (err) {
       console.error('Wallet sync error:', err);
       setState(prev => ({
@@ -116,6 +126,7 @@ const [state, setState] = useState<ThirdwebAuthState>({
         isNewUser: false,
         onboardingCompleted: false,
       });
+      setHasSynced(false);
 
       // Clear any local storage tokens
       localStorage.removeItem('thirdweb_auth_token');
@@ -152,7 +163,7 @@ const [state, setState] = useState<ThirdwebAuthState>({
 export function useThirdwebAuth() {
   const context = useContext(ThirdwebAuthContext);
   if (!context) {
-    throw new Error('useThirdwebAuth must be used within ThirdwebAuthProvider');
+    throw new Error('useThirdwebAuth must be used within a ThirdwebAuthProvider');
   }
   return context;
 }

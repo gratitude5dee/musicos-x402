@@ -106,6 +106,23 @@ serve(async (req) => {
       console.log('New user created:', user.id);
     }
 
+    // Ensure profiles row exists (upsert to create if missing)
+    const { error: profileUpsertError } = await supabase
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        wallet_address: body.walletAddress,
+        updated_at: now,
+      }, {
+        onConflict: 'id',
+        ignoreDuplicates: false
+      });
+
+    if (profileUpsertError) {
+      console.error('Profile upsert error:', profileUpsertError);
+      // Non-fatal - continue, the profile might already exist
+    }
+
     // Create audit log entry
     const { error: auditError } = await supabase
       .from('audit_logs')
@@ -136,6 +153,7 @@ serve(async (req) => {
       .maybeSingle();
 
     const onboardingCompleted = profile?.onboarding_completed ?? false;
+    console.log('Profile onboarding status:', { userId: user.id, onboardingCompleted });
 
     // Return success response
     return jsonResponse(
