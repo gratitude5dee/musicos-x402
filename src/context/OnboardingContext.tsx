@@ -75,28 +75,40 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       // Use Thirdweb userId instead of Supabase auth (wallet auth doesn't use Supabase sessions)
       if (!userId) throw new Error('User not authenticated');
 
-      const { error } = await supabase
+      console.log('Saving onboarding data for user:', userId);
+
+      // Use upsert to ensure the profile row exists
+      const { error, data } = await supabase
         .from('profiles')
-        .update({
+        .upsert({
+          id: userId,
           display_name: state.creatorName.trim() || null,
           connected_accounts: state.connectedAccounts,
           uploaded_files: state.uploadedFiles,
           ai_preferences: state.preferences,
           onboarding_completed: true,
           updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'id'
         })
-        .eq('id', userId);
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Failed to save onboarding data:', error);
+        throw error;
+      }
 
-      // Re-sync wallet to update onboardingCompleted state
-      await syncWallet();
+      console.log('Onboarding data saved successfully:', data);
+
+      // Force re-sync wallet to update onboardingCompleted state
+      await syncWallet({ force: true });
 
       toast({
         title: "Profile saved!",
         description: "Your Creator OS has been configured successfully.",
       });
     } catch (error: any) {
+      console.error('Error in saveOnboardingData:', error);
       toast({
         title: "Error saving profile",
         description: error.message,

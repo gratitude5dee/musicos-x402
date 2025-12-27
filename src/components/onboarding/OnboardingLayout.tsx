@@ -1,18 +1,21 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import OnboardingProgress from './OnboardingProgress';
 import CloudShader from '@/components/ui/shaders/CloudShader';
 
 interface OnboardingLayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
   currentStep: number;
   totalSteps: number;
 }
 
 const OnboardingLayout = ({ children, currentStep, totalSteps }: OnboardingLayoutProps) => {
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0a0f] text-white relative overflow-hidden">
-      {/* CloudShader background */}
-      <div className="fixed inset-0 z-0">
+    <div 
+      className="min-h-screen flex flex-col bg-[#0a0a0f] text-white relative overflow-hidden"
+      style={{ isolation: 'isolate' }}
+    >
+      {/* CloudShader background - pushed behind everything with -z-10 */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
         <CloudShader />
       </div>
       
@@ -23,7 +26,7 @@ const OnboardingLayout = ({ children, currentStep, totalSteps }: OnboardingLayou
         </div>
       </div>
       
-      {/* Main content */}
+      {/* Main content - ensure it's above the shader */}
       <main className="flex-1 flex items-center justify-center relative z-10 px-4 py-8">
         <div className="w-full max-w-4xl mx-auto">
           {children}
