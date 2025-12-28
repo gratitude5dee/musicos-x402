@@ -82,7 +82,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
         .from('profiles')
         .upsert({
           id: userId,
-          display_name: state.creatorName.trim() || null,
+          full_name: state.creatorName.trim() || null,
           connected_accounts: state.connectedAccounts,
           uploaded_files: state.uploadedFiles,
           ai_preferences: state.preferences,
@@ -92,6 +92,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
           onConflict: 'id'
         })
         .select();
+
 
       if (error) {
         console.error('Failed to save onboarding data:', error);

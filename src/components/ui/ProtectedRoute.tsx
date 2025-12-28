@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useEnhancedAuth } from "@/context/EnhancedAuthContext";
 import { useThirdwebAuth } from "@/context/ThirdwebAuthContext";
@@ -8,6 +8,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, isGuestMode } = useEnhancedAuth();
   const { onboardingCompleted, isLoading: thirdwebLoading, hasSynced } = useThirdwebAuth();
   const account = useActiveAccount();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 500);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -31,10 +32,12 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   // If wallet connected but hasn't completed onboarding, redirect there
-  if (account && hasSynced && !onboardingCompleted && !isGuestMode) {
+  // IMPORTANT: don't redirect if we're already on /onboarding (it would prevent onboarding from mounting)
+  if (account && hasSynced && !onboardingCompleted && !isGuestMode && location.pathname !== "/onboarding") {
     return <Navigate to="/onboarding" replace />;
   }
 
   // User is authenticated or in guest mode, render the protected content
   return <>{children}</>;
 };
+
