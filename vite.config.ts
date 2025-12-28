@@ -22,7 +22,7 @@ export default defineConfig(({ mode, command }) => ({
     },
   },
   optimizeDeps: {
-    include: ['thirdweb', 'thirdweb/react'],
+    include: ['thirdweb', 'thirdweb/react', '@splinetool/react-spline', '@splinetool/runtime'],
     exclude: ['@turnkey/api-key-stamper', '@turnkey/viem'],
     esbuildOptions: {
       target: 'esnext',
@@ -83,6 +83,7 @@ export default defineConfig(({ mode, command }) => ({
             if (id.includes("@tanstack")) return "vendor-tanstack";
             if (id.includes("recharts") || id.includes("d3")) return "vendor-charts";
             if (id.includes("mapbox-gl") || id.includes("react-map-gl")) return "vendor-mapbox";
+            if (id.includes("@splinetool")) return "vendor-spline";
             if (id.includes("react-force-graph")) return "vendor-force-graph";
             if (id.includes("fabric")) return "vendor-fabric";
             if (id.includes("@supabase")) return "vendor-supabase";
