@@ -75,28 +75,39 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       // Use Thirdweb userId instead of Supabase auth (wallet auth doesn't use Supabase sessions)
       if (!userId) throw new Error('User not authenticated');
 
-      console.log('Saving onboarding data for user:', userId);
+      // Get the wallet address from the user record
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('wallet_address')
+        .eq('id', userId)
+        .single();
 
-      // Use upsert to ensure the profile row exists
-      const { error, data } = await supabase
-        .from('profiles')
-        .upsert({
-          id: userId,
-          full_name: state.creatorName.trim() || null,
-          connected_accounts: state.connectedAccounts,
-          uploaded_files: state.uploadedFiles,
-          ai_preferences: state.preferences,
-          onboarding_completed: true,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: 'id'
-        })
-        .select();
+      if (userError || !userData?.wallet_address) {
+        throw new Error('Could not retrieve wallet address');
+      }
 
+      console.log('Saving onboarding data via edge function for user:', userId);
+
+      // Call the edge function which uses service role to bypass RLS
+      const { data, error } = await supabase.functions.invoke('save-onboarding', {
+        body: {
+          userId,
+          walletAddress: userData.wallet_address,
+          creatorName: state.creatorName,
+          connectedAccounts: state.connectedAccounts,
+          uploadedFiles: state.uploadedFiles,
+          preferences: state.preferences,
+        },
+      });
 
       if (error) {
-        console.error('Failed to save onboarding data:', error);
-        throw error;
+        console.error('Edge function error:', error);
+        throw new Error(error.message || 'Failed to save onboarding data');
+      }
+
+      if (!data?.success) {
+        console.error('Save onboarding failed:', data);
+        throw new Error(data?.error || 'Failed to save onboarding data');
       }
 
       console.log('Onboarding data saved successfully:', data);
