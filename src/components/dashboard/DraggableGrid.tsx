@@ -6,7 +6,7 @@ import StatsRow from './cards/StatsRow';
 import RecentContactsCard from './cards/RecentContactsCard';
 import RevenueTargetsCard from './cards/RevenueTargetsCard';
 import QuickActionsCard from './cards/QuickActionsCard';
-import VoiceOrbCard from './cards/VoiceOrbCard';
+import SplineOrbCard from './cards/SplineOrbCard';
 import RecentActivityCard from './cards/RecentActivityCard';
 import { RecentCreationsCard } from './cards/RecentCreationsCard';
 
@@ -56,11 +56,21 @@ const DraggableGrid = () => {
 
   return (
     <div className="space-y-8">
+      {/* Spline 3D Orb - Center Top */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        className="flex justify-center"
+      >
+        <SplineOrbCard />
+      </motion.div>
+
       {/* Static Header Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
       >
         <GreetingCard />
       </motion.div>
@@ -69,24 +79,9 @@ const DraggableGrid = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
       >
         <StatsRow />
-      </motion.div>
-
-      {/* Aria Voice Orb - Centered Hero Section */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="flex justify-center py-8"
-      >
-        <div className="relative">
-          {/* Ambient glow rings */}
-          <div className="absolute inset-0 -m-8 rounded-full bg-gradient-to-r from-purple-500/20 via-cyan-500/20 to-pink-500/20 blur-3xl animate-pulse" />
-          <div className="absolute inset-0 -m-4 rounded-full bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-cyan-500/10 blur-2xl" />
-          <VoiceOrbCard />
-        </div>
       </motion.div>
 
       {/* Draggable Cards Grid Section */}
