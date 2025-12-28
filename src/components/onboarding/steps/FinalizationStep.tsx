@@ -15,17 +15,21 @@ const FinalizationStep = () => {
     setIsFinalizing(true);
     
     try {
+      // Wait for save to complete successfully before navigating
       await saveOnboardingData();
+      
+      // Only trigger confetti and navigate if save was successful
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      
+      // Small delay for confetti effect, then navigate
+      setTimeout(() => {
+        navigate('/home');
+      }, 1500);
     } catch (error) {
       console.error('Error saving onboarding data:', error);
-      // Continue to navigate even if save fails
+      // Stay on page - user will see the error toast from OnboardingContext
+      setIsFinalizing(false);
     }
-    
-    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
-    
-    setTimeout(() => {
-      navigate('/home');
-    }, 2000);
   };
   
   return (

@@ -1,1 +1,7 @@
 project_id = "ixkkrousepsiorwlaycp"
+
+[functions.create-wallet]
+verify_jwt = false
+
+[functions.save-onboarding]
+verify_jwt = false
