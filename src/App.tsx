@@ -122,7 +122,7 @@ function App() {
                               <Toaster />
                               <Routes>
                                 {/* Public routes - Wallet Login is the primary auth */}
-                                <Route path="/" element={<FYILanding />} />
+                                <Route path="/" element={<WalletLogin />} />
                                 <Route path="/wallet-login" element={<WalletLogin />} />
                                 <Route path="/landing" element={<Landing />} />
                                 
