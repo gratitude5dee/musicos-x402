@@ -1016,6 +1016,63 @@ export type Database = {
           },
         ]
       }
+      character_scene_appearances: {
+        Row: {
+          accessories: string[] | null
+          character_id: string | null
+          clothing_prompt: string | null
+          clothing_reference_images: string[] | null
+          created_at: string | null
+          hair_style: string | null
+          id: string
+          makeup_description: string | null
+          notes: string | null
+          scene_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          accessories?: string[] | null
+          character_id?: string | null
+          clothing_prompt?: string | null
+          clothing_reference_images?: string[] | null
+          created_at?: string | null
+          hair_style?: string | null
+          id?: string
+          makeup_description?: string | null
+          notes?: string | null
+          scene_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          accessories?: string[] | null
+          character_id?: string | null
+          clothing_prompt?: string | null
+          clothing_reference_images?: string[] | null
+          created_at?: string | null
+          hair_style?: string | null
+          id?: string
+          makeup_description?: string | null
+          notes?: string | null
+          scene_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "character_scene_appearances_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "character_scene_appearances_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       characters: {
         Row: {
           created_at: string | null
@@ -4832,6 +4889,7 @@ export type Database = {
       }
       projects: {
         Row: {
+          ad_brief_data: Json | null
           add_voiceover: boolean | null
           aspect_ratio: string | null
           call_to_action: string | null
@@ -4844,7 +4902,9 @@ export type Database = {
           format: string | null
           genre: string | null
           id: string
+          infotainment_data: Json | null
           main_message: string | null
+          music_video_data: Json | null
           product_name: string | null
           selected_storyline_id: string | null
           special_requests: string | null
@@ -4855,8 +4915,12 @@ export type Database = {
           updated_at: string | null
           user_id: string
           video_style: string | null
+          voiceover_id: string | null
+          voiceover_name: string | null
+          voiceover_preview_url: string | null
         }
         Insert: {
+          ad_brief_data?: Json | null
           add_voiceover?: boolean | null
           aspect_ratio?: string | null
           call_to_action?: string | null
@@ -4869,7 +4933,9 @@ export type Database = {
           format?: string | null
           genre?: string | null
           id?: string
+          infotainment_data?: Json | null
           main_message?: string | null
+          music_video_data?: Json | null
           product_name?: string | null
           selected_storyline_id?: string | null
           special_requests?: string | null
@@ -4880,8 +4946,12 @@ export type Database = {
           updated_at?: string | null
           user_id: string
           video_style?: string | null
+          voiceover_id?: string | null
+          voiceover_name?: string | null
+          voiceover_preview_url?: string | null
         }
         Update: {
+          ad_brief_data?: Json | null
           add_voiceover?: boolean | null
           aspect_ratio?: string | null
           call_to_action?: string | null
@@ -4894,7 +4964,9 @@ export type Database = {
           format?: string | null
           genre?: string | null
           id?: string
+          infotainment_data?: Json | null
           main_message?: string | null
+          music_video_data?: Json | null
           product_name?: string | null
           selected_storyline_id?: string | null
           special_requests?: string | null
@@ -4905,6 +4977,9 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           video_style?: string | null
+          voiceover_id?: string | null
+          voiceover_name?: string | null
+          voiceover_preview_url?: string | null
         }
         Relationships: [
           {
@@ -5110,13 +5185,63 @@ export type Database = {
         }
         Relationships: []
       }
+      scene_objects: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          importance_level: string | null
+          name: string
+          position_hint: string | null
+          prompt_context: string | null
+          reference_images: string[] | null
+          scene_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          importance_level?: string | null
+          name: string
+          position_hint?: string | null
+          prompt_context?: string | null
+          reference_images?: string[] | null
+          scene_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          importance_level?: string | null
+          name?: string
+          position_hint?: string | null
+          prompt_context?: string | null
+          reference_images?: string[] | null
+          scene_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scene_objects_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scenes: {
         Row: {
           created_at: string
           description: string | null
+          enabled_sections: Json | null
           id: string
           lighting: string | null
           location: string | null
+          location_details: Json | null
+          location_prompt_context: string | null
           project_id: string
           scene_number: number
           storyline_id: string | null
@@ -5128,9 +5253,12 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          enabled_sections?: Json | null
           id?: string
           lighting?: string | null
           location?: string | null
+          location_details?: Json | null
+          location_prompt_context?: string | null
           project_id: string
           scene_number: number
           storyline_id?: string | null
@@ -5142,9 +5270,12 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          enabled_sections?: Json | null
           id?: string
           lighting?: string | null
           location?: string | null
+          location_details?: Json | null
+          location_prompt_context?: string | null
           project_id?: string
           scene_number?: number
           storyline_id?: string | null
